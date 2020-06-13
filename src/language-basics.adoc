@@ -1,16 +1,16 @@
-=== First steps with Lisp syntax
+=== Primeiros passos com a sintaxe Lisp
 
-Invented by John McCarthy in 1958, Lisp is one of the oldest programming languages
-that is still around. It has evolved into many derivatives called dialects,
-ClojureScript being one of them. It is a programming language written in its own
-data structures — originally lists enclosed in parentheses — but Clojure(Script) has
-evolved the Lisp syntax with more data structures, making it more pleasant to write
-and read.
+Inventada por John Mccarthy em 1958, Lisp é uma das linguagens de progrmação
+mais antigas que ainda são utilizadas. Ela possui várias outras derivações chamadas
+de dialeto, sendo Clojure uma delas. É uma linguagem de programação escrita utilizando
+suas próprias estrutura de dados - originalmente uma lista rodeada de parênteses -
+mas Clojure evoluiu essa sintaxe para possuir mais estruturas de dados e ser mais
+agradável de escrever.
 
-A list with a function in the first position is used for calling a function in
-ClojureScript. In the example below, we apply the addition function to three
-arguments. Note that unlike in other languages, `+` is not an operator but a
-function. Lisp has no operators; it only has functions.
+Uma lista com uma função na primeira posição é utilizada para chamar uma função
+em Clojure. No exemplo abaixo, nos aplicamos a função de adição a três argumentos.
+Observe que diferente de outras linguagens, `+` não é um operado, mas uma função.
+Lisp não possui operadores; somente funções.
 
 [source, clojure]
 ----
@@ -18,9 +18,9 @@ function. Lisp has no operators; it only has functions.
 ;; => 6
 ----
 
-In the example above, we're applying the addition function `+` to the arguments `1`,
-`2` and `3`. ClojureScript allows many unusual characters like `?` or `-` in symbol
-names, which makes it easier to read:
+No exemplo acima, estamos aplicando a função de adição `+` aos argumentos `1`, `2` e `3`.
+Clojure permite vários caracteres não muito comuns como `?` e `-` em nome de símbolos,
+o que a torna a leitura mais fácil:
 
 [source, clojure]
 ----
@@ -28,9 +28,10 @@ names, which makes it easier to read:
 ;; => true
 ----
 
-To distinguish function calls from lists of data items, we can quote lists to keep
-them from being evaluated.  The quoted lists will be treated as data instead of as a
-function call:
+Para diferencial chamadas de funções de uma lista de itens, podemos usar uma aspa
+o que evite que a lista seja calculada/avaliada, como no primeiro exemplo. Uma lista
+com aspa no começo (_quoted list_) será tratada como dado ao invés de uma chamada de
+função:
 
 [source, clojure]
 ----
@@ -38,9 +39,9 @@ function call:
 ;; => (+ 1 2 3)
 ----
 
-ClojureScript uses more than lists for its syntax. The full details will be covered
-later, but here is an example of the usage of a vector (enclosed in brackets) for
-defining local bindings:
+Clojure não usa somente listas para sua sintaxe. Cobriremos isso com mais detalhes mais
+tarde, mas aqui está um exemplo de utilização de um vetor (rodeado por cochetes) para
+definir uma relação entre nome e valor (_bidinng_) local:
 
 [source, clojure]
 ----
@@ -51,34 +52,33 @@ defining local bindings:
 ;; => 6
 ----
 
-This is practically all the syntax we need to know for using not only ClojureScript,
-but any Lisp. Being written in its own data structures (often referred to as
-_homoiconicity_) is a great property since the syntax is uniform and simple; also,
-code generation via xref:macros-section[macros] is easier than in any other
-language, giving us plenty of power to extend the language to suit our needs.
+Essa é a sintaxe mínima que voc6e precisa saber para utilizar não só Clojure,
+mas qualquer Lisp. Sendo escrita nas suas próprias estruturas de dados (aquela coisa de _homoiconicity_)
+é uma propriedade muito poderosa, pois a sintaxe é uniforme e simples, além disso,
+a geração de código através de xref:macros-section[macros] é mais simples que outras linguagens,
+nos dando poder de ampliar a linguagem para se adequar às nossas necessidades.
 
 
-=== The base data types
+=== Os tipos básicos
 
-The ClojureScript language has a rich set of data types like most programming
-languages. It provides scalar data types that will be very familiar to you, such as
-numbers, strings, and floats. Beyond these, it also provides a great number of
-others that might be less familiar, such as symbols, keywords, regexes (regular
-expressions), vars, atoms, and volatiles.
+Clojure possui uma conjunto de tipos primitivos como maioria das linguagens.
+Ele prove escalares que serão muito familiar para você como números, strings e
+números de ponto flutuantes (_floats_). Além desses, ele provê alguns outros tipos
+não muito comuns como símbolos, chaves, expressões regulares (_regex_), _vars_ e _atoms_.
 
-_ClojureScript_ embraces the host language, and where possible, uses the host's
-provided types. For example: numbers and strings are used as is and behave in the
-same way as in JavaScript.
+_Clojure_ utiliza a linguagem hospedeira (_Java_), e quando possível, utiliza os
+tipos fornecidos por ela. Por exemplo, números e strings são usados como providos
+pelo linguagem e se comportam do mesmo jeito que se comportam em Java.
 
+==== Números
 
-==== Numbers
+Em _Clojure_, números incluem tanto inteiros quanto floating points (_float_).
+Tenha em mente, que como uma linguagem hospedada na _JVM_, os tipos numéricos em _Clojure_
+são os tipos nativos do Java como Integer e Long  por baixo dos panos,
+mas tanbém provendo alguns outros tipos como BigInt.
 
-In _ClojureScript_, numbers include both integers and floating points. Keeping in
-mind that _ClojureScript_ is a guest language that compiles to JavaScript, integers
-are actually JavaScript's native floating points under the hood.
-
-As in any other language, numbers in _ClojureScript_ are represented in the
-following ways:
+Como em outras linguagens, números em _Clojure_ são representados da seguinte
+maneira:
 
 [source, clojure]
 ----
@@ -93,11 +93,11 @@ following ways:
 ----
 
 
-==== Keywords
+====  Chaves (_Keywords_)
 
-Keywords in _ClojureScript_ are objects that always evaluate to themselves. They are
-usually used in <<maps-section,map data structures>> to efficiently represent the
-keys.
+Chaves em _Clojure_ são objetos que sempre são avalidados a eles mesmos. Eles
+são usualmente usado em  <<maps-section,estruturas de dados do tipo mapa>> para representar
+de maneira eficiente as chaves do mapa (ou dicionário).
 
 [source, clojure]
 ----
@@ -106,12 +106,12 @@ keys.
 :?
 ----
 
-As you can see, the keywords are all prefixed with `:`, but this character is only
-part of the literal syntax and is not part of the name of the object.
+Como voc6e pode ver, as chaves são todas prefixadas com `:`, mas esse caracter é
+apenas parte da sintaxe literal e não parte do nome do objeto.
 
-You can also create a keyword by calling the `keyword` function. Don't worry if you
-don't understand or are unclear about anything in the following example;
-<<function-section,functions>> are discussed in a later section.
+Você também pode criar uma chave chamando a função `keyword`. Não se preocupe se você
+não entende ou nada está claro no próximo exemplo, vamos discutir <<function-section,funções>>
+em uma seção adiante.
 
 [source, clojure]
 ----
@@ -119,46 +119,47 @@ don't understand or are unclear about anything in the following example;
 ;; => :foo
 ----
 
-===== Namespaced keywords
+===== Chaves qualificadas (ou com _Namespace_)
 
-When prefixing keywords with a double colon `::`, the keyword will be prepended by the name of the current namespace.
-Note that namespacing keywords affects equality comparisons.
+Quando prefixamos uma chave com `::`, essa chave passa a ser prefixada com o _namespace_ atual.
+Note que chaves qualificadas afetam comparações de igualdade.
 
 [source, clojure]
 ---
 ::foo
-;; => :cljs.user/foo
+;; => :clojure.user/foo
 
 (= ::foo :foo)
 ;; => false
 ---
 
-Another alternative is to include the namespace in the keyword literal, this is useful when creating namespaced keywords
-for other namespaces:
+Outra alternativa é incluir o _namespace_ na sintaxe literal da chava, isso é útil para criamos chaves qualificadas
+para outro _namespace_:
 
 [source, clojure]
 ---
-:cljs.unraveled/foo
-;; => :cljs.unraveled/foo
+:clojure.unraveled/foo
+;; => :clojure.unraveled/foo
 ---
 
-The `keyword` function has an arity-2 variant where we can specify the namespace as the first parameter:
+A função `keyword` também funciona como uma função que recebe 2 argumentos (_arity-2_) onde você
+especifica o _namespace_ como primeiro argumento:
 
 [source, clojure]
 ---
-(keyword "cljs.unraveled" "foo")
-;; => :cljs.unraveled/foo
+(keyword "clojure.unraveled" "foo")
+;; => :clojure.unraveled/foo
 ---
 
 
-==== Symbols
+==== Símbolos
 
-Symbols in _ClojureScript_ are very, very similar to *keywords* (which you now know
-about). But instead of evaluating to themselves, symbols are evaluated to something
-that they refer to, which can be functions, variables, etc.
+Símbolos em _Clojure_ são muito parecidos com chaves (que agora você conhece0. Mas ao invés de
+serem avaliados (_evaluated_) a eles mesmos, os símbolos são avaliados para outra coisa
+a qual eles referem, que pode ser funções, variáveis, etc.
 
-Symbols start with a non numeric character and can contain alphanumeric characters
-as well as *, +, !, -, _, ', and ? such as :
+Símbolos começam sembre com um caractere não numério e pode conter caracteres alfa-numéricos
+assim como *, +, !, -, -, ', e ? como:
 
 [source, clojure]
 ----
@@ -168,25 +169,23 @@ f1
 my-special-swap!
 ----
 
-Don't worry if you don't understand right away; symbols are used in almost all of
-our examples, which will give you the opportunity to learn more as we go on.
-
+Não se preocupe se você não entender isso de imediato, símbolos são usados praticamente
+em todos os nossos outros exemplosl, o que te dá a oportunidade de aprender mais a medida
+que avançamos.
 
 ==== Strings
 
-There is almost nothing new we can explain about strings that you don't already
-know. In _ClojureScript_, they work the same as in any other language. One point of
-interest, however, is that they are immutable.
-
-In this case they are the same as in JavaScript:
+Strings em _Clojure_ não são tão diferente de outras linguagens, então você já deve
+saber suficiente sobre elas. Um único ponto interessante de mencionar é que elas
+são imutáveis.
 
 [source, clojure]
 ----
 "An example of a string"
 ----
 
-One peculiar aspect of strings in _ClojureScript_ is due to the language's Lisp
-syntax: single and multiline strings have the same syntax:
+Um aspecto peculiar de strings em _Clojure_ devido a sintaxe de Lisp é que seja
+strings de uma linha ou de várias linhas, elas possuem a mesma sintaxe.
 
 [source, clojure]
 ----
@@ -194,42 +193,36 @@ syntax: single and multiline strings have the same syntax:
       string in ClojureScript."
 ----
 
-==== Characters
+==== Caracteres
 
-_ClojureScript_ also lets you write single characters using Clojure's character
-literal syntax.
+_Clojure_ também permite você escrever um único caractere usando a seguinte sintaxe
+literal:
 
 [source, clojure]
 ----
-\a        ; The lowercase a character
-\newline  ; The newline character
+\a        ; "a" minúsculo
+\newline  ; Caractere que indica uma nova linha
 ----
 
-Since the host language doesn't contain character literals, _ClojureScript_
-characters are transformed behind the scenes into single character JavaScript
-strings.
 
+==== Coleções
 
-==== Collections
+O próximo grande passo em explicar a linguagem é explicar suas coleções e as
+abstrações de coleções. _Clojure_ não é uma exceção a essa regra.
 
-Another big step in explaining a language is to explain its collections and
-collection abstractions. _ClojureScript_ is not an exception to this rule.
+_Clojure_ vem com vários tipos de coleções. A principal diferenção do _Clojure_ para
+outras linguagens é que suas coleções são persistentes e imutáveis.
 
-_ClojureScript_ comes with many types of collections. The main difference between
-_ClojureScript_ collections and collections in other languages is that they are
-persistent and immutable.
+Antes de entrarmos nesses conceitos (provavelmente) desconhecidos, vamos dar uma
+visão geral das coleções existentes em _Clojure_.
 
-Before moving on to these (possibly) unknown concepts, we'll present a high-level
-overview of existing collection types in _ClojureScript_.
+===== Listas
 
+Essa é uma coleção clássica em qualquer linguagem derivada do Lisp.
+Listas são o tipo de coleção mais simples em _Clojure_. Elas podem conter itens
+de qualquer tipo, incluindo outras coleções.
 
-===== Lists
-
-This is a classic collection type in languages based on Lisp. Lists are the simplest
-type of collection in _ClojureScript_. Lists can contain items of any type,
-including other collections.
-
-Lists in _ClojureScript_ are represented by items enclosed between parentheses:
+Listas em _Clojure_ são representadas por items envolvidos por parênteses:
 
 [source, clojure]
 ----
@@ -237,16 +230,15 @@ Lists in _ClojureScript_ are represented by items enclosed between parentheses:
 '(:foo :bar 2)
 ----
 
-As you can see, all list examples are prefixed with the `'` char. This is because
-lists in Lisp-like languages are often used to express things like function or macro
-calls. In that case, the first item should be a symbol that will evaluate to
-something callable, and the rest of the list elements will be function
-arguments. However, in the preceding examples, we don't want the first item as a
-symbol; we just want a list of items.
+Como você pode ver, todos os exemplos de listas são prefixados com o caractere `'`.
+Isso porque em linguagems derivadas do Lisp, listas são usadas para expressar
+chamadas de funções (ou de macros). Nesse caso, o primeiro item deveria ser um
+símbolo que é avaliado a alguma coisa que é chamável (ex: uma função), e o resto dos
+elementos da lista serão argumentos da função. porém, nos exemplos anteriores, nos não
+ queremos que o primeiro item da lista seja um símbolo, nos queremos que seja apenas
+ uma lista de items.
 
-The following example shows the difference between a list without and with the
-preceding single quote mark:
-
+O exemplo seguinte mostra a diferença entre listas com e sem uma aspa no começo:
 [source, clojure]
 ----
 (inc 1)
@@ -256,11 +248,11 @@ preceding single quote mark:
 ;; => (inc 1)
 ----
 
-As you can see, if you evaluate `(inc 1)` without prefixing it with `'`, it will
-resolve the `inc` symbol to the *inc* function and will execute it with `1` as the
-first argument, returning the value `2`.
+Como você pode ver, se evaluarmos `(inc 1)` sem prefixar com uma aspa `'`, ele
+será transformado na função `inc` (de incrementar) e irá executar essa função com 1
+como seu primeiro argumento, retornando o valor de 2.
 
-You can also explicitly create a list with the `list` function:
+Você pode também contruir uma lista com a função `list`:
 
 [source, clojure]
 ----
@@ -271,19 +263,17 @@ You can also explicitly create a list with the `list` function:
 ;; => (:foo :bar 2)
 ----
 
-Lists have the peculiarity that they are very efficient if you access them
-sequentially or access their first elements, but a list is not a very good option if
-you need random (index) access to its elements.
+Listas tem a peculiaridade de ser muito eficiente se você acessar elas sequencialmente
+ou os primeiros elementos, porém elas não são uma boa opção se você precisa acessar elementos
+utilizando a posição (index) desses elementos.
 
+===== Vetores
 
-===== Vectors
+Como listas, vetores armazenam uma série de valores, mas nesse caso, de forma
+mais eficiente para acesso através do index desses elementos. Não se preocupe, nas seções
+seguintes vamos entrar nos detalhes, mas por hora, essa explicação é mais que suficiente.
 
-Like lists, *vectors* store a series of values, but in this case, with very
-efficient index access to their elements, as opposed to lists, which are evaluated
-in order. Don't worry; in the following sections we'll go in depth with details, but
-at this moment, this simple explanation is more than enough.
-
-Vectors use square brackets for the literal syntax; let's see some examples:
+Vetores usam cochetes como sintaxe literal, vamos ver alguns exemplos:
 
 [source, clojure]
 ----
@@ -291,11 +281,11 @@ Vectors use square brackets for the literal syntax; let's see some examples:
 [3 4 5 nil]
 ----
 
-Like lists, vectors can contain objects of any type, as you can observe in the
-preceding example.
+Como listas, vetores podem contem objetos de qualquer tipo, como mostrado no
+exemplo anterior.
 
-You can also explicitly create a vector with the `vector` function, but this is not
-commonly used in ClojureScript programs:
+Você pode também explicitamente criar um vetor com a função `vector`, mas esse não é
+o jeito mais comum de fazê-lo em _Clojure_.
 
 [source, clojure]
 ----
@@ -308,12 +298,11 @@ commonly used in ClojureScript programs:
 
 
 [[maps-section]]
-===== Maps
+===== Mapas (ou dicionários)
 
-Maps are a collection abstraction that allow you to store key/value pairs. In other
-languages, this type of structure is commonly known as a hash-map or dict
-(dictionary). Map literals in _ClojureScript_ are written with the pairs between
-curly braces.
+Mapas são coleções de abstrações que permite você armazenar pares de chave e valor.
+Em outras linguages, esse tipo de estrutura são comumente conhecidas como has-map ou
+dicionários. Mapas são literais em _Clojure_ e são escritos como pares entre chaves.
 
 [source, clojure]
 ----
@@ -321,21 +310,20 @@ curly braces.
 {:alphabet [:a :b :c]}
 ----
 
-NOTE: Commas are frequently used to separate a key-value pair, but they are
-completely optional. In _ClojureScript_ syntax, commas are treated like spaces.
+NOTA: Podemos usar vírgulas para separar pares, mas elas são opcionais.
+No geral, a formatação dos arquivos já favorece a leitura. Em _Clojure_, vírgulas
+são como espaços.
 
-Like vectors, every item in a map literal is evaluated before the result is stored
-in a map, but the order of evaluation is not guaranteed.
+Como vetores, cada item em um mapa literal é evaluado antes que seu resultado seja
+armazenado no map, mas a ordem de resolução não é garantida.
 
+===== Conjuntos
 
-===== Sets
+E finalmente, *sets* (ou conjuntos).
 
-And finally, *sets*.
-
-Sets store zero or more unique items of any type and are unordered. Like maps, they
-use curly braces for their literal syntax, with the difference being that they use a
-`#` as the leading character. You can also use the `set` function to convert a
-collection to a set:
+Conjuntos armazenam zero ou mais itens únicos de forma não ordenada. Como mapas,
+eles  possuem chaves como sintaxe litera, com a diferença de serem prefixados com `#`.
+Você também pode usar a função `set` para converter  uma coleção em um set:
 
 [source, clojure]
 ----
@@ -345,9 +333,8 @@ collection to a set:
 ;; => #{1 2 3 4 5}
 ----
 
-In subsequent sections, we'll go in depth about sets and the other collection types
-you've seen in this section.
-
+Nas seções seguintes, vamos explorar a fundo conjuntos e outras coleções que vimos
+nessa seção. 
 
 === Vars
 
