@@ -1082,18 +1082,17 @@ usa uma "redução" mais rápida.
 Essa função explicitamente retorna `nil`.
 
 
-=== Collection types
+=== Tipos de coleções
 
-==== Immutable and persistent
+==== Imutáveis e persistentes
 
-We mentioned before that ClojureScript collections are persistent and immutable, but
-we didn't explain what that meant.
+Como mencionamos antes, as coleções no _Clojure_ são persistentes e imutáveis, mas
+nós não explicamos o que isso significa.
 
-An immutable data structure, as its name suggests, is a data structure that cannot
-be changed. In-place updates are not allowed in immutable data structures.
+Uma estrutura de dado imutável, como o nome sugere, são estrutura de dados que não
+podem ser mudadas. Alterações in-loco não são permitidas em estruturas imutáveis.
 
-Let's illustrate that with an example: appending values to a vector using the `conj`
-(conjoin) operation.
+Vamos ilustrar isso com um exemplo: adicionando valores a um vetor usando `conj`(conjoin).
 
 [source, clojure]
 ----
@@ -1107,25 +1106,24 @@ Let's illustrate that with an example: appending values to a vector using the `c
 ;; => nil
 ----
 
-As you can see, we derived a new version of the `xs` vector appending an element
-to it and got a new vector `ys` with the element added. However, the `xs` vector
-remained unchanged because it is immutable.
+Como você pode ver, nós derivamos uma versão do vetor `xs` ao adicionar um elmento
+a ele, e obtemos um novo vetor `ys` com esse elemento adicionado. Entretanto,
+o vetor `xs` se mantém inalterado, porque ele é imutável.
 
-A persistent data structure is a data structure that returns a new version of
-itself when transforming it, leaving the original unmodified. ClojureScript makes
-this memory and time efficient using an implementation technique called _structural
-sharing_, where most of the data shared between two versions of a value is not
-duplicated and transformations of a value are implemented by copying the minimal
-amount of data required.
+Uma estrutura persistente é uma estrutura de dados que retorna uma nova versão
+dela mesmo enquanto a transforma, deixando o original não modificado. _Clojure_
+faz isso ser eficiente em termos de memória e tempo usando uma técnica de implementação
+chamada _structural sharing_ (compartilhamento de estrutura), onde a maioria dos dados
+são compartilhados entre as duas versões e não duplicada e as transformações
+copiam o mínimo possível de dados.
 
-If you want to see an example of how structural sharing works, read on. If you're
-not interested in more details you can skip over to the
-xref:the-sequence-abstraction[next section].
+Se você quer saber mais como esse compartilhamento funciona, continue lendo. Se não
+está interessado em saber mais dos detalhes, sinta-se livre para pular para xref:the-sequence-abstraction[próxima seção].
 
-For illustrating the structural sharing of ClojureScript data structures, let's
-compare whether some parts of the old and new versions of a data structure are
-actually the same object with the `identical?` predicate. We'll use the list data
-type for this purpose:
+Para ilustrar melhor esse _structural sharing_ nas estruturas do _Clojure_, vamos
+comparar se algumas partes da velha e nova versão da estrutura de dados são
+na verdade o mesmo objeto usando a função `identical?`. Nós vamos usar uma lista
+para isso:
 
 [source, clojure]
 ----
@@ -1142,23 +1140,24 @@ type for this purpose:
 ;; => true
 ----
 
-As you can see in the example, we used `cons` (construct) to prepend a value to
-the `xs` list and we got a new list `ys` with the element added. The `rest` of
-the `ys` list (all the values but the first) are the same object in memory as the
-`xs` list, thus `xs` and `ys` share structure.
+Como você pode ver no exemplo, nós usamos `cons` (construct0 para prefixar um valor
+a lista `xs` e obtemos uma nova lista `ys` com o elemento adicionado. O resto de `ys`
+obtidos usando a função `rest`, é o mesmo objeto em memória que a lista `xs`, e então
+`xs` e `ys` compartilham a mesma estrutura.
 
 
 [[the-sequence-abstraction]]
-==== The sequence abstraction
+==== A Abstração de Sequências
 
-One of the central ClojureScript abstractions is the _sequence_ which can be
-thought of as a list and can be derived from any of the collection types. It is
-persistent and immutable like all collection types, and many of the core
-ClojureScript functions return sequences.
+Uma das abstrações centrais do _Clojure_ é a _sequence_ que pode ser pensando como
+uma lista e pode ser derivada de qualquer tipo de coleção. É uma coleção persistente
+e imutável como todos os tipos de coleção, e muitas funções centrais do _Clojure_
+retornam sequências.
 
-The types that can be used to generate a sequence are called "seqables"; we can
-call `seq` on them and get a sequence back. Sequences support two basic operations:
-`first` and `rest`. They both call `seq` on the argument we provide them:
+Os tipos que podem ser usados para gerar uma sequência são chamados de  "seqables";
+nos podemos chamar `seq` com eles como argumento e obter uma sequência de volta.
+Sequências suportam duas operações básicas: `first` e `rest`. Ambas chamam `seq`
+no argumento fornecidos a eles:
 
 [source, clojure]
 ----
@@ -1169,8 +1168,8 @@ call `seq` on them and get a sequence back. Sequences support two basic operatio
 ;; => (2 3)
 ----
 
-Calling `seq` on a seqable can yield different results if the seqable is empty or
-not. It will return `nil` when empty and a sequence otherwise:
+Chamando `seq` em um _seqable_, podemos obter resultados diferentes se o _seqable_ está
+vazio ou não. Ele irá retornar `nil` quando a coleção está vazia ou se não, uma sequence:
 
 [source, clojure]
 ----
@@ -1181,12 +1180,11 @@ not. It will return `nil` when empty and a sequence otherwise:
 ;; => (1 2 3)
 ----
 
-`next` is a similar sequence operation to `rest`, but it differs from the latter
-in that it yields a `nil` value when called with a sequence with one or zero
-elements. Note that, when given one of the aforementioned sequences, the empty
-sequence returned by `rest` will evaluate as a boolean true whereas the `nil`
-value returned by `next` will evaluate as false
-(xref:truthiness-section[see the section on _truthiness_ later in this chapter]).
+`next` é similar a operação `rest`, exceto que ela retorna `nil` quando chamada
+com uma sequência com um ou zero elementos. note que, quando chamamos `rest` com
+uma sequência vazia, ela retornará um valor "logicamente true"(`()`), enquanto `next`
+irá retornar um valor "logicalmente false" (`nil`).
+(xref:truthiness-section[revise a seção sobre "O que é verdade em Clojure" caso tenha alguma dúvida sobre isso]).
 
 [source, clojure]
 ----
@@ -1206,9 +1204,9 @@ value returned by `next` will evaluate as false
 
 ===== nil-punning
 
-Since `seq` returns `nil` when the collection is empty, and `nil` evaluates to
-false in boolean context, you can check to see if a collection is empty by using
-the `seq` function. The technical term for this is nil-punning.
+Como `seq` retorna `nil` quando a coleção está valia, e `nil` é considerado um valor
+"logicalmente false", você pode checar se uma coleção está vazia usando a função `seq`.
+O termo técnico para isso é nil-punning.
 
 [source, clojure]
 ----
@@ -1219,20 +1217,20 @@ the `seq` function. The technical term for this is nil-punning.
     (recur (rest coll))))
 
 (print-coll [1 2 3])
-;; Saw 1
-;; Saw 2
-;; Saw 3
+;; Vi 1
+;; Vi 2
+;; Vi 3
 ;; => nil
 
 (print-coll #{1 2 3})
-;; Saw 1
-;; Saw 3
-;; Saw 2
+;; Vi 1
+;; Vi 3
+;; Vi 2
 ;; => nil
 ----
 
-Though `nil` is neither a seqable nor a sequence, it is supported by all the
-functions we saw so far:
+Apesar de `nil` não ser  nem um _seqable_ nem uma sequência, ele é suportado por todas
+as funções que vimos até agora:
 
 [source, clojure]
 ----
@@ -1247,13 +1245,13 @@ functions we saw so far:
 ----
 
 
-===== Functions that work on sequences
+===== Funções que trabalham com sequências
 
-The ClojureScript core functions for transforming collections make sequences out
-of their arguments and are implemented in terms of the generic sequence operations
-we learned about in the preceding section. This makes them highly generic because
-we can use them on any data type that is seqable. Let's see how we can use `map`
-with a variety of seqables:
+As funções centrais do _Clojure_ para transformar coleções criam sequências a partir
+dos seus argumentos e são implementadas em termos das operações genéricas que aprendemos
+na seção precedente. Isso faz com que elas sejam super genéricas porque podemos usar
+em qualquer tipo de dado que seja um _seqable_. vamos ver como `map` funciona nos diversos
+tipos de coleções:
 
 [source, clojure]
 ----
@@ -1270,10 +1268,9 @@ with a variety of seqables:
 ;; => (2 3 4)
 ----
 
-NOTE: When you use the `map` function on a map collection, your higher-order
-function will receive a two-item vector containing a key and value from the map.
-The following example uses xref:destructuring-section[destructuring] to access
-the key and value.
+NOTE: Quando usamos `map` em uma coleção do tipo map, sua função de mapeamento irá receber como
+argumento um vetor com dois items, contendo chave e valor contidos no mapa.
+O exemplo abaixo usa xref:destructuring-section[destructuring] para acessar a chave e o valor de maneira mais simples.
 
 [source,clojure]
 ----
@@ -1282,8 +1279,8 @@ the key and value.
 ;; => (100 49 16)
 ----
 
-Obviously the same operation can be done in more idiomatic way only obtaining a seq
-of values:
+Obviamente a mesma operação pode ser feita de forma mais idiomática obtendo somente uma
+_seq_ dos valores do mapa:
 
 [source,clojure]
 ----
@@ -1292,9 +1289,9 @@ of values:
 ;; => (100 49 16)
 ----
 
-As you may have noticed, functions that operate on sequences are safe to use with
-empty collections or even `nil` values since they don't need to do anything but
-return an empty sequence when encountering such values.
+Como você pode notar, funções que operam em sequências são seguras para serem
+usadas com coleções vazias ou até mesmo `nil` já que elas não precisam fazer nada
+a não ser retornar um sequência vazia quando encontram tais valores.
 
 [source, clojure]
 ----
@@ -1308,13 +1305,13 @@ return an empty sequence when encountering such values.
 ;; => ()
 ----
 
-We already saw examples with the usual suspects like `map`, `filter`, and `reduce`,
-but ClojureScript offers a plethora of generic sequence operations in its core
-namespace. Note that many of the operations we'll learn about either work with
-seqables or are extensible to user-defined types.
+Nós já vimos alguns exemplos com as funções como `map`, `filter`, e `reduce`, mas
+_Clojure_ fornece uma variedade de funções genéricas que operam em sequências no
+seu _core namespace_. Note qua muitas das operações que aprendemos até agora
+funcionam com _seqables_ e são extensíveis a tipos definidos pelo usuário.
 
-We can query a value to know whether it's a collection type with the `coll?`
-predicate:
+Podemos verificar se um valor é uma coleção através da função predicado
+`coll?`:
 
 [source, clojure]
 ----
@@ -1331,8 +1328,8 @@ predicate:
 ;; => false
 ----
 
-Similar predicates exist for checking if a value is a sequence (with `seq?`) or a
-seqable (with `seqable?`):
+Existem funções predicados similares para checarem se um valor é uma sequência (`seq?`) ou
+um _seqable_ (`seqable?`):
 
 [source, clojure]
 ----
@@ -1355,11 +1352,16 @@ seqable (with `seqable?`):
 ;; => false
 (seqable? "ClojureScript")
 ;; => false
+
+(seq? '(1 2 3))
+;; => true
+(seqable? '(1 2 3))
+;; => true
 ----
 
-For collections that can be counted in constant time, we can use the `count`
-operation. This operation also works on strings, even though, as you have seen,
-they are not collections, sequences, or seqable.
+Para coleções que podem ser contadas em tempo constante, podemos utilizar a
+função `count`. Essa operação inclusive funciona com strings, apesar de elas não serem
+uma coleção, sequência, ou seqable.
 
 [source, clojure]
 ----
@@ -1376,7 +1378,8 @@ they are not collections, sequences, or seqable.
 ;; => 13
 ----
 
-We can also get an empty variant of a given collection with the `empty` function:
+Nós também podemos obterm uma variante vazia de uma certa coleção através da
+função `empty`:
 
 [source, clojure]
 ----
@@ -1390,7 +1393,7 @@ We can also get an empty variant of a given collection with the `empty` function
 ;; => #{}
 ----
 
-The `empty?` predicate returns true if the given collection is empty:
+A função predicado `empty?` retorna `true` se uma certa coleção está vazia:
 
 [source, clojure]
 ----
@@ -1404,12 +1407,11 @@ The `empty?` predicate returns true if the given collection is empty:
 ;; => false
 ----
 
-The `conj` operation adds elements to collections and may add them in different
-"places" depending on the type of collection. It adds them where it is most
-performant for the collection type, but note that not every collection has a
-defined order.
+A função `conj`(conjoin) adiciona um elemento a um coleção e pode adicionar ela
+em diferentes "lugares" dependendo do tipo da coleção. O elemento é adicionado
+onde é mais performático, mas note que nem toda coleção possui uma ordem definida.
 
-We can pass as many elements as we want to add to `conj`; let's see it in action:
+Podemos passar muitos elementos quanto quisermos para `conj`; vamos ver alguns exemplos:
 
 [source, clojure]
 ----
@@ -1433,15 +1435,15 @@ We can pass as many elements as we want to add to `conj`; let's see it in action
 ----
 
 
-===== Laziness
+===== Laziness/Preguiça
 
-Most of ClojureScript's sequence-returning functions generate lazy sequences instead
-of eagerly creating a whole new sequence. Lazy sequences generate their contents as
-they are requested, usually when iterating over them. Laziness ensures that we don't
-do more work than we need to and gives us the possibility of treating potentially
-infinite sequences as regular ones.
+Maioria das funções que retornam sequência no _Clojure_ retornam uma sequência "preguiçosa"
+ao invés de calcular todos os elementos da nova sequênica. Sequências _Lazy_ geram seu
+conteúdo a medida que são solicitadas a fazê-lo, normalmente quando estamos iterando sob
+elas. Laziness/Preguiça garante que não estamos fazendo mais trabalho do que precisamos e nos dá
+a possibilidade de tratar sequências potencialmente infinitas como sequências comuns.
 
-Consider the `range` function, which generates a range of integers:
+Considere a função `rage`, que gera uma sequência de inteiros:
 
 [source, clojure]
 ----
@@ -1453,15 +1455,15 @@ Consider the `range` function, which generates a range of integers:
 ;; (10 25 40 55 70 85)
 ----
 
-If you just say `(range)`, you will get an infinite sequence of all the integers.
-Do *not* try this in the REPL, unless you are prepared to wait for a very, very long
-time, because the REPL wants to fully evaluate the expression.
+Se você dizer apenas `(range)`, você irá obter uma sequência de todos os inteiros.
+Não tente isso dentro de uma REPL, pois ela tentará evaluar a expressão e todos os
+elementos da sequência.
 
-Here is a contrived example. Let's say you are writing a graphing program and you
-are graphing the equation _y_= 2 _x_ ^2^ + 5, and you want only those values of _x_
-for which the _y_ value is less than 100. You can generate all the numbers 0 through
-100, which will certainly be enough, and then `take-while` the condition holds:
 
+Aqui está um exemplo controlado. Supondo que você esteja escrevendo um programa
+gráfico e queira desenhar o gráfico da equação _y_= 2 _x_ ^2^ + 5, e queira somente
+aqueles valores de `x` para quais `y` é menor que 100. Você pode geral todos os números
+entre 0 e 100, que certamente serão suficientes, e então usar `take-while` com a condição `y <= 100`:
 [source,clojure]
 ----
 (take-while (fn [x] (< (+ (* 2 x x) 5) 100))
