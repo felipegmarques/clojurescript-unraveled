@@ -338,16 +338,16 @@ nessa seção.
 
 === Vars
 
-_ClojureScript_ is a mostly functional language that focuses on
-immutability. Because of that, it does not have the concept of variables as you know
-them in most other programming languages. The closest analogy to variables are the
-variables you define in algebra; when you say `x = 6` in mathematics, you are saying
-that you want the symbol `x` to stand for the number six.
+_Clojure_ é uma linguagem funcional que foca principalmente em imutabilidade.
+Por cause disso, ela não tem o conceito de variáveis como estamos acostumados
+em outras linguagens. A analogia mais próxima de vars são as variáveis que
+definimos na álgebra; quando dizemos `x = 6` na matemática, estamos dizendo que queremos
+que o símbolo `x` tenha, ou represente, o número seis.
 
-In _ClojureScript_, vars are represented by symbols and store a single value
-together with metadata.
+Em _Clojure_, vars são representadas por símbolos e armazenam um único valor
+junto com alguns meta-dados.
 
-You can define a var using the `def` special form:
+Você pode definir uma var utilizando a forma especial `def`:
 
 [source, clojure]
 ----
@@ -355,28 +355,27 @@ You can define a var using the `def` special form:
 (def y [1 2 3])
 ----
 
-Vars are always top level in the namespace (<<namespace-section,which we will
-explain later>>). If you use `def` in a function call, the var will be defined at
-the namespace level, but we do not recommend this - instead, you should use `let` to
-define variables within a function.
-
+Vars são tempre top level em um _namespace_(<<namespace-section,which we will
+explain later>>). Se você usar `dev` em uma chamada de função, aquela var será definida
+no nível do namespace e poderá ser usada em outros lugares (diferente de variáveis locais
+que algumas linguagens possuem), mas não recomendamos isso - ao invés, você devereria
+utilizar um bloco `let` para definir variáveis dentro de uma função.
 
 [[function-section]]
-=== Functions
+=== Funções
 
-==== The first contact
+==== O primeiro contato
 
-It's time to make things happen. _ClojureScript_ has what are known as first class
-functions. They behave like any other type; you can pass them as parameters and you
-can return them as values, always respecting the lexical scope. _ClojureScript_ also
-has some features of dynamic scoping, but this will be discussed in another section.
+É hora de fazer as coisas acontecerem. _Clojure_ possui o que conhecemos como
+_first class functions_. Funções se comportam como qualquer outro tipo; você pode passá-las
+como argumentos e retorná-las como valores, sempre respeitando o escopo léxico. _Clojure_
+também possui algumas funcionalidades devido ao escopo dinâmica, mas vamos ver isso em
+outra seção.
 
-If you want to know more about scopes, this
-link:http://en.wikipedia.org/wiki/Scope_(computer_science)[Wikipedia article] is
-very extensive and explains different types of scoping.
+Se você quer saber mais sobre escopos, esse  link:https://pt.wikipedia.org/wiki/Escopo_(computa%C3%A7%C3%A3o))[Artigo da Wikipedia] é
+bem completo e explica os diversos tipos de escopo.
 
-As _ClojureScript_ is a Lisp dialect, it uses the prefix notation for calling a
-function:
+Como _Clojure_ é um dialeto do Lisp, ela utiliza a notação prefixada para chamar funções:
 
 [source, clojure]
 ----
@@ -384,8 +383,8 @@ function:
 ;; => 2
 ----
 
-In the example above, `inc` is a function and is part of the _ClojureScript_
-runtime, and `1` is the first argument for the `inc` function.
+No exemplo acima, `inc` é uma função e é parte da _runtime_ do _Clojure_, e
+`1` é o primeiro argumento para a função `inc`.
 
 [source, clojure]
 ----
@@ -393,21 +392,20 @@ runtime, and `1` is the first argument for the `inc` function.
 ;; => 6
 ----
 
-The `+` symbol represents an `add` function. It allows multiple parameters, whereas
-in ALGOL-type languages, `+` is an operator and only allows two parameters.
+O símbolo de `+`  representa a função `add` (de adição). Ela permite múltiplos parâmetros,
+enquanto em linguagens que seguem o estilo _ALGOL_, `+` é um operador e permite somente
+dois parâmetros.
 
-The prefix notation has huge advantages, some of them not always
-obvious. _ClojureScript_ does not make a distinction between a function and an
-operator; everything is a function. The immediate advantage is that the prefix
-notation allows an arbitrary number of arguments per "operator". It also completely
-eliminates the problem of operator precedence.
+A notação prefixada possui algumas vantagens, que não são óbvias. _Clojure_
+não faz distinção entre função e operador; tudo é uma função. A vantagem imediata é
+que a notação prefixada permite um número arbitrário de argumentos por "operador".
+Isso remove completamente o problema de precedência de operadores.
 
+==== Definindo suas próprias funções
 
-==== Defining your own functions
-
-You can define an unnamed (anonymous) function with the `fn` special form. This is
-one type of function definition; in the following example, the function takes two
-parameters and returns their average.
+Você pode definir funções sem nome (anônimas) com a forma especial `fn`. Esse é um tipo
+de definição de função; no exemplo seguinte, a função recebe dois argumentos e retorna
+a média deles.
 
 [source, clojure]
 ----
@@ -415,7 +413,7 @@ parameters and returns their average.
   (/ (+ param1 param2) 2.0))
 ----
 
-You can define a function and call it at the same time (in a single expression):
+Você pode definir a função e chamá-la ao mesmo tempo (em uma única expressão):
 
 [source, clojure]
 ----
@@ -423,10 +421,9 @@ You can define a function and call it at the same time (in a single expression):
 ;; => 25
 ----
 
-Let's start creating named functions. But what does a _named function_ really mean?
-It is very simple; in _ClojureScript_, functions are first-class and behave like any
-other value, so naming a function is done by simply binding the function to a
-symbol:
+Agora vamos criar algumas funções com nomes. Mas o que uma _função com nome_ significa?
+Em _Clojure_ é bem simples, funções são _first-class_ e se comportam como qualquer outro valor.
+Então, nomear uma função é feita simplesmente vinculando a função a um símbolo.
 
 [source, clojure]
 ----
@@ -436,8 +433,8 @@ symbol:
 ;; => 144
 ----
 
-_ClojureScript_ also offers the `defn` macro as a little syntactic sugar for making
-function definition more idiomatic:
+_Clojure_ também oferece uma macro `defn` que permite fazer a mesma coisa de uma
+maneira mais idiomática:
 
 [source, clojure]
 ----
@@ -447,19 +444,18 @@ function definition more idiomatic:
   (* x x))
 ----
 
-The string that comes between the function name and the parameter vector is called a
-_docstring_ (documentation string); programs that automatically create web
-documentation from your source files will use these docstrings.
+A string que vem entre o nome da função e o vetor de parâmetros é chamada de  _docstring_
+(documentation string); existem programas que geram documentação a partir do código fonte
+que utilizam essas _docstrings_.
 
+==== Funções com múltiplas aridades (ou diferente números de argumentos)
 
-==== Functions with multiple arities
+_Clojure_ também vem com a habilidade de definir funções com um número arbitrário de argumentos.
+(O termo _aridade_ signifca o número de argumentos que um função aceita.) A sintaxe é praticamente
+idêntica a sintaxe de definição de uma função comum, com a pequana diferenção que ela contém mais
+de um _body_(ou corpo de expressões).
 
-_ClojureScript_ also comes with the ability to define functions with an arbitrary
-number of arguments. (The term _arity_ means the number of arguments that a function
-takes.) The syntax is almost the same as for defining an ordinary function, with the
-difference that it has more than one body.
-
-Let's see an example, which will explain it better:
+Vejamos um exemplo, o qual vamos explicar melhor:
 
 [source, clojure]
 ----
@@ -470,14 +466,14 @@ Let's see an example, which will explain it better:
    (+ x increment)))
 ----
 
-This line: `([x] (myinc x 1))` says that if there is only one argument, call the
-function `myinc` with that argument and the number `1` as the second argument. The
-other function body `([x increment] (+ x increment))` says that if there are two
-arguments, return the result of adding them.
+Essa linha: `([x] (myinc x 1))` diz que se a função for chamada somente com um argumento,
+chame a função `myinc` com aquele argumento e o número `1`como segundo argumento. O outro
+corpo de expressões `([x increment] (+ x increment))` dis que se houver dois
+argumentos, retorna-se o resultado da adição deles.
 
-Here are some examples using the previously defined multi-arity function. Observe
-that if you call a function with the wrong number of arguments, the compiler will
-emit an error message.
+Aqui estão mais alguns exemplos de como usar a função de múltipla aridade definida
+anteriormente. Observe que se você chama uma função com o número errado de argumentos,
+o compilador irá produzir uma mensagem de erro.
 
 [source, clojure]
 ----
@@ -491,15 +487,13 @@ emit an error message.
 ;; Compiler error
 ----
 
-NOTE: Explaining the concept of "arity" is out of the scope of this book, however
-you can read about that in this link:http://en.wikipedia.org/wiki/Arity[Wikipedia
-article].
+NOTE: Explicar o conceito de "aridade" está fora do escopo desse livro,
+entretanto você pode ler mais sobre isso nesse link:https://pt.wikipedia.org/wiki/Aridade[ artigo da Wikipedia].
 
-==== Variadic functions
+==== Funçòes de aridade variável
 
-Another way to accept multiple parameters is defining variadic functions. Variadic
-functions are functions that accept an arbitrary number of arguments:
-
+Outro jeito de aceitar múltiplo número de argumentos é definir uma função aridade variável.
+Essas funções podem aceitar um número arbitrário de argumentos:
 [source, clojure]
 ----
 (defn my-variadic-set
@@ -508,18 +502,21 @@ functions are functions that accept an arbitrary number of arguments:
 
 (my-variadic-set 1 2 3 1)
 ;; => #{1 2 3}
+
+(my-variadic-set 1 2)
+;; => #{1 2}
 ----
 
-The way to denote a variadic function is using the `&` symbol prefix on its
-arguments vector.
+A função acima aceita de 0 a quantos argumentos quisermos, podendo receber 1, 2, 3 ou até mais.
+O jeito de definir uma função com aridade variável é utilizando o símbolo `&` como prefixo
+no seu vetor de argumentos.
 
+==== Sintaxe mais simmples para funções anônimas
 
-==== Short syntax for anonymous functions
-
-_ClojureScript_ provides a shorter syntax for defining anonymous functions using the
-`#()` reader macro (usually leads to one-liners). Reader macros are "special"
-expressions that will be transformed to the appropriate language form at compile
-time; in this case, to some expression that uses the `fn` special form.
+_Clojure_ provê uma sintaxe mais compacta para definir funções anônimas usando a macro de leitura
+`#()` (usualmente consistindo de somente uma linha). Macros de leitura são expressões
+especiais que serão transformadas para algo compatível com a língua em tempo de compilação;
+nesse caso, para uma expressão que usa a forma especial `fn`.
 
 [source, clojure]
 ----
@@ -529,7 +526,7 @@ time; in this case, to some expression that uses the `fn` special form.
 ;; => 3.5
 ----
 
-The preceding definition is shorthand for:
+A definição precedente é uma jeito mais curto de escrever:
 
 [source,clojure]
 ----
@@ -538,16 +535,15 @@ The preceding definition is shorthand for:
 (average-longer 7 8)
 ;; => 7.5
 ----
+`%1`, `%2`... `%N` são marcadores simples da posição dos argumentos no vetor de argumentos
+que são implicitamente declarados quando a macro de leitura vai interpretar e converter
+essa forma em uma expressão `fn`.
 
-The `%1`, `%2`... `%N` are simple markers for parameter positions that are
-implicitly declared when the reader macro will be interpreted and converted to a
-`fn` expression.
+Se a função aceitar somente um argumento, você pode omitir o número depois do `%`,
+por exemplo, uma função eleva um número ao quadrado pode ser escrita tanto assim
+`#(* %1 %1)` como assim `#(* % %)`.
 
-If a function only accepts one argument, you can omit the number after the `%`
-symbol, e.g., a function that squares a number: `#(* %1 %1))` can be written
-`++#++(* % %))`.
-
-Additionally, this syntax also supports the variadic form with the `%&` symbol:
+Além disso, a sintaxe também suporta a forma de aridade variável com o símbolo `%&`:
 
 [source, clojure]
 ----
@@ -558,24 +554,23 @@ Additionally, this syntax also supports the variadic form with the `%&` symbol:
 ----
 
 
-=== Flow control
+=== Lógica de controle
 
-_ClojureScript_ has a very different approach to flow control than languages like
-JavaScript, C, etc.
+_Clojure_ tem uma abordagem diferente a lógica de controle (if, else, for) do que outras linguagens
+como JavaScript, C, etc.
 
+==== Executando coisas diferentes com `if`
 
-==== Branching with `if`
-
-Let's start with a basic one: `if`. In _ClojureScript_, the `if` is an expression
-and not a statement, and it has three parameters: the first one is the condition
-expression, the second one is an expression that will be evaluated if the condition
-expression evaluates to logical true, and the third expression will be evaluated
-otherwise.
+Vamos começar com o simples `if`. Em _Clojure_, o `if` é uma expressão e não uma
+declaração, e ele recebe três parâmetros: o primeiro é a expressão de condição
+(que define qual expressão vai ser executada), o segundo é a expresão que será executada
+se a expressão de condição for evaluada para algo "verdadeiro", e a terceira expressão
+vai ser executada caso contrário.
 
 [source, clojure]
 ----
 (defn discount
-  "You get 5% discount for ordering 100 or more items"
+  "Você pode obter 5% de disconto se pedir 100 ou mais itens"
   [quantity]
   (if (>= quantity 100)
     0.05
@@ -588,16 +583,17 @@ otherwise.
 ;; => 0.05
 ----
 
-The block expression `do` can be used to have multiple expressions in an `if`
-branch.  xref:block-section[`do` is explained in the next section].
+
+O bloco de execução `do` pode ser usado para termos múltiplas expressoão em um `if`.
+xref:block-section[`do` is explained in the next section].
 
 
-==== Branching with `cond`
+==== Executando coisas diferentes com `cond`
 
-Sometimes, the `if` expression can be slightly limiting because it does not have the
-"else if" part to add more than one condition. The `cond` macro comes to the rescue.
+Algumas vezes, a expressão `if` pode ser um pouco limitante porque ela não possui o
+bloco "else if" para adicionarmos mais de uma condição. A macro `cond` resolve isso.
 
-With the `cond` expression, you can define multiple conditions:
+Com a expressão `cond`, podemos definir múltiplas expressões de condição:
 
 [source, clojure]
 ----
@@ -613,11 +609,14 @@ With the `cond` expression, you can define multiple conditions:
 
 (mypos? -2)
 ;; => "negative"
+
+(mypos? 1)
+;; => "positive"
 ----
 
-Also, `cond` has another form, called `condp`, that works very similarly to the
-simple `cond` but looks cleaner when the condition (also called a predicate) is the
-same for all conditions:
+Também, `cond` tem outra forma, chamada `condp`, que trabalha de forma muito similar com
+que o `cond` trabalha, porém é um pouco mais simples quando a condição (também chamada de predicado0 é
+a mesma para todas as condições:
 
 [source, clojure]
 ----
@@ -635,20 +634,18 @@ same for all conditions:
 ;; => "Unknown"
 ----
 
-The line `condp = (keyword code)` means that, in each of the following lines,
-_ClojureScript_ will apply the `=` function to the result of evaluating `(keyword
-code)`.
+A linha `condp = (keyword code)` significa que, em cada uma das linhas seguintes,
+_Clojure_ vai aplicar a função `=` ao resultado de `(keyword code)` e o argumento
+seguinte. Por exemplo para `:es`, será executado o seguinte: `(= :es (keyword code)`.
 
+====  Case
 
-==== Branching with `case`
+O operador de controle `case` tem um uso similar ao exemplo do `condp`. A principal diferença
+é que no `case` o predicado é sempre `=` e seus valores de controle (os `:es` e `:en` nos exemplos anteriores)
+são evaluados em tempo de compilação. Isso resulta em algo mais performático que `cond` e `condp`, com a desvantagem
+de os valores serem estáticos.
 
-The `case` branching expression has a similar use as our previous example with
-`condp`. The main differences are that `case` always uses the `=` predicate/function
-and its branching values are evaluated at compile time. This results in a more
-performant form than `cond` or `condp` but has the disadvantage that the condition
-value must be static.
-
-Here is the previous example rewritten to use `case`:
+Aqui está o exemplo anterior, reescrito usando `case`:
 
 [source, clojure]
 ----
@@ -668,28 +665,34 @@ Here is the previous example rewritten to use `case`:
 
 
 [[truthiness-section]]
-=== Truthiness
+=== O que é "Verdade" em _Clojure_?
 
-This is the aspect where each language has its own semantics (mostly wrongly). The
-majority of languages consider empty collections, the integer 0, and other things
-like this to be false.  In _ClojureScript_, unlike in other languages, only two
-values are considered as false: `nil` and `false`. Everything else is treated as
-logical `true`.
+Esse é um aspecto onde cada língua possui sua própria semântica. Maioria das línguas
+consideram coleções vazias, o valor 0 e outras coisas como sendo "logicamente falso", isso é
+levam para o `else` em um `if`. Em _Clojure_ diferente de outras línguas, somente duas coisas
+são consideradas "logicamente falsas": `nil` e `false`. Todo o resto é tratado como
+"logicamente  verdadeiro" (`true`).
 
-Jointly with the ability to implement the callable protocol (the `IFn`, explained
-more in detail later), data structures like sets can be used just as predicates,
-without need of additional wrapping them in a function:
+Junto com a abilidade de implementar o protocolo "chamável" (_callable_, o `IFN` explicado com
+mais detalhes mais tarde), estruturas de dados como sets podem ser usados como predicados, sem
+a necessidade de adicionar funções:
 
 [source, clojure]
 ----
 (def valid? #{1 2 3})
 
+(valid? 2)
+;; => true
+
+(valid? 4)
+;; => nil
+
 (filter valid? (range 1 10))
 ;; => (1 2 3)
 ----
 
-This works because a set returns either the value itself for all contained elements
-or `nil`:
+Isso funciona porque um set retorna ou o valor do elemento se ele contiver esse elemento
+ou `nil`:
 
 [source, clojure]
 ----
@@ -701,47 +704,44 @@ or `nil`:
 ----
 
 
-=== Locals, Blocks, and Loops
+=== Locals, Blocos, e Loops
 
 ==== Locals
 
-_ClojureScript_ does not have the concept of variables as in ALGOL-like languages,
-but it does have locals. Locals, as per usual, are immutable, and if you try to
-mutate them, the compiler will throw an error.
+_Clojure_ não possui o conceito de variáveis como linguagens similares ao `ALGOL` possuem,
+mas ele possui o conceito de locals. Locals, como sempre, são imutáveis, e se você tentar
+mudá-los, o compilador vai lançar uma exceção.
 
-Locals are defined with the `let` expression. The expression starts with a vector as
-the first parameter followed by an arbitrary number of expressions. The first
-parameter (the vector) should contain an arbitrary number of pairs that give a
-_binding form_ (usually a symbol) followed by an expression whose value will be
-bound to this new local for the remainder of the `let` expression.
+Locals são definidos usando a expressão `let`. Essa expressão começa com um vetor de vínculos
+e por um número arbitrário de expressões (que chamámos de let-body ou corpo do `let`). O vetor de vínculos
+deve contar um número arbitrário de pares, onde o primeiro item do par é normalmente um símbolo e
+o segundo item, o valor daquele símbolo, que será usado no corpo do `let`.
 
 [source, clojure]
 ----
 (let [x (inc 1)
       y (+ x 1)]
-  (println "Simple message from the body of a let")
+  (println "Uma simples mensagem do corpo do  let")
   (* x y))
-;; Simple message from the body of a let
+;; Uma simples mensagem do corpo do let
 ;; => 6
 ----
 
-In the preceding example, the symbol `x` is bound to the value `(inc 1)`, which
-comes out to 2, and the symbol `y` is bound to the sum of `x` and 1, which comes out
-to 3. Given those bindings, the expressions `(println "Simple message from the body
-of a let")` and `(* x y)` are evaluated.
+No exemplo precedente, o símbolo `x` está vinculado ao valor `(inc 1)`, que é evaluado
+como `2`, e o símbolo `y` está vinculado a soma de `x` e `1`, que passa a ser 3. Dado esses
+vínculos, as expressões `(println "Uma simples mensagem do corpo do  let")` e `(* x y)` são
+evaluadas.
 
+==== Blocos
 
-==== Blocks
+Blocos de expressões que devem estar juntas, são criados usando a expressão  `do` em _Clojure_
+e normalmente são usado para "efeitos" (side effects), como imprimir algo no console ou
+logar algo.
 
-In JavaScript, braces `{` and `}` delimit a block of code that “belongs
-together”. Blocks in _ClojureScript_ are created using the `do` expression and are
-usually used for side effects, like printing something to the console or writing a
-log in a logger.
+Um side effect é alguma coisa que não precisa necessariamente retornar um valor.
 
-A side effect is something that is not necessary for the return value.
-
-The `do` expression accepts as its parameter an arbitrary number of other
-expressions, but it returns the return value only from the last one:
+A expressão `do` aceita como argumento um número arbitrário de outras expressões, mas retorna
+somente o valor da última expressão:
 
 [source, clojure]
 ----
@@ -756,90 +756,83 @@ expressions, but it returns the return value only from the last one:
 ;; => 3
 ----
 
-The body of the `let` expression, explained in the previous section, is very similar
-to the `do` expression in that it allows multiple expressions. In fact, the `let`
-has an implicit `do`.
-
+O corpo de uma expressão `let`, explicado anteriormente, é muito parecido com a expressão `do`
+no sentido que aceita múltiplas expressões. Na verade, o bloco `let` possui um bloco `do` implícito. 
 
 ==== Loops
 
-The functional approach of _ClojureScript_ means that it does not have standard,
-well-known, statement-based loops such as `for` in JavaScript. The loops in
-_ClojureScript_ are handled using recursion.  Recursion sometimes requires
-additional thinking about how to model your problem in a slightly different way than
-imperative languages.
+A abordagem funcional de _Clojure_ significa que ela não possui o tradicional loop
+`for` de outras línguas como _C_. Os loops em _Clojure_ funcionam através de recursão.
+Recursão algumas vezes precisa de um esforço adicional de como modelar um problema
+um pouco diferente de como se faz em linguagens imperativas.
 
-Many of the common patterns for which `for` is used in other languages are achieved
-through higher-order functions - functions that accept other functions as
-parameters.
+Muitas dos usos comuns para qual `for` é utilizado em outras línguas são obtidos com funções
+de `high-order` - isso é, funções que aceitam outras funções como parâmetros.
 
+===== Looping com loop/recur
 
-===== Looping with loop/recur
+Vamos dar uma olhada em como expressar loops usando recursão com as formas
+`loop` e  `recur`. `loop` define uma lista de vínculos (observe a simetria com `let`)
+e `recur` retorna a execução de volta para o loop com novos valores para esses vínculos.
 
-Let's take a look at how to express loops using recursion with the `loop` and
-`recur` forms.  `loop` defines a possibly empty list of bindings (notice the
-symmetry with `let`) and `recur` jumps execution back to the looping point with new
-values for those bindings.
-
-Let's see an example:
+Vamos ver um exemplo:
 
 [source, clojure]
 ----
 (loop [x 0]
-  (println "Looping with " x)
+  (println "Looping com " x)
   (if (= x 2)
-    (println "Done looping!")
+    (println "Terminei o loop!")
     (recur (inc x))))
-;; Looping with 0
-;; Looping with 1
-;; Looping with 2
-;; Done looping!
+;; Looping com 0
+;; Looping com 1
+;; Looping com 2
+;; Terminei o loop!
 ;; => nil
 ----
 
-In the above snippet, we bind the name `x` to the value `0` and execute the
-body. Since the condition is not met the first time, it's rerun with `recur`,
-incrementing the binding value with the `inc` function. We do this once more until
-the condition is met and, since there aren't any more `recur` calls, exit the loop.
+No código acima, nos vinculamos o nome `x` ao valor `0` e executamos o corpo do loop.
+Como a condição não é verdadeira na primeira vez, ela é roda novamente com o `recur`,
+com o novo vínculo de `x` sendo `1`, resultado do `(inc x)`. Fazemos isso mais uma vez
+até que a condição é satisfeita, e não ocorram outras chamadas do `recur` e saímos do loop.
 
-Note that `loop` isn't the only point we can `recur` to; using `recur` inside a
-function executes the body of the function recursively with the new bindings:
+Observe que não estamos restritos a usar o `recur` somente dentro do `loop`. Podemos
+usá-lo também na execução do corpo de uma função recursiva:
 
 [source, clojure]
 ----
 (defn recursive-function
   [x]
-  (println "Looping with" x)
+  (println "Looping com" x)
   (if (= x 2)
     (println "Done looping!")
     (recur (inc x))))
 
 (recursive-function 0)
-;; Looping with 0
-;; Looping with 1
-;; Looping with 2
-;; Done looping!
+;; Looping com 0
+;; Looping com 1
+;; Looping com 2
+;; Terminei o loop!
 ;; => nil
 ----
 
 
-===== Replacing for loops with higher-order functions
+===== Substituindo loops por funções de _high-order_
 
-In imperative programming languages it is common to use `for` loops to iterate over
-data and transform it, usually with the intent being one of the following:
+Em linguagens de programação imperativas, é comum o uso de `for` loops para iterar
+dados e transformá-los, usualmente com algum dos objetivos abaixo:
 
-- Transform every value in the iterable yielding another iterable
-- Filter the elements of the iterable by certain criteria
-- Convert the iterable to a value where each iteration depends on the result from
-  the previous one
-- Run a computation for every value in the iterable
+- Transformar cada valor na coleção retornando uma nova coleção
+- Filtrar alguns elementos na coleção baseado em algum critério
+- Converter uma coleção em um valor onde cada iteração depende do resultado da iteração
+anterior
+- Rodar algum tipo de rotina para cada valor na coleção
 
-The above actions are encoded in higher-order functions and syntactic constructs in
-ClojureScript; let's see an example of the first three.
+As ações acimas são expressas em funções de _high-oder_ e em construções sintáticas do _Clojure_,
+vamos ver um exemplo para as três primeiras.
 
-For transforming every value in an iterable data structure we use the `map`
-function, which takes a function and a sequence and applies the function to every
-element:
+Para transformar cada valor em uma coleção, nos usamos a função `map`, que
+recebe uma função e uma sequência e aplica essa função em cada elemento:
 
 [source, clojure]
 ----
@@ -847,10 +840,10 @@ element:
 ;; => (1 2 3)
 ----
 
-The first parameter for `map` can be _any_ function that takes one argument and
-returns a value.  For example, if you had a graphing application and you wanted to
-graph the equation `y&#160;=&#160;3x&#160;+&#160;5` for a set of _x_ values, you
-could get the _y_ values like this:
+O primeiro argumento do `map` pode ser qualquer função que receba *um argumento*
+e retorne um valor. Por exemplo, se você tiver uma aplicação gráfica e quiser
+desenhar o gráfico da equação  `y&#160;=&#160;3x&#160;+&#160;5` para algum conjunto
+de valores de `x`,  você poderia obter os valores de `y` assim:
 
 [source, clojure]
 ----
@@ -860,8 +853,8 @@ could get the _y_ values like this:
 ;; => (8 11 14 17 20)
 ----
 
-If your function is short, you can use an anonymous function instead, either the
-normal or short syntax:
+Se a função de mapeamento é pequena, você pode usar uma função anônima, seja com a forma
+normal ou com a sintaxe `#()`:
 
 [source, clojure]
 ----
@@ -872,9 +865,9 @@ normal or short syntax:
 ;; => (8 11 14 17 20)
 ----
 
-For filtering the values of a data structure we use the `filter` function, which
-takes a predicate and a sequence and gives a new sequence with only the elements
-that returned `true` for the given predicate:
+Para filtrar valores em uma coleção, nos usamos a função `filter`, que recebe um
+predicado e uma sequência e retorna uma nova sequência somente com os elementos
+que retornaram algum valor "logicamente true" para o predicado fornecido:
 
 [source, clojure]
 ----
@@ -882,9 +875,10 @@ that returned `true` for the given predicate:
 ;; => (1 3)
 ----
 
-Again, you can use any function that returns `true` or `false` as the first argument
-to `filter`.  Here is an example that keeps only words less than five characters
-long. (The `count` function returns the length of its argument.)
+Novamente, você pode usar qualquer função que retorne `true` ou `false` como o primeiro
+argumento do `filter`. Aqui está um exemplo que mantém somente as palavras com menos
+de 5 letras. (A função `count` retorna o comprimento da coleção passada como argumento -
+uma string é uma coleção de caracteres.)
 
 [source, clojure]
 ----
@@ -892,22 +886,25 @@ long. (The `count` function returns the length of its argument.)
 ;; => ("ant" "crab" "duck" "fox")
 ----
 
-Converting an iterable to a single value, accumulating the intermediate result at
-every step of the iteration can be achieved with `reduce`, which takes a function
-for accumulating values, an optional initial value and a collection:
+Convertendo uma coleção para um único valor, acumulando o resultado intermediário a
+cada passo da iteraçào pode ser obtido usando a função `reduce`, que recebe uma função
+para acumular os valores, um valor inicial opcional e uma coleção:
 
 [source, clojure]
 ----
 (reduce + 0 [1 2 3 4])
 ;; => 10
+
+(reduce + [1 2 3 4])
+;; => 10
+
 ----
 
-Yet again, you can provide your own function as the first argument to `reduce`, but
-your function must have _two_ parameters. The first one is the "accumulated value"
-and the second parameter is the collection item being processed. The function
-returns a value that becomes the accumulator for the next item in the list.  For
-example, here is how you would find the sum of squares of a set of numbers (this is
-an important calculation in statistics). Using a separate function:
+Uma outra vez, podemos usar nossa própria função como argumento do `reduce`, mas ela
+deve receber *dois* argumentos. O primeiro é o resultado intermediário e o segundo
+é o item da coleção sendo processado. A função retorna o valore que se torna o novo
+resultado intermediário para ser usado junto com o próximo item na lista. Por exemplo,
+aqui está o que você obtém a soma dos quadrados de um conjunto de números.
 
 [source, clojure]
 ----
@@ -919,7 +916,7 @@ an important calculation in statistics). Using a separate function:
 ;; => 50
 ----
 
-...and with an anonymous function:
+Agora com uma função anônima:
 
 [source, clojure]
 ----
@@ -927,7 +924,7 @@ an important calculation in statistics). Using a separate function:
 ;; => 50
 ----
 
-Here is a `reduce` that finds the total number of characters in a set of words:
+Aqui um `reduce` que encontra o total de número de caracteres de um conjunto de palavras:
 
 [source, clojure]
 ----
@@ -935,35 +932,33 @@ Here is a `reduce` that finds the total number of characters in a set of words:
 ;; => 14
 ----
 
-We have not used the short syntax here because, although it requires less typing, it
-can be less readable, and when you are starting with a new language, it's important
-to be able to read what you wrote! If you are comfortable with the short syntax,
-feel free to use it.
+Aque não usamos a sintaxe `#()`, porque apesar de reduzirmos o tamanho do código, ficaria
+menos legível.
 
-Remember to choose your starting value for the accumulator carefully. If you wanted
-to use `reduce` to find the product of a series of numbers, you would have to start
-with one rather than zero, otherwise all the numbers would be multiplied by zero!
+Lembre-se de escolher o valor inicial do seu acumulador com atenção. Se você quiser
+usar o `reduce` para encontrar a multiplicação de uma série de números, você teria
+que começar com 1 ao invés de 0, se não, estaríamos multiplicando os números por zero!
 
 [source, clojure]
 ----
-;; wrong starting value
+;; valor inicial errado
 (reduce * 0 [3 4 5])
 ;; => 0
 
-;; correct starting accumulator
+;; valor inicial correto
 (reduce * 1 [3 4 5])
 ;; => 60
 ----
 
 
-===== `for` sequence comprehensions
+===== `sequências for`
 
-In ClojureScript, the `for` construct isn't used for iteration but for generating
-sequences, an operation also known as "sequence comprehension". In this section
-we'll learn how it works and use it to declaratively build sequences.
+Em _Clojure_, o `for` não é usado para iteração, mas para gerar uma sequência, uma
+operação também conhecida como "sequence comprehension". Em esta seção, você vai aprender
+como ela funciona e como usá-la para construir sequências declarativas.
 
-`for` takes a vector of bindings and an expression and generates a sequence of the
-result of evaluating the expression. Let's take a look at an example:
+`for` recebe um vetor de vínculos e uma expressão e gera uma sequência com o resultado
+de evaluar cada expressão. Vamos ver um exemplo:
 
 [source, clojure]
 ----
@@ -972,12 +967,13 @@ result of evaluating the expression. Let's take a look at an example:
 ;; => ([1 1] [2 4] [3 9])
 ----
 
-In this example, `x` is bound to each of the items in the vector `[1 2 3]` in turn,
-and returns a new sequence of two-item vectors with the original item squared.
+Nesse exemplo, `x` seria vinculado a cada item do vetor `[1 2 3]` por vez,
+e retornaria uma nova sequência onde cada item é um vetor de dois itens com o item
+original e o quadrado dele.
 
-`for` supports multiple bindings, which will cause the collections to be iterated in
-a nested fashion, much like nesting `for` loops in imperative languages. The
-innermost binding iterates “fastest.”
+`for` suporta vários vínculos, o que vai fazer a coleção ser iterada em uma maneira
+aninhada, muito parecido quando colocamos `for` dentro de `for` em uma linguagem imperativa.
+O vínculo mais interno itera "mais rápido".
 
 [source, clojure]
 ----
@@ -988,12 +984,12 @@ innermost binding iterates “fastest.”
 ;; => ([1 4] [1 5] [2 4] [2 5] [3 4] [3 5])
 ----
 
-We can also follow the bindings with three modifiers: `:let` for creating local
-bindings, `:while` for breaking out of the sequence generation, and `:when` for
-filtering out values.
+Podemos também colocar depois dos vínculos, três modificadores: `:let` para
+criar vínculos locais, `:while` para parar a geração da sequência, e `:when`para
+filtrar valores.
 
-Here's an example of local bindings using the `:let` modifier; note that the
-bindings defined with it will be available in the expression:
+Aqui está um exemplo de vínculos locais utilizando o modificador `:let`, note
+que os vínculos definitos estarão disponíveis na expressão:
 
 [source, clojure]
 ----
@@ -1004,8 +1000,8 @@ bindings defined with it will be available in the expression:
 ;; => (5 6 6 7 7 8)
 ----
 
-We can use the `:while` modifier for expressing a condition that, when it is no
-longer met, will stop the sequence generation. Here's an example:
+Podemos utilizar o modificador `:while` para expressar a condição que uma vez que deixar
+de ser verdade, vamos parar a geraçào da sequência. Aqui está um exemplo:
 
 [source, clojure]
 ----
@@ -1017,8 +1013,8 @@ longer met, will stop the sequence generation. Here's an example:
 ;; => ([1 4] [2 4] [3 4])
 ----
 
-For filtering out generated values, use the `:when` modifier as in the following
-example:
+Para fitrar os valores gerados, podemos usar o modificador `:when` como no exemplo
+a seguir:
 
 [source, clojure]
 ----
@@ -1030,8 +1026,8 @@ example:
 ;; => ([1 5] [2 4])
 ----
 
-We can combine the modifiers shown above for expressing complex sequence generations
-or more clearly expressing the intent of our comprehension:
+Podemos combinar os modificados acima para expressar geração de sequências mais complexas
+ou expressar a intenção do nosso `for` loop de maneira mais clara:
 
 [source, clojure]
 ----
@@ -1044,13 +1040,15 @@ or more clearly expressing the intent of our comprehension:
 ;; => ([1 5] [2 4])
 ----
 
-When we outlined the most common usages of the `for` construct in imperative
-programming languages, we mentioned that sometimes we want to run a computation for
-every value in a sequence, not caring about the result. Presumably we do this for
-achieving some sort of side-effect with the values of the sequence.
+Quando listamos os usos mais comuns do `for` loop em linguagens imperativas,
+nós mencionamos que algumas vezes queremos rodar alguma rotina pra
+cada valor na sequência, sem nos importarmos com o resultado. Normalmente,
+fazemos isso para realizar algum efeito (_side-effect_) com os valores da sequência.
 
-ClojureScript provides the `doseq` construct, which is analogous to `for` but
-executes the expression, discards the resulting values, and returns `nil`.
+
+_Clojure_ provê o construtor `doseq`, que é análogo ao `for`, mas executa a expressão,
+descarta o resultado, e retorna `nil`. Como o `for`, ele aceita os mesmos modificadores
+`:let`, `:when` e `:while`.
 
 [source, clojure]
 ----
@@ -1068,9 +1066,9 @@ executes the expression, discards the resulting values, and returns `nil`.
 ;; => nil
 ----
 
-If you want just iterate and apply some side effectfull operation (like `println`)
-over each item in the collection, you can just use the specialized function `run!`
-that internally uses fast reduction:
+Se você quer simplesmente iterar e aplicar alguma rotina com efeito (_side-effect_) como
+`println` para cada item na coleção, você usar a função especializada `run!` que internamente
+usa uma "redução" mais rápida.
 
 [source, clojure]
 ----
@@ -1081,7 +1079,7 @@ that internally uses fast reduction:
 ;; => nil
 ----
 
-This function explicitly returns `nil`.
+Essa função explicitamente retorna `nil`.
 
 
 === Collection types
