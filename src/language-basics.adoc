@@ -1471,25 +1471,24 @@ entre 0 e 100, que certamente serão suficientes, e então usar `take-while` com
 ;; => (0 1 2 3 4 5 6)
 ----
 
-==== Collections in depth
+==== Entendendo Coleções a fundo
 
-Now that we're acquainted with ClojureScript's sequence abstraction and some of the
-generic sequence manipulating functions, it's time to dive into the concrete
-collection types and the operations they support.
+Agora que conhecemos a abstração de serquências de Clojure e algum das funções
+para manipulá-las, é hora de conhecermos alguns tipos de coleções concretas
+e as operações que elas suportam.
 
+===== Listas
 
-===== Lists
+Em _Clojure_, listas são uma estrutura de dados usada principalmente par agrupar
+símbolos juntos para criar programas. Diferente de outras Lisps, muitas construções
+sintáticas do _Clojure_ usam estruturas sintáticas diferentes da lista (como vetores e mapas).
+Isso torna o código menos uniforme, porém aumenta a facilidade de leitura.
 
-In ClojureScript, lists are mostly used as a data structure for grouping symbols
-together into programs. Unlike in other Lisps, many of the syntactic constructs of
-ClojureScript use data structures different from the list (vectors and maps).  This
-makes code less uniform, but the gains in readability are well worth the price.
-
-You can think of ClojureScript lists as singly linked lists, where each node
-contains a value and a pointer to the rest of the list. This makes it natural (and
-fast!) to add items to the front of the list, since adding to the end would require
-traversal of the entire list. The prepend operation is performed using the `cons`
-function.
+Você pode pensar nas listas do _Clojure_ como listas ligadas (mas não duplamente), onde
+cada nó contém um valor e um ponteiro para o resto da lista. Isso faz com que seja
+natural (e rápido) adicionar items ao começo da lista, já que adicionar ao fim iria
+criar a necessidade de percorrer toda a lista. Essa adição é feita utilizando
+a função `cons`.
 
 [source, clojure]
 ----
@@ -1497,10 +1496,10 @@ function.
 ;; => (0 1 2)
 ----
 
-We used the literal `()` to represent the empty list. Since it doesn't contain any
-symbols, it is not treated as a function call. However, when using list literals
-that contain elements, we need to quote them to prevent ClojureScript from
-evaluating them as a function call:
+Nós usamos a sintaxe literal `()` para representar uma lista vazia. Já que ela não
+contém nenhum símbolo, não é tratada como uma chamada de função. porém, quando usando
+a sintaxe literal de listas que contenham elementos, precisamos prefixá-la com aspa
+`'` para previnir que _Clojure_ evalue ela como uma chamada de função:
 
 [source, clojure]
 ----
@@ -1508,8 +1507,8 @@ evaluating them as a function call:
 ;; => (0 1 2)
 ----
 
-Since the head is the position that has constant time addition in the list
-collection, the `conj` operation on lists naturally adds items to the front:
+Como adicionar ao começo (ou cabeça, ou head) leva tempo constante para ser
+feito, a função `conj` operando em listas adiciona items ao começo.
 
 [source, clojure]
 ----
@@ -1517,15 +1516,15 @@ collection, the `conj` operation on lists naturally adds items to the front:
 ;; => (0 1 2)
 ----
 
-Lists and other ClojureScript data structures can be used as stacks using the
-`peek`, `pop`, and `conj` functions. Note that the top of the stack will be the
-"place" where `conj` adds elements, making `conj` equivalent to the stack's push
-operation. In the case of lists, `conj` adds elements to the front of the list,
-`peek` returns the first element of the list, and `pop` returns a list with all the
-elements but the first one.
+Listas e outras estruturas de dados do _Clojure_ podem ser usadas como pilhas
+usando as funções `peek`, `pop` e `conj`. Note que o topo da pilha será o lugar
+onde `conj` vai adicionar elementos, fazendo `conj` equivalente a função `push`
+de uma pilha. No caso de listas, `conj` adiciona elementos no começo da lista,
+e `peek` retorna o primeiro elemento da lista, e `pop` retorna a lista com todos
+os elementos exceto o primeiro.
 
-Note that the two operations that return a stack (`conj` and `pop`) don't change the
-type of the collection used for the stack.
+Note que as duas operações que retornam a pilha (`conj` e `pop`) não mudam o tipo da
+coleção usada pela pilha.
 
 [source, clojure]
 ----
@@ -1547,21 +1546,22 @@ type of the collection used for the stack.
 ;; => cljs.core/List
 ----
 
-One thing that lists are not particularly good at is random indexed access. Since
-they are stored in a single linked list-like structure in memory, random access to a
-given index requires a linear traversal in order to either retrieve the requested
-item or throw an index out of bounds error. Non-indexed ordered collections like
-lazy sequences also suffer from this limitation.
+Uma coisa que listas não particularmente goas é acesso arbitrário de elementos através
+de um index. Como elas são armazenadas como listas ligadas em memória, para acesso arbitrário
+a um certo index, é necessário percorrer a lista em ordem para obter o elemento desejado, ou
+lançar uma exceção de index não presente na lista, caso o index maior que a quantidade
+de elementos na lista. Outras coleções que não possuem index também sofrem
+dessa limitação como _lazy sequences_ .
 
+===== Vetores
 
-===== Vectors
+Vetores são uma das estruturas de dados mais comum em _Clojure_. Elas são usadas como
+estrutura sintática em vários lugares em que Lisps mais tradicionais utilizam lista, como
+por exemplo em declaração de argumentos de funções e em blocos de vínculos `let`.
 
-Vectors are one of the most common data structures in ClojureScript. They are used
-as a syntactic construct in many places where more traditional Lisps use lists, for
-example in function argument declarations and `let` bindings.
-
-ClojureScript vectors have enclosing brackets `[]` in their syntax literals. They
-can be created with `vector` and from another collection with `vec`:
+Vetores em _Clojure_ são delimitados por cochetes `[]` como sintaxe literal. Eles
+também podem ser criados com a função `vector` ou a partir de outra coleção
+utilizando a função `vec`:
 
 [source,clojure]
 ----
@@ -1575,9 +1575,9 @@ can be created with `vector` and from another collection with `vec`:
 ;; => [0 1 2]
 ----
 
-Vectors are, like lists, ordered collections of heterogeneous values. Unlike lists,
-vectors grow naturally from the tail, so the `conj` operation appends items to the
-end of a vector. Insertion on the end of a vector is effectively constant time:
+Vetores são, como listas, coleções ordenadas de valores heterogêneos. Diferente de listas,
+vetores crescem naturalmente a partir do fim deles (ou cauda), então a função `conj`
+adiciona itens ao final do vetor. Adições ao fim do vetor são feitas em tempo constante:
 
 [source,clojure]
 ----
@@ -1585,21 +1585,25 @@ end of a vector. Insertion on the end of a vector is effectively constant time:
 ;; => [0 1 2]
 ----
 
-Another thing that differentiates lists and vectors is that vectors are indexed
-collections and as such support efficient random index access and non-destructive
-updates. We can use the `nth` function to retrieve values given an index:
+Outra coisa que diferencia listas de vetores é que vetores são coleções indexadas
+e suportam acesso eficiente a items através de índices e atualizações nào destrutivas.
+Nós usamos a função `nth` para obter valores de um certo index:
 
 [source, clojure]
 ----
 (nth [0 1 2] 0)
 ;; => 0
+
+(nth [0 1 2] 2)
+;; => 2
+
 ----
 
-Since vectors associate sequential numeric keys (indexes) to values, we can treat
-them as an associative data structure. ClojureScript provides the `assoc` function
-that, given an associative data structure and a set of key-value pairs, yields a new
-data structure with the values corresponding to the keys modified. Indexes begin at
-zero for the first element in a vector.
+Como vetores associam chaves sequênciais númericas (indexes) aos valroes, podemos
+tratar eles como uma estrutura associativa. _Clojure_ provê a função `assoc`
+que dado uma estrutura de dados associativa, um conjunto de pares de chave e valores
+retorna uma nova estrutura de dados com as chaves fornecidas modificadas. O index
+começa em 0 referindo-se ao primeiro elemento do vetor. 
 
 [source, clojure]
 ----
@@ -1607,8 +1611,8 @@ zero for the first element in a vector.
 ;; => ["cero" "uno" "dos"]
 ----
 
-Note that we can only `assoc` to a key that is either contained in the vector
-already or if it is the last position in a vector:
+Note que podemos somente associar uma chave que já está no vetor ou é a última
+posição do vetor (fazendo ele crescer):
 
 [source, clojure]
 ----
@@ -1619,10 +1623,10 @@ already or if it is the last position in a vector:
 ;; Error: Index 4 out of bounds [0,3]
 ----
 
-Perhaps surprisingly, associative data structures can also be used as
-functions. They are functions of their keys to the values they are associated
-with. In the case of vectors, if the given key is not present an exception is
-thrown:
+Algo supreendente é que estruturas de dados associativas podem ser usadas
+como funções. Elas sào funções das suas chaves para os valores associado a elas.
+No caso dos vetores, se uma certa chave não está presente uma exceção é
+lançada:
 
 [source, clojure]
 ----
@@ -1636,9 +1640,8 @@ thrown:
 ;; Error: Not item 3 in vector of length 3
 ----
 
-As with lists, vectors can also be used as stacks with the `peek`, `pop`, and `conj`
-functions. Note, however, that vectors grow from the opposite end of the collection
-as lists:
+Como listas, vetores podem também ser usadas como pilhas com as funções `peek`, `pop`
+e `conj`. É importante notar que vetores crescem na direção contrária das listas:
 
 [source, clojure]
 ----
@@ -1660,11 +1663,11 @@ as lists:
 ;; => cljs.core/PersistentVector
 ----
 
-The `map` and `filter` operations return lazy sequences, but as it is common to need
-a fully realized sequence after performing those operations, vector-returning
-counterparts of such functions are available as `mapv` and `filterv`. They have the
-advantages of being faster than building a vector from a lazy sequence and making
-your intent more explicit:
+As funções `map` e `filter` são operações que retornam uma _lazy sequence_, mas é comum
+precisarmos de sequências onde todos os valores já foram computados. Por isso,
+existem as funções `mapv` e `filterv` que funcionam igual `map` e `filter` porém
+retornam vetores. Elas tem a vantagem de serem mais rápidas do que construir um vetor
+a partir de uma _lazy sequence_ e fazendo a intenção do código mais explícita:
 
 [source, clojure]
 ----
@@ -1681,15 +1684,17 @@ your intent more explicit:
 ;; => cljs.core/PersistentVector
 ----
 
-===== Maps
+===== Mapas
 
-Maps are ubiquitous in ClojureScript. Like vectors, they are also used as a
-syntactic construct, particularly for attaching xref:metadata-section[metadata] to
-vars. Any ClojureScript data structure can be used as a key in a map, although it's
-common to use keywords since they can also be called as functions.
+Mapas são onipresente em _Clojure_. Como vetores, eles também são usados
+como parte da sintaxe da linguagem, principalmente para adição de xref:metadata-section[metadadaos]
+a uma var. Qualquer estrutura de dados em _Clojure_ pode ser usada como
+uma chave em um mapa, apesar de ser comum usarmos _keywords_ pois elas
+também podem ser chamadas como funções.
 
-ClojureScript maps are written literally as key-value pairs enclosed in braces
-`{}`. Alternatively, they can be created with the `hash-map` function:
+Mapas em _Clojure_ são escritos literalmente como pares chave-valor envoltos
+por chaves `{}`. Alternativamente, eles também pode ser criados usando a
+função `hash-map`:
 
 [source,clojure]
 ----
@@ -1703,9 +1708,9 @@ ClojureScript maps are written literally as key-value pairs enclosed in braces
 ;; => {:name "Cirilla" :surname "Fiona"}
 ----
 
-Since regular maps don't have a specific order, the `conj` operation just adds one
-or more key-value pairs to a map. `conj` for maps expects one or more sequences of
-key-value pairs as its last arguments:
+Como mapas não possuem uma ordem específica, a função `conj` apenas adiciona um
+ou mais pares de chave-valor ao mapa. `conj` para mapas espera um ou mais sequência
+de pares chave-valor como seus últimos argumentos:
 
 [source,clojure]
 ----
@@ -1718,13 +1723,13 @@ key-value pairs as its last arguments:
 ;; => {:name "Cirilla", :surname "Fiona", :occupation "Wizard"}
 ----
 
-In the preceding example, it just so happens that the order was preserved, but if
-you have many keys, you will see that the order is not preserved.
+No exemplo anterior, por causalidade, a ordem foi preservada, mas para muitas chaves,
+você verá que a ordem não é preservada.
 
-Maps associate keys to values and, as such, are an associative data structure. They
-support adding associations with `assoc` and, unlike vectors, removing them with
-`dissoc`. `assoc` will also update the value of an existing key. Let's explore these
-functions:
+Mapas associam chaves a valores e são portanto uma estrutura de dados associativa.
+Eles suportam a adição de novas associaçòes usando a função `assoc` e, diferente de vetores,
+a remoção usando `dissoc`. `assoc` também pode atualizar valores de uma chave existente.
+Vamos ver como essas funções funcionam:
 
 [source,clojure]
 ----
@@ -1736,9 +1741,9 @@ functions:
 ;; => {}
 ----
 
-Maps are also functions of their keys, returning the values related to the given
-keys. Unlike vectors, they return `nil` if we supply a key that is not present in
-the map:
+Mapas também são funções das suas chaves, retornando os valores relacionados com
+a chave passada como argumentol. Diferente de vetores, eles retornam `nil` caso a
+chave não esteja presente no mapa:
 
 [source,clojure]
 ----
@@ -1749,9 +1754,9 @@ the map:
 ;; => nil
 ----
 
-ClojureScript also offers sorted hash maps which behave like their unsorted versions
-but preserve order when iterating over them. We can create a sorted map with default
-ordering with `sorted-map`:
+_Clojure_ também fornece hash maps ordenados que se comportam como sua versão não ordenada
+mas preservam a ordem quando iteramos sob seus elementos. Podemos criar um mapa ordenado
+com um ordenamento padrão usando a função `sorted-map`:
 
 [source,clojure]
 ----
@@ -1762,11 +1767,11 @@ ordering with `sorted-map`:
 ;; => (:a :b :c)
 ----
 
-If we need a custom ordering we can provide a comparator function to
-`sorted-map-by`, let's see an example inverting the value returned by the built-in
-`compare` function. Comparator functions take two items to compare and return -1 (if
-the first item is less than the second), 0 (if they are equal), or 1 (if the first
-item is greater than the second).
+Se precisarmos de um ordenamento diferente, podemos prover uma função comparadora
+a função `sorted-map-by`, vamos ver um exemplo em que invertemos a ordem retornada
+pela função `compare`. Uma função comparadora recebe dois items para comparar
+e retorna -1 (se o primeiro item é menor que o segundo), 0 (se eles são iguais) e
+1 (se o primeiro item é maior que o segundo).
 
 [source,clojure]
 ----
@@ -1780,11 +1785,11 @@ item is greater than the second).
 ----
 
 
-===== Sets
+===== Conjuntos (ou Sets)
 
-Sets in ClojureScript have literal syntax as values enclosed in `#{}` and they can
-be created with the `set` constructor. They are unordered collections of values
-without duplicates.
+Sets em _Clojure_ também possuem uma sintaxe literal que é `#{}` e também podem
+ser criados utilizando a função `set`. Eles são coleções não ordenadas de valores sem
+duplicações.
 
 [source,clojure]
 ----
@@ -1795,20 +1800,19 @@ without duplicates.
 ;; => #{1 2 3}
 ----
 
-Set literals cannot contain duplicate values. If you accidentally write a set
-literal with duplicates an error will be thrown:
+A sintaxe literal não permite duplicações. Se você escrever um set literal com duplicações
+um erro será lançado:
 
 [source,clojure]
 ----
 #{1 1 2 3}
 ;; clojure.lang.ExceptionInfo: Duplicate key: 1
 ----
-
-There are many operations that can be performed with sets, although they are located
-in the `clojure.set` namespace and thus need to be imported. You'll learn
-xref:namespace-section[the details of namespacing] later; for now, you only need to
-know that we are loading a namespace called `clojure.set` and binding it to the `s`
-symbol.
+Existem várias operações que podem ser realizadas com sets, porem elas estão
+localizadas no _namespace_ `clojure.set` e portanto precisam ser importadas. Você vai
+aprender xref:namespace-section[os detalhes sobre namespaces] mais tarde, por hora, você só
+precisa saber que estamos carregando um _namespace_ chamado `clojure.set` e vinculá-lo
+ao símbolo `s`:
 
 [source,clojure]
 ----
@@ -1830,12 +1834,12 @@ symbol.
 ;; => #{"a" "e" "i" "o" "u"}
 ----
 
-A nice property of immutable sets is that they can be nested. Languages that have
-mutable sets can end up containing duplicate values, but that can't happen in
-ClojureScript. In fact, all ClojureScript data structures can be nested arbitrarily
-due to immutability.
+Uma propriedade interessante dos sets é que eles podem ser aninhados. Linguagens
+que possuem sets mutáveis podem acabar contendo valores duplicados, mas isso não
+pode acontecer no _Clojure_. Todas as estruturas de dado do _Clojure_ podém ser aninhadas
+de forma arbitrária devido a imutabilidade.
 
-Sets also support the generic `conj` operation just like every other collection does.
+Sets também suportam a operação genérica `conj` como todas as outras coleções suportam.
 
 [source,clojure]
 ----
@@ -1849,9 +1853,9 @@ Sets also support the generic `conj` operation just like every other collection 
 ;; => #{1 3 2}
 ----
 
-Sets act as read-only associative data that associates the values it contains to
-themselves. Since every value except `nil` and `false` is truthy in ClojureScript,
-we can use sets as predicate functions:
+Sets funcionam como uma estrutura associativa que associam os valores que ele contém a eles
+mesmos. E como qualquer valore exceto `nil` e `false` são "logicamente verdade" em
+_Clojure_, podemos usar os sets como funções predicados:
 
 [source,clojure]
 ----
@@ -1873,10 +1877,9 @@ we can use sets as predicate functions:
 (filter vowels "Hound dog")
 ;; => ("o" "u" "o")
 ----
-
-Sets have a sorted counterpart like maps do that are created using the functions
-`sorted-set` and `sorted-set-by` which are analogous to map's `sorted-map` and
-`sorted-map-by`.
+Sets também possuem uma variante ordenada como mapas que é criada
+utilizando as funções `sorted-set` e `sorted-set-by` que são análogas as funções
+`sorted-map` e `sorted-map-by`.
 
 [source,clojure]
 ----
@@ -1895,50 +1898,55 @@ Sets have a sorted counterpart like maps do that are created using the functions
 
 
 
-===== Queues
+===== Filas
 
+_Clojure_ também provê uma fila persistente e imutável. Filas não são usadas tanto
+quanto outros tipos de coleções. Elas podem ser criadas utilizando a sintaxe literal
+`#queue []`, mas não existe uma função para criá-las.
 ClojureScript also provides a persistent and immutable queue. Queues are not used as
-pervasively as other collection types.  They can be created using the `#queue []`
-literal syntax, but there are no convenient constructor functions for them.
+pervasively as other collection types.  They can be created by simply getting the empty
+queue: `(clojure.lang.PersistentQueue/EMPTY)`. Porém não existe nenhuma função
+construtora para criá-las.
 
 [source,clojure]
 ----
-(def pq #queue [1 2 3])
-;; => #queue [1 2 3]
+(def pq (conj (clojure.lang.PersistentQueue/EMPTY) 1 2 3))
+;; => #object[clojure.lang.PersistentQueue 0x28cb9120 "clojure.lang.PersistentQueue@7861"]
 ----
 
-Using `conj` to add values to a queue adds items onto the rear:
+Usar `conj` para adiconar valores a files, os adiciona ao fim dela:
 
 [source,clojure]
 ----
-(def pq #queue [1 2 3])
-;; => #queue [1 2 3]
+(def pq (conj (clojure.lang.PersistentQueue/EMPTY) 1 2 3))
+;; => #object[clojure.lang.PersistentQueue 0x28cb9120 "clojure.lang.PersistentQueue@7861"]
 
-(conj pq 4 5)
-;; => #queue [1 2 3 4 5]
+(last (conj pq 4 5))
+;; => 5
 ----
 
-A thing to bear in mind about queues is that the stack operations don't follow the
-usual stack semantics (pushing and popping from the same end). `pop` takes values
-from the front position, and `conj` pushes (appends) elements to the back.
+Infelizmente, as filas não são impressas de forma muito legível na Repl.
+É importante lembrar que as operações que usamos para pilha funcionam de maneira
+diferente para filas. `pop` retira valores do começo da fila, e `conj` coloca valores
+no fim da fila.
 
 [source,clojure]
 ----
-(def pq #queue [1 2 3])
-;; => #queue [1 2 3]
+(def pq (conj (clojure.lang.PersistentQueue/EMPTY) 1 2 3))
+;; => #object[clojure.lang.PersistentQueue 0x28cb9120 "clojure.lang.PersistentQueue@7861"]
 
 (peek pq)
 ;; => 1
 
-(pop pq)
-;; => #queue [2 3]
+(println (mapv identity (pop pq)))
+;; => [2 3]
 
-(conj pq 4)
-;; => #queue [1 2 3 4]
+(println (mapv identity (conj pq 4)))
+;; => [1 2 3 4]
 ----
 
-Queues are not as frequently used as lists or vectors, but it is good to know that
-they are available in ClojureScript, as they may occasionally come in handy.
+Filas não são usadas com muita frequência como lista ou vetores, mas é bom saber
+que elas estão disponíveis em _Clojure_, e podem eventualmente serem úteis.
 
 
 [[destructuring-section]]
