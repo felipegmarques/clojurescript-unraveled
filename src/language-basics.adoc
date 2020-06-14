@@ -1950,17 +1950,17 @@ que elas estão disponíveis em _Clojure_, e podem eventualmente serem úteis.
 
 
 [[destructuring-section]]
-=== Destructuring
+=== Desestruturando (_Destructuring_)
 
-Destructuring, as its name suggests, is a way of taking apart structured data such
-as collections and focusing on individual parts of them. ClojureScript offers a
-concise syntax for destructuring both indexed sequences and associative data
-structures that can be used any place where bindings are declared.
+_Destructuring,_ como o nome sugere, é um modo de quebrar uma estrutura de dados
+como coleções e focar em partes individuais dela. _Clojure_ oferece uma
+sintaxe concisa para desestruturar seja sequência indexadas ou estruturas
+associativas que pode ser usada onde criamos vínculos entre símbolos e valores.
 
-Let's see an example of what destructuring is useful for that will help us
-understand the previous statements better. Imagine that you have a sequence but are
-only interested in the first and third item. You could get a reference to them
-easily with the `nth` function:
+Vamos ver um exemplo de _destructuring_ que é útil pare entendermos o parágrafo
+anterior. Imagine que você tem uma sequência e esteja interessado somente
+no primeiro e terceiro item. Você pode obter uma referência a eles usando
+a função `nth`:
 
 [source, clojure]
 ----
@@ -1971,9 +1971,9 @@ easily with the `nth` function:
 ;; => [2 0]
 ----
 
-However, the previous code is overly verbose. Destructuring lets us extract values
-of indexed sequences more succintly using a vector on the left-hand side of a
-binding:
+Porém, o código anterior é um pouco verboso. _Destructuring_ pode nos ajudar a
+extrair valores de uma sequência indexada de maneira mais sucinta se usarmos
+um vetor no lado esquerdo do vínculo:
 
 [source, clojure]
 ----
@@ -1982,15 +1982,16 @@ binding:
 ;; => [2 0]
 ----
 
-In the above example, `[fst _ thrd]` is a destructuring form. It is represented as a
-vector and used for binding indexed values to the symbols `fst` and `thrd`,
-corresponding to the index `0` and `2`, respectively. The `_` symbol is used as a
-placeholder for indexes we are not interested in — in this case `1`.
+No exemplo acima, `[fst _ thrd]` é uma expressão de _destructuring_. Ela é representada
+como um vetor e é usada para vincular valores indexados aos símbolos `fst` e `thrd`,
+correspondendo aos valores com index `0` e `2` respectivamente. O símbolo `_` é utilizado
+como um placeholder para valores que não estamos interessados, nesse caso `1`.
 
-Note that destructuring is not limited to the `let` binding form; it works in almost
-every place where we bind values to symbols such as in the `for` and `doseq` special
-forms or in function arguments. We can write a function that takes a pair and swaps
-its positions very concisely using destructuring syntax in function arguments:
+Note que _destructuring_ não está limitado aos vínculos criados dentro de um `let`;
+ele funciona em qualquer lugar que criámos um vínculo entre valores e símbolos como
+nas formas especiais `for` e `doseq` ou em argumentos de funções. Podemos escrever uma
+função que receba um pair e troque as posiçòes desse par de maneira muito sucinta
+utilizando a sintaxe do _destructuring_ como argumento da função:
 
 [source, clojure]
 ----
@@ -2004,11 +2005,10 @@ its positions very concisely using destructuring syntax in function arguments:
 ;; => [4 3]
 ----
 
-Positional destructuring with vectors is quite handy for taking indexed values out
-of sequences, but sometimes we don't want to discard the rest of the elements in the
-sequence when destructuring.  Similarly to how `&` is used for accepting variadic
-function arguments, the ampersand can be used inside a vector destructuring form for
-grouping together the rest of a sequence:
+_Destructuring_ posicional com vetores é bastante útil para tirarmos valores indexados
+de uma sequência, mas algumas vezes não queremos descartar o resto dos elementos
+na sequência. Similar com ao `&` usado em funções de aridade variável, o `&` pode ser usado
+dentro do _destructuring_ de um vetor para agrupar o resto dos elementos de uma sequência:
 
 [source, clojure]
 ----
@@ -2019,14 +2019,14 @@ grouping together the rest of a sequence:
 ;; => {:first 0, :snd 1, :rest (2 3 4 5 6 7 8 9)}
 ----
 
-Notice how the value in the `0` index got bound to `fst`, the value in the `1` index
-got bound to `snd`, and the sequence of elements from `2` onwards got bound to the
-`more` symbol.
+Note que o valor na posição `0` foi vinculado a `fst`, o valor na posição `1`
+foi vinculado a `snd`, e a sequência de elementos a partir da posição `2` foi vinculada
+ao símbolo `more`.
 
-We may still be interested in a data structure as a whole even when we are
-destructuring it. This can be achieved with the `:as` keyword. If used inside a
-destructuring form, the original data structure is bound to the symbol following
-that keyword:
+Nós podemos ainda estar interessados na estrutura de dados como um todo, mesmo
+quando estamos fazendo um _destructuring_. Podemos manter a referência a estrutura
+usando a _keyword_ `:as`. Se usada dentro de um _destructuring_, a estrutura de dados
+original fica vinculada ao símbolo que segue a _keyword_ `:as`:
 
 [source, clojure]
 ----
@@ -2038,11 +2038,11 @@ that keyword:
 ;; => {:first 0, :snd 1, :rest (2 3 4 5 6 7 8 9), :original (0 1 2 3 4 5 6 7 8 9)}
 ----
 
-Not only can indexed sequences be destructured, but associative data can also be
-destructured. Its destructuring binding form is represented as a map instead of a
-vector, where the keys are the symbols we want to bind values to and the values are
-the keys that we want to look up in the associative data structure. Let's see an
-example:
+Não só podemos usar _destructuring_ com sequências, mas estruturas associativas ainda
+podem ser desestruturadas. Nesse caso, o _destructuring_ é representado utilizando
+um map ao invés de um vetor. Nesse mapa, as chaves são símbolos que queremos vincular aos valores
+e os valores são as chaves que queremos usar para obter os valores dentro da estrutura
+associativa que queremos desestruturar. Vamos ver um exemplo:
 
 [source, clojure]
 ----
@@ -2051,9 +2051,9 @@ example:
 ;; => "ClojureScript"
 ----
 
-In the above example, we are extracting the value associated with the `:language`
-key and binding it to the `language` symbol. When looking up keys that are not
-present, the symbol will get bound to `nil`:
+No exemplo acima, estamos extraindo o valor associado com a chave `:language` e
+vinculando ele com o símbolo `language`. Quando procuramos o map por uma chave que não
+está presente, o símbolo é vinculado a `nil`:
 
 [source, clojure]
 ----
@@ -2062,9 +2062,9 @@ present, the symbol will get bound to `nil`:
 ;; => nil
 ----
 
-Associative destructuring lets us give default values to bindings which will be used
-if the key isn't found in the data structure we are taking apart. A map following
-the `:or` keyword is used for default values as the following examples show:
+_Destructuring_ associative permite o fornecimento de valores _default_ caso a chave não
+esteja presente no mapa. Um mapa seguido da chave `:or` é usada para valores
+_default_ como o exemplo seguinte mostra:
 
 [source, clojure]
 ----
@@ -2077,8 +2077,8 @@ the `:or` keyword is used for default values as the following examples show:
 ;; => "Cirilla"
 ----
 
-Associative destructuring also supports binding the original data structure to a
-symbol placed after the `:as` keyword:
+_Destructuing_ associativo também suporta vincular a estrutura de dados original a um
+símbolo colocado depois da keyword `:as`:
 
 [source, clojure]
 ----
@@ -2087,10 +2087,10 @@ symbol placed after the `:as` keyword:
 ;; => ["Cirilla" {:name "Cirilla" :age 49}]
 ----
 
-Keywords aren't the only things that can be the keys of associative data structures.
-Numbers, strings, symbols and many other data structures can be used as keys, so we
-can destructure using those, too. Note that we need to quote the symbols to prevent
-them from being resolved as a var lookup:
+_Keyword_ não são as únicas coisas que podem ser chaves em uma estrutura associative.
+Números, strings, símbolos e muitas outras estruturas de dados podem ser usadas como
+chave, então também podemos usá-las no _destruturing_. Mas note que para símbolos, precisamos
+prefixá-los com aspa `'` para evitar que sejam evaluados.
 
 [source, clojure]
 ----
@@ -2107,13 +2107,12 @@ them from being resolved as a var lookup:
 ;; => "ClojureScript"
 ----
 
-Since the values corresponding to keys are usually bound to their equivalent symbol
-representation (for example, when binding the value of `:language` to the symbol
-`language`) and keys are usually keywords, strings, or symbols, ClojureScript offers
-shorthand syntax for these cases.
+Como normalmente os valores correspondente as chaves são usualmente vinculado
+a símbolos com o mesmo nome (Ex: `:language` e `language`) e chaves normalmente
+são keywords, strings ou símbolos, _Clojure_ oferece uma sintaxe mais simples
+para esses casos.
 
-We'll show examples of all of these, starting with destructuring keywords using
-`:keys`:
+Vamos ver alguns exemplos desses casos, começando pelas _keywords_ usando `:keys`:
 
 [source, clojure]
 ----
@@ -2122,13 +2121,13 @@ We'll show examples of all of these, starting with destructuring keywords using
 ;; => ["Cirilla" "Fiona"]
 ----
 
-As you can see in the example, if we use the `:keys` keyword and associate it with a
-vector of symbols in a binding form, the values corresponding to the keywordized
-version of the symbols will be bound to them. The `{:keys [name surname]}`
-destructuring is equivalent to `{name :name surname :surname}`, only shorter.
+Como você pode ver, utilizamos a _keyword_ `:keys` e associamos ela a um vetor de símbolos,
+os valores correspondentes as versões chaves do símbolo são vinculado a eles. A expressão
+`{:keys [name surname]}` é equivalente a  `{name :name surname :surname}`, porém mais
+sucinta.
 
-The string and symbol shorthand syntax works exactly like `:keys`, but using the
-`:strs` and `:syms` keywords respectively:
+A versão string e simbólica dessa sintaxe funciona exatamente igual, só que nesses casos
+usamos `:strs` e `:syms` respectivamente:
 
 [source, clojure]
 ----
@@ -2141,9 +2140,9 @@ The string and symbol shorthand syntax works exactly like `:keys`, but using the
 ;; => ["Cirilla" "Fiona"]
 ----
 
-An interesting property of destructuring is that we can nest destructuring forms
-arbitrarily, which makes code that accesses nested data on a collection very easy to
-understand, as it mimics the collection's structure:
+Uma propriedade interessante do _destruturing_ é que podemos ter um dentro do outro de maneira
+arbitrária, o que torna o código para acesso de estruturas aninhadas muito fácil de compreender,
+uma vez que ele faz mímica da estrutura da coleção:
 
 [source, clojure]
 ----
@@ -2153,30 +2152,31 @@ understand, as it mimics the collection's structure:
 ----
 
 
-=== Threading Macros
+=== _Threading Macros_ (ou ordenando chamadas consecutivas de funções)
 
-Threading macros, also known as arrow functions, enables one to write more readable code
-when multiple nested function calls are performed.
+_Threading macros_, também conhecido como funções flecha, permite que escrevamos código
+mais fácil de ler quando possuímos várias chamadas de funções aninhadas.
 
-Imagine you have `(f (g (h x)))` where a function `f` receives as its first parameter the
-result of executing function `g`, repeated multiple times. With the most basic `->` threading
-macro you can convert that into `(\-> x (h) (g) (f))` which is easier to read.
+Imagine que você tenha `(f (g (h x)))` onde a função `f` recebe como seu primeiro argumento
+o resultado da chamada da função `g` repetida e assim por diante. Com a _threading macro_
+mais básica `->` podemos converter essa expressào em `(\-> x (h) (g) (f))` que é muito
+mais fácil de ler.
 
-The result is syntactic sugar, because the arrow functions are defined as macros
-and it does not imply any runtime performance. The `(\-> x (h) (g) (f))` is
-automatically converted to (f (g (h x))) at compile time.
+O resulta é uma sintaxe mais simples, porque a função flecha é definida como macro
+e não impacta na performance do código. A forma `(\-> x (h) (g) (f))` é convertida
+automaticamente para `(f (g (h x)))` durante a compilação
 
-Take note that the parenthesis on `h`, `g` and `f` are optional, and can be ommited:
-`(f (g (h x)))` is the same as `(\-> x h g f)`.
+Observe que os parenteses em `h`, `g` e `f` são opcionais e podem ser omitidos:
+`(f (g (h x)))` é o mesmo que `(\-> x h g f)`.
 
 
-==== The thread-first macro (`\->`)
+==== _Thread-first macro_ (`\->`)
 
-This is called *thread first* because it threads the first argument throught the
-different expressions as first arguments.
+Isso é chamado de _thread first_, ou thread primeiro, poque o primeiro argumento das diferentes
+funções é o resultado da expressão anterior.
 
-Using a more concrete example, this is how the code looks without using threading
-macros:
+Usando um exemplo mais concreto, assim é como seria o código sem utilizarmos
+_threading macro_:
 
 [source, clojure]
 ----
@@ -2187,7 +2187,7 @@ macros:
 ;; => {:name "Lady of the lake" :age 1999 :readers 1}
 ----
 
-We can rewrite that code to use the `\->` threading macro:
+Podemos reescrevê-lo com a _threading macro `\->`:
 
 [source, clojure]
 ----
@@ -2197,18 +2197,16 @@ We can rewrite that code to use the `\->` threading macro:
 ;; => {:name "Lady of the lake" :age 1999 :readers 1}
 ----
 
-This threading macro is especially useful for transforming data structures, because
-_ClojureScript_ (and _Clojure_) functions for data structures transformations
-consistently uses the first argument for receive the data structure.
+Esse _threading macro_ é especialmente útil para transformarmos estrutura de dados, porque
+em _Clojure_, funções que transforma estruturas de dados recebem como primeiro argumento
+a estrutura de dados.
 
+==== Thread-last macro, ou thread por último (`\->>`)
 
-==== The thread-last macro (`\->>`)
+A principal diferença entre _thread-last_ e _thread-first_ é que ao invés do retorno
+ser utilizado como primeiro argumento das funções, ele é utilizado como último.
 
-The main difference between the thread-last and thread-first macros is that instead
-of threading the first argument given as the first argument on the following expresions,
-it threads it as the last argument.
-
-Let's look at an example:
+Vejamos um exemplo:
 
 [source, clojure]
 ----
@@ -2218,7 +2216,7 @@ Let's look at an example:
 ;; => (3 5)
 ----
 
-The same code written using `\->>` threading macro:
+O mesmo código reescrito com `\->>`:
 
 [source, clojure]
 ----
@@ -2229,23 +2227,23 @@ The same code written using `\->>` threading macro:
 ;; => (3 5)
 ----
 
-This threading macro is especially useful for transforming sequences or collections
-of data because _ClojureScript_ functions that work with sequences and collections
-consistently use the last argument position to receive them.
+Esse thread macro é especialmente útil para transformarmos sequências ou coleções com
+`map` , `filter`, `reduce` e outras funções, pois no _Clojure_ essas funções recebem como
+último argumento a sequência.
 
+==== Thread-as macro ou thread-como (`as\->`)
 
-==== The thread-as macro (`as\->`)
+Finalmente, tem os casos que nem  `\->` nem `\->>` são aplicáveis. Nesses casos,
+tudo que você precisa utilizar é `as\->`, a alternativa mais flexível, que permite
+aplicar o retorno em qualquer posição da chamada de função, e não somente a primeira
+ou a última.
 
-Finally, there are cases where neither `\->` nor `\->>` are applicable. In these
-cases, you’ll need to use `as\->`, the more flexible alternative, that allows you to
-thread into any argument position, not just the first or last.
+Essa forma espera dois argumentos fixos e um número arbitrário de expressões.
+Assim como `\->`, o primeiro argumento é o valor a ser utilizado nas formas seguintes.
+O segundo arbumento é um símbolo ao qual esse valor estará vinculado. Em cada forma subsequente,
+podemos utilizar esse símbolo para nos referirmos ao valor retornado na forma anterior.
 
-It expects two fixed arguments and an arbitrary number of expressions. As with
-`\->`, the first argument is a value to be threaded through the following forms. The
-second argument is the name of a binding. In each of the subsequent forms, the bound
-name can be used for the prior expression's result.
-
-Let's see an example:
+Vejamos um exemplo:
 
 [source, clojure]
 ----
@@ -2258,14 +2256,13 @@ Let's see an example:
 ----
 
 
-==== The thread-some macros (`some\->` and `some\->>`)
+==== Thread-some macros ou thread se algo (`some\->` and `some\->>`)
 
-Two of the more specialized threading macros that _ClojureScript_ comes with. They work
-in the same way as their analagous `\->` and `\->>` macros with the additional
-support for short-circuiting the expression if one of the expresions evaluates
-to `nil`.
+Duas outras _threading macros_ mais especializadas que o _Clojure_ possui são as _thread-some_.
+Elas funcionam de forma semelhante a `\->` e `\->>` exceto que elas encerram a execução
+das formas uma vez que alguma expressão retorne `nil`.
 
-Let's see another example:
+Vejamos um exemplo:
 
 [source, clojure]
 ----
@@ -2278,13 +2275,13 @@ Let's see another example:
 ;; => nil
 ----
 
-This is an easy way avoid null pointer exceptions.
+Esse é um modo fácil de evitar uma null pointer exception.
 
 
-==== The thread-cond macros (`cond\->` and `cond\->>`)
+==== Thread-cond macros ou thread se (`cond\->` and `cond\->>`)
 
-The `cond\->` and `cond\->>` macros are analogous to `\->` and `\->>` that offers
-the ability to conditionally skip some steps from the pipeline. Let see an example:
+As macros `cond\->` and `cond\->>` são análogas a `\->`  e `\->>` e oferecem
+a abilidade de pularmos alguns itens na pipeline. Vejamos um exemplo:
 
 [source, clojure]
 ----
@@ -2303,105 +2300,13 @@ the ability to conditionally skip some steps from the pipeline. Let see an examp
 ;; => ["even" "positive"]
 ----
 
-The value threading only happens when the corresponding condition evaluates to
-logical true.
+A expressão seguinte é executada somente quando a condição é "logicamente true".
 
-==== Additional Readings
+==== Leituras adicional (em inglês)
 
 - http://www.spacjer.com/blog/2015/11/09/lesser-known-clojure-variants-of-threading-macro/
 - http://clojure.org/guides/threading_macros
 
-
-[[reader-conditionals]]
-=== Reader Conditionals
-
-This language feature allows different dialects of Clojure to share common code that
-is mostly platform independent but need some platform dependent code.
-
-To use reader conditionals, all you need is to rename your source file with
-`.cljs` extension to one with `.cljc`, because reader conditionals only work if
-they are placed in files with `.cljc` extension.
-
-==== Standard (`#?`)
-
-There are two types of reader conditionals, standard and splicing. The standard
-reader conditional behaves similarly to a traditional cond and the syntax looks
-like this:
-
-[source, clojure]
-----
-(defn parse-int
-  [v]
-  #?(:clj  (Integer/parseInt v)
-     :cljs (js/parseInt v)))
-----
-
-As you can observe, `#?` reading macro looks very similar to cond, the difference is
-that the condition is just a keyword that identifies the platform, where `:cljs` is
-for _ClojureScript_ and `:clj` is for _Clojure_. The advantage of this approach, is
-that it is evaluated at compile time so no runtime performance overhead exists for
-using this.
-
-==== Splicing (`#?@`)
-
-The splicing reader conditional works in the same way as the standard and allows
-splice lists into the containing form. The `#?@` reader macro is used for that
-and the code looks like this:
-
-[source, clojure]
-----
-(defn make-list
-  []
-  (list #?@(:clj  [5 6 7 8]
-            :cljs [1 2 3 4])))
-
-;; On ClojureScript
-(make-list)
-;; => (1 2 3 4)
-----
-
-The _ClojureScript_ compiler will read that code as this:
-
-[source, clojure]
-----
-(defn make-list
-  []
-  (list 1 2 3 4))
-----
-
-The splicing reader conditional can't be used to splice multiple top level forms,
-so the following code is ilegal:
-
-[source, clojure]
-----
-#?@(:cljs [(defn func-a [] :a)
-           (defn func-b [] :b)])
-;; => #error "Reader conditional splicing not allowed at the top level."
-----
-
-If you need so, you can use multiple forms or just use `do` block for group
-multiple forms together:
-
-[source, clojure]
-----
-#?(:cljs (defn func-a [] :a))
-#?(:cljs (defn func-b [] :b))
-
-;; Or
-
-#?(:cljs
-   (do
-     (defn func-a [] :a)
-     (defn func-b [] :b)))
-----
-
-
-==== More readings
-
-- http://clojure.org/guides/reader_conditionals
-- https://danielcompton.net/2015/06/10/clojure-reader-conditionals-by-example
-- https://github.com/funcool/cuerdas (example small project that uses
-  reader conditionals)
 
 [[namespace-section]]
 === Namespaces
