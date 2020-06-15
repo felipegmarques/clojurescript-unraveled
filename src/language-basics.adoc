@@ -127,7 +127,7 @@ Note que chaves qualificadas afetam comparações de igualdade.
 [source, clojure]
 ---
 ::foo
-;; => :clojure.user/foo
+;; => :user/foo
 
 (= ::foo :foo)
 ;; => false
@@ -2302,7 +2302,7 @@ a abilidade de pularmos alguns itens na pipeline. Vejamos um exemplo:
 
 A expressão seguinte é executada somente quando a condição é "logicamente true".
 
-==== Leituras adicional (em inglês)
+==== Leituras adicionais (em inglês)
 
 - http://www.spacjer.com/blog/2015/11/09/lesser-known-clojure-variants-of-threading-macro/
 - http://clojure.org/guides/threading_macros
@@ -2311,43 +2311,43 @@ A expressão seguinte é executada somente quando a condição é "logicamente t
 [[namespace-section]]
 === Namespaces
 
-==== Defining a namespace
+==== Definindo um _namespace_
 
-The _namespace_ is ClojureScript's fundamental unit of code modularity. Namespaces
-are analogous to Java packages or Ruby and Python modules and can be defined with
-the `ns` macro. If you have ever looked at a little bit of ClojureScript source, you
-may have noticed something like this at the beginning of the file:
+Um _namespace_ é um peça fundamental de modularizar o código. _Namespaces_ são
+análagos aos pacotes em Java ou módulos em Ruby ou Python e podem ser definidos
+com a macro `ns`. Se você já deu uma olhada algum código em _Clojure_, você terá
+notado que alguns arquivoc começam com: 
 
 [source, clojure]
 ----
 (ns myapp.core
-  "Some docstring for the namespace.")
+  "Alguma string de documentação.")
 
 (def x "hello")
 ----
 
-Namespaces are dynamic, meaning you can create one at any time. However, the
-convention is to have one namespace per file. Naturally, a namespace definition is
-usually at the beginning of the file, followed by an optional docstring.
+_Namespaces_ são dinâmicos, significando que você pode criá-los a qualquer momento.
+Entretanto a convenção é possuir um _namespace_ por arquivo. Naturalmente,
+a definição de um _namespace_ está usualmente no começo de um arquivo, seguida
+de um docstring opcional.
 
-Previously we have explained vars and symbols. Every var that you define will be
-associated with its namespace. If you do not define a concrete namespace, then the
-default one called "cljs.user" will be used:
+Antes, explicamos vars e símbolos. Cada var que definimos será associada com
+um namespace. Se você não define um _namespace_, então o default, "user" será usado:
 
 [source, clojure]
 ----
 (def x "hello")
-;; => #'cljs.user/x
+;; => #'user/x
 ----
 
 
-==== Loading other namespaces
+==== Carregando outros _namespaces_ 
 
-Defining a namespace and the vars in it is really easy, but it's not very useful if
-we can't use symbols from other namespaces. For this purpose, the `ns` macro offers
-a simple way to load other namespaces.
+Definir um _namespace_ e  variáveis dentro dele, mas não é muito útil se não podemos
+utilizar símbolos de outros namespaces. Para isso, a macro `ns` oferece um jeito
+simpels de carregar outros _namespaces_:
 
-Observe the following:
+Observe o exemplo seguinte:
 
 [source, clojure]
 ----
@@ -2359,13 +2359,12 @@ Observe the following:
 ;; => "HELLO"
 ----
 
-As you can observe, we are using fully qualified names (namespace + var name) for
-access to vars and functions from different namespaces.
+Como você pode observar, estamos usando nomes qualificados (_namespace_ + nome da var)
+para acessar vars e funções de um outros _namespaces_.
 
-While this will let you access other namespaces, it's also repetitive and overly
-verbose. It will be especially uncomfortable if the name of a namespace is very
-long. To solve that, you can use the `:as` directive to create an additional
-(usually shorter) alias to the namespace.  This is how it can be done:
+Isso permite acessarmos outros _namespaces_, mas também é repetitivo e extremamente
+verbose. E será bem mais verbose se o nome do namespace for muito grande. Para resolver isso
+podemos utilizar a diretiva `:as` para criar um "apelido" (_alias_) para o _namespace_.
 
 [source, clojure]
 ----
@@ -2377,11 +2376,10 @@ long. To solve that, you can use the `:as` directive to create an additional
 ;; => "HELLO"
 ----
 
-Additionally, _ClojureScript_ offers a simple way to refer to specific vars or
-functions from a concrete namespace using the `:refer` directive, followed by a
-sequence of symbols that will refer to vars in the namespace. Effectively, it is as
-if those vars and functions are now part of your namespace, and you do not need to
-qualify them at all.
+Adicionalmente, _Clojure_ oferece um jeito simples de se refer a uma var ou função
+de um _namespace_ usando a diretiva `:refer`, seguido pela sequência de símbolos
+que vão referir-se as vars daquele _namespace_. Efetivamente, é como se essas
+vars e funções fizessem parte do seu _namespace_, e não precisamos qualificá-las.
 
 [source, clojure]
 ----
@@ -2391,13 +2389,14 @@ qualify them at all.
 ;; => "HELLO"
 ----
 
-And finally, you should know that everything located in the `cljs.core` namespace is
-automatically loaded and you should not require it explicitly. Sometimes you may
-want to declare vars that will clash with some others defined in the `cljs.core`
-namespace. To do this, the `ns` macro offers another directive that allows you to
-exclude specific symbols and prevent them from being automatically loaded.
+E finalmente, é importante saber que tudo localizado no _namespace_ `clojure.core`
+é automaticamente carregado e não deveria ser feito o `require` de forma explícita.
+Algumas vezes, você pode querer definir vars com nomes que conflituam com aqueles
+definidos no _namespace_ `clojure.core`. Para fazer isso, a macro `ns` oferece outra
+diretiva que permite excluir alguns símbolos específicos e prevenir que eles sejam
+carregados.
 
-Observe the following:
+Vejamos um exemplo:
 
 [source, clojure]
 ----
@@ -2411,16 +2410,15 @@ Observe the following:
     x))
 ----
 
-The `ns` macro also has other directives for loading host classes (with `:import`)
-and macros (with `:refer-macros`), but these are explained in other sections.
+A macro `ns` tem outras diretivas para carregar classes da linguagem hospeira , Java,
+com `:import`, mas isso é explicado em outra seção.
 
+==== _Namespaces_ e nome de arquivos
 
-==== Namespaces and File Names
-
-When you have a namespace like `myapp.core`, the code must be in a file named
-_core.cljs_ inside the _myapp_ directory.  So, the preceding examples with
-namespaces `myapp.core` and `myapp.main` would be found in project with a file
-structure like this:
+Quando você possui um _namespace_ como `myapp.core`, o código deve estar em
+um arquivo chamado `core.clj` dentro do diretório `myapp`. Entào, no exemplo precedente
+com os _namespaces_ `myapp.core` e `myapp.main` seriam encontrados em um projeto
+com uma estrutura de arquivos assim:
 
 ----
 myapp
@@ -2431,36 +2429,37 @@ myapp
 ----
 
 
-=== Abstractions and Polymorphism
+=== Abstrações e Polimorfismos
 
-I'm sure that at more than one time you have found yourself in this situation: you
-have defined a great abstraction (using interfaces or something similar) for your
-"business logic", and you have found the need to deal with another module over which
-you have absolutely no control, and you probably were thinking of creating adapters,
-proxies, and other approaches that imply a great amount of additional complexity.
+Tenho certeza que em mais de uma vez você se encontrou em uma situação somo essa:
+você definiu uma ótima abstração (utilizando interfaces ou algo similar) para sua
+"lógica de negócio", e você precisa lidar com outro módulo sob o qual você não tem
+nenhum controle, e você provavelmente estava pensando em criar adapters, proxies, e
+outras abordagens que implicam em um grande volume de complexidade adicional.
 
-Some dynamic languages allow "monkey-patching"; languages where the classes are open
-and any method can be defined and redefined at any time. Also, it is well known that
-this technique is a very bad practice.
+Algumas linguagens dinâmicas permitem "mokey-patching": linguagems onde as classes
+são abertas e qualquer método pode ser definido e redefinido a qualquer momento.
+Também sabemos que essa é uma má prática.
 
-We can not trust languages that allow you to silently overwrite methods that you are
-using when you import third party libraries; you cannot expect consistent behavior
-when this happens.
+Nós nào podemos confiar em uma linguagem que permite que você sobreescreva métodos
+que você está usando quando importarmos uma biblioteca de um terceiro. Não podemos
+esperar um comportamento consistente quando isso acontece.
 
-These symptoms are commonly called the "expression problem";
-see http://en.wikipedia.org/wiki/Expression_problem for more details
+Esses sintomas são comumente chamados de "problema de expressão"
+veja http://en.wikipedia.org/wiki/Expression_problem para mais detalhes.
 
 
-==== Protocols
+==== Protocolos
 
-The _ClojureScript_ primitive for defining "interfaces" is called a protocol. A
-protocol consists of a name and set of functions. All the functions have at least
-one argument corresponding to the `this` in JavaScript or `self` in Python.
+O mecanismo em _Clojure_ para definir "interfaces" é chamado protocolo (_protocol_).
+Um protocolo consiste de um nome e um conjunto de assinaturas de funções.
+Todas as funções tem ao menos um argumento correspondendo ao `this` em Javascript
+ou `self` em Python.
 
-Protocols provide a type-based polymorphism, and the dispatch is always done by the
-first argument (equivalent to JavaScript’s `this`, as previously mentioned).
+Protocolos provém um polimorfismo baseado em tipos, e eles escolhem qual função
+executar baseado no tipo do primeiro argumento.
 
-A protocol looks like this:
+Um protocolo parece o seguinte:
 
 [source, clojure]
 ----
@@ -2471,84 +2470,75 @@ A protocol looks like this:
   (sample-method [this] "A doc string associated with this function."))
 ----
 
-NOTE: the "I" prefix is commonly used to designate the separation of protocols and
-types. In the Clojure community, there are many different opinions about how the "I"
-prefix should be used. In our opinion, it is an acceptable solution to avoid name
-clashing and possible confusion. But not using the prefix is not considered bad
-practice.
+NOTE: o prefixo "I" é comumente usado para criar uma separação entre protocolos
+e tipos. Na comunidade _Clojure_, existe opiniões muitas diferentes sobre como
+o prefixo "I" deveria ser usado. Na nossa opinião, é uma solução aceitável para
+evitar conflito de nomes e possíveis confusões. Porém, nào utilizar esse prefixo 
+não é considerado uma prática ruim.
 
-From the user perspective, protocol functions are simply plain functions defined in
-the namespace where the protocol is defined. This enables an easy and simple aproach
-for avoid conflicts between different protocols implemented for the same type that
-have conflicting function names.
+Da perspectiva do usuário, funções de um protocolo são simpels funções definidas no
+_namespace_ onde o protocolo foi definido. Isso permite uma abordagem fácil e simples
+para evitar conflitos entre diferentes protocolos implementados para o mesmo tipo que
+contém nomes de funções iguais.
 
-Here is an example. Let's create a protocol called `IInvertible` for data that can
-be "inverted".  It will have a single method named `invert`.
+Aqui está um exemplo. Vamos criar um protocolo chamado `IInvertible` para os dados
+que podem ser "invertidos". Ele irá conter um único método chamado `invert`.
 
 [source, clojure]
 ----
 (defprotocol IInvertible
-  "This is a protocol for data types that are 'invertible'"
+  "Esse protocolo é para tipos de dados que são 'invertíveis'"
   (invert [this] "Invert the given item."))
 ----
 
 
-===== Extending existing types
+===== Extendendo tipos já existentes
 
-One of the big strengths of protocols is the ability to extend existing and maybe
-third party types. This operation can be done in different ways.
+Uma dos pontos positivos de protocolos é a habilidade de extender tipos existentes
+e talvez tipos providos por bibliotecas de terceiros. Essa operação pode ser feito
+de jeitos diferentes.
 
-The majority of time you will tend to use the *extend-protocol* or the *extend-type*
-macros. This is how `extend-type` syntax looks:
+A maioria das vezes você irá usar as macros *extend-protocol* ou *extend-type*. A sintaxe
+do `extend-type` é assim:
 
 [source, clojure]
 ----
 (extend-type TypeA
   ProtocolA
   (function-from-protocol-a [this]
-    ;; implementation here
+    ;; implementação aqui
     )
 
   ProtocolB
   (function-from-protocol-b-1 [this parameter1]
-    ;; implementation here
+    ;; implementação aqui
     )
   (function-from-protocol-b-2 [this parameter1 parameter2]
-    ;; implementation here
+    ;; implementação aqui
     ))
 ----
 
-You can observe that with *extend-type* you are extending a single type with
-different protocols in a single expression.
+Como você pode observar, que com *extend-type* você pode extender um só tipo com
+diferentes protocolos em uma única expressão.
 
-Let's play with our `IInvertible` protocol defined previously:
+Vamos brincar com o nosso protocolo `IInvertible` definido anteriormente:
 
 [source, clojure]
 ----
-(extend-type string
+(extend-type String
   IInvertible
   (invert [this] (apply str (reverse this))))
 
-(extend-type cljs.core.List
+(extend-type clojure.lang.PersistentList
   IInvertible
   (invert [this] (reverse this)))
 
-(extend-type cljs.core.PersistentVector
+(extend-type clojure.lang.PersistentVector
   IInvertible
   (invert [this] (into [] (reverse this))))
 ----
 
-You may note that a special symbol *string* is used instead of `js/String` for
-extend the protol for string. This is because the builtin javascript types have
-special treatment and if you replace the `string` with `js/String` the compiler
-will emit a warning about that.
-
-So if you want extend your protocol to javascript primitive types, instead of using
-`js/Number`, `js/String`, `js/Object`, `js/Array`, `js/Boolean` and `js/Function`
-you should use the respective special symbols: `number`, `string`, `object`,
-`array`, `boolean` and `function`.
-
-Now, it's time to try our protocol implementation:
+Agora, é hora de testarmos a implementação do nosso protocolo:
 
 [source, clojure]
 ----
@@ -2565,40 +2555,40 @@ Now, it's time to try our protocol implementation:
 ;; => [3 2 1]
 ----
 
-In comparison, *extend-protocol* does the inverse; given a protocol, it adds
-implementations for multiple types. This is how the syntax looks:
+Em comparação, *extend-protocol* faz o inverso; dado um protocolo, ele adiciona
+uma implementação para vários tipos. A sintaxe é assim:
 
 [source, clojure]
 ----
 (extend-protocol ProtocolA
   TypeA
   (function-from-protocol-a [this]
-    ;; implementation here
+    ;; implementação aqui
     )
 
   TypeB
   (function-from-protocol-a [this]
-    ;; implementation here
+    ;; implementação aqui
     ))
 ----
 
-Thus, the previous example could have been written equally well with this way:
+Então, o exemplo anterior poderia ser escrito também dessa maneira:
 
 [source, clojure]
 ----
 (extend-protocol IInvertible
-  string
+  String
   (invert [this] (apply str (reverse this)))
 
-  cljs.core.List
+  clojure.lang.PersistentList
   (invert [this] (reverse this))
 
-  cljs.core.PersistentVector
+  clojure.lang.PersistentVector
   (invert [this] (into [] (reverse this))))
 ----
 
 
-===== Participate in ClojureScript abstractions
+===== Participando das abstrações do _Clojure_
 
 ClojureScript itself is built up on abstractions defined as protocols. Almost all
 behavior in the _ClojureScript_ language itself can be adapted to third party
