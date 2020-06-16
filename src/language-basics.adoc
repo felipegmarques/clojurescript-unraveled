@@ -2892,31 +2892,31 @@ Usamos essa função no nosso código ao invés de `->User`.
 
 ==== Defrecord
 
-The record is a slightly higher-level abstraction for defining types in
-_ClojureScript_ and should be the preferred way to do it.
+Um _record_ é uma abstração um pouco mais alto nível para definirmos tipos
+em _Clojure_ e deveria ser favorecido em relação a `deftype`.
 
-As we know, _ClojureScript_ tends to use plain data types such as maps, but in most
-cases we need a named type to represent the entities of our application. Here come
-the records.
+Como sabemos, _Clojure_ tende a usar tipos de dados como `map`, mas na maioria dos
+casos precisamos tipos vinculados a um nome para representar entidades
+na nossa aplicação. Para isso usamos os _records_:
 
-A record is a data type that implements the map protocol and therefore can be used
-like any other map.  And since records are also proper types, they support
-type-based polymorphism through protocols.
+Um _record_ é um tipo de dado que implementa a interface do mapa e portanto pode ser
+utilizado como qualquer outro mapa. E como _records_ são tipos, eles suportam
+polimorfismo baseado em tipos através de protocolos.
 
-In summary: with records, we have the best of both worlds, maps that can play in
-different abstractions.
+Em resumo: com _records_ temos o melhor dos dois mundos, mapas que podem participar
+em diferentes abstrações.
 
-Let's start defining the `User` type but using records:
+Vamos começar definindo o tipo `User` mas utilizando _records_:
 
 [source, clojure]
 ----
 (defrecord User [firstname lastname])
 ----
 
-It looks really similar to the `deftype` syntax; in fact, it uses `deftype` behind
-the scenes as a low-level primitive for defining types.
+Parece muito com a sintaxe de `deftype`, e na verdade, `defrecord` utililiza o `deftype`
+por baixo dos panos como um função de baixo nível para definir tipos.
 
-Now, look at the difference with raw types for access to its fields:
+Agora, perceba a diferença para acessar campos:
 
 [source, clojure]
 ----
@@ -2929,7 +2929,7 @@ Now, look at the difference with raw types for access to its fields:
 ;; => "Yennefer"
 ----
 
-As we mentioned previously, records are maps and act like them:
+Como mencionamos, _records_ são mapas e agem como tais:
 
 [source, clojure]
 ----
@@ -2937,7 +2937,7 @@ As we mentioned previously, records are maps and act like them:
 ;; => true
 ----
 
-And like maps, they support extra fields that are not initially defined:
+E como mapas, eles suportam campos extras que não definimos inicialmente:
 
 [source, clojure]
 ----
@@ -2947,13 +2947,13 @@ And like maps, they support extra fields that are not initially defined:
 ;; => 92
 ----
 
-As we can see, the `assoc` function works as expected and returns a new instance of
-the same type but with new key value pair. But take care with `dissoc`! Its behavior
-with records is slightly different than with maps; it will return a new record if
-the field being dissociated is an optional field, but it will return a plain map if
-you dissociate a mandatory field.
+Como podemos ver, a função `assoc` funciona como esperado e retorna uma instância do
+mesmo tipo, porém com um novo par chave-valor. Porém tome cuidado com o `dissoc`!
+Seu comportamento com `records` é um pouco diferente do que com mapas; ele vai retornar
+um novo _record_ se o campo desassociado for opcional, se não ele vai retornar um
+mapa normal.
 
-Another difference with maps is that records do not act like functions:
+Outra diferença com mapas é que os _records_ não agem como funções:
 
 [source, clojure]
 ----
@@ -2963,14 +2963,13 @@ Another difference with maps is that records do not act like functions:
 ;; => "Yennefer"
 
 (person :firstname)
-;; => person.User does not implement IFn protocol.
+;; => class user.User cannot be cast to class clojure.lang.IFn 
 ----
 
-For convenience, the `defrecord` macro, like `deftype`, exposes a `->User` function,
-as well as an additional `map->User` constructor function. We have the same opinion
-about that constructor as with `deftype` defined ones: we recommend defining your
-own instead of using the other ones. But as they exist, let’s see how they can be
-used:
+Por conveniência, a macro `defrecord`, como `deftype`, expõe uma função `->User`,
+assim como uma função construtora adicional `map->User`. Mas mantemos nossa
+opinião de criar nossos próprios construtores ao invés de usar os outros.
+Mas como eles existem, vamos dar uma olhada em como usá-los:
 
 [source, clojure]
 ----
