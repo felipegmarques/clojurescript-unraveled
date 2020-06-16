@@ -2834,37 +2834,37 @@ obtém a implementação default:
 
 === Tipos de dados
 
-Until now, we have used maps, sets, lists, and vectors to represent our data. And in
-most cases, this is a really great approach. But sometimes we need to define our own
-types, and in this book we will call them *data types*.
+Até agora, nós usamos mapas, `sets`, listas e vetores para representar nossos dados.
+E na maioria dos casos, essa é um abordagem muito boa. Mas algumas vezes precisamos
+definir nossos próprios tipos, e nesse livro vamos chamá-los de _data types_.
 
-A data type provides the following:
+Um _data type_ fornece o seguinte:
 
-* A unique host-backed type, either named or anonymous.
-* The ability to implement protocols (inline).
-* Explicitly declared structure using fields or closures.
-* Map-like behavior (via records, see below).
+* Um tipo único fornecido pelo host, seja nomeado ou anônimo.
+* A habilidade de implementar protocolos.
+* Estrutura explicitamente declarada utilizando campos e _closures_.
+* Comportamento similar a mapas (via _records_, que veremos em seguida)
 
 
 ==== Deftype
 
-The most low-level construction in _ClojureScript_ for creating your own types is
-the `deftype` macro. As a demonstration, we will define a type called `User`:
+A opção mais baixo nível para criar seus próprios tipos em _Clojure_ é a macro
+`deftype`. Como demonstração, vamos definir um tipo chamado `User`:
 
 [source, clojure]
 ----
 (deftype User [firstname lastname])
 ----
 
-Once the type has been defined, we can create an instance of our `User`. In the
-following example, the `.` after `User` indicates that we are calling a constructor.
+Uma vez que o tipo foi definido, podemos criar uma instância do nosso `User`. No
+exemplo a seguir, o `.` depois do `User` indica que estamos chamando um construtor.
 
 [source, clojure]
 ----
 (def person (User. "Triss" "Merigold"))
 ----
 
-Its fields can be accessed using the prefix dot notation:
+Os campos do `User` podem ser acessados usando a notação prefixada com `.`:
 
 [source, clojure]
 ----
@@ -2872,13 +2872,13 @@ Its fields can be accessed using the prefix dot notation:
 ;; => "Triss"
 ----
 
-Types defined with `deftype` (and `defrecord`, which we will see later) create a
-host-backed class-like object associated with the current namespace. For
-convenience, _ClojureScript_ also defines a constructor function called `->User`
-that can be imported using the `:require` directive.
+Tipos definidos com `deftype` (e `defrecord`, que veremos depois0 criam uma
+classe na linguagem host associada com o _namespace_ atual. Por conveniência,
+_Clojure_ também define uma função construtora chamada `->User` que pode ser importada
+utilizando a diretiva `:require`.
 
-We personally do not like this type of function, and we prefer to define our own
-constructors with more idiomatic names:
+Nós, pessoalmente, não gostamos desse tipo de função, e prefirimos definir nossos
+próprios construtores com nomes mais idiomáticos.
 
 [source, clojure]
 ----
@@ -2887,7 +2887,7 @@ constructors with more idiomatic names:
   (User. firstname lastname))
 ----
 
-We use this in our code instead of `->User`.
+Usamos essa função no nosso código ao invés de `->User`.
 
 
 ==== Defrecord
