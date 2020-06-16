@@ -2588,108 +2588,61 @@ Então, o exemplo anterior poderia ser escrito também dessa maneira:
 ----
 
 
-===== Participando das abstrações do _Clojure_
+===== Introspeção usando Protocolos
 
-ClojureScript itself is built up on abstractions defined as protocols. Almost all
-behavior in the _ClojureScript_ language itself can be adapted to third party
-libraries. Let's look at a real life example.
+_Clojure_ vem com algumas funções úteis que permitem verificar se algo implementa
+um protocolo usando a função `satisfies?`. O propósito dessa função é determinar
+em runtime se algum objeto satisfaz um protocolo.
 
-In previous sections, we have explained the different kinds of built-in
-collections. For this example we will use a *set*. See this snippet of code:
-
-[source, clojure]
-----
-(def mynums #{1 2})
-
-(filter mynums [1 2 4 5 1 3 4 5])
-;; => (1 2 1)
-----
-
-What happened? In this case, the _set_ type implements the _ClojureScript_ internal
-`IFn` protocol that represents an abstraction for functions or anything
-callable. This way it can be used like a callable predicate in filter.
-
-OK, but what happens if we want to use a regular expression as a predicate function
-for filtering a collection of strings:
+Se definirmos um protocolo Baz e um record Foo que implementa esse protocolo,
+podemos verificar isso com a função `satisfies?`:
 
 [source, clojure]
 ----
-(filter #"^foo" ["haha" "foobar" "baz" "foobaz"])
-;; TypeError: Cannot call undefined
-----
+(defprotocol Baz
+             (bar [this]))
 
-The exception is raised because the `RegExp` type does not implement the `IFn`
-protocol so it cannot behave like a callable, but that can be easily fixed:
-
-[source, clojure]
-----
-(extend-type js/RegExp
-  IFn
-  (-invoke
-   ([this a]
-     (re-find this a))))
-----
-
-Let’s analyze this: we are extending the `js/RegExp` type so that it implements the
-`invoke` function in the `IFn` protocol. To invoke a regular expression `a` as if it
-were a function, call the `re-find` function with the object of the function and the
-pattern.
-
-Now, you will be able use the regex instances as predicates in a filter operation:
-
-[source, clojure]
-----
-(filter #"^foo" ["haha" "foobar" "baz" "foobaz"])
-;; => ("foobar" "foobaz")
-----
+(defrecord Foo [some-name]
+           Baz
+           (bar [this] (str "Hello, " some-name)))
 
 
-===== Introspection using Protocols
-
-_ClojureScript_ comes with a useful function that allows runtime introspection:
-`satisfies?`. The purpose of this function is to determine at runtime if some object
-(instance of some type) satisfies the concrete protocol.
-
-So, with the previous examples, if we check if a `set` instance satisfies an *IFn*
-protocol, it should return `true`:
-
-[source, clojure]
-----
-(satisfies? IFn #{1})
+(satisfies? Baz (->Foo "Alguém"))
 ;; => true
 ----
 
 
 ==== Multimethods
 
-We have previously talked about protocols which solve a very common use case of
-polymorphism: dispatch by type. But in some circumstances, the protocol approach can
-be limiting. And here, *multimethods* come to the rescue.
+Protocolos resolvem um problema muito comum de polimorfismo: despachar uma função
+por tipo. Mas em algumas circunstâncias, essa abordagem pode ser limitante.
+E são nesses casos que usamos _multimethods_
 
-These *multimethods* are not limited to type dispatch only; instead, they also offer
-dispatch by types of multiple arguments and by value. They also allow ad-hoc
-hierarchies to be defined. Also, like protocols, multimethods are an "Open System",
-so you or any third parties can extend a multimethod for new types.
+Esses _multimethods_ não estão limitados apenas por tipos; ao invés, eles oferecem
+a possibilidade de chamar funções de acordo com tipos de múltiplos argumentos
+ou por valor. Eles também permitem criarmos hierarquias. Além disso, como protocolos,
+_multimethods_ são um sistema aberto de extensão que pode ser usado por outras
+bibliotecas.
 
-The basic constructions of *multimethods* are the `defmulti` and `defmethod`
-forms. The `defmulti` form is used to create the multimethod with an initial
-dispatch function. This is a model of what it looks like:
+As funções básicas dos _multimethods_ são `defmulti` e `defmethod`. O `defmulti` é
+utilizado para criar uma função _dispatch_ inicial.
 
 [source, clojure]
 ----
 (defmulti say-hello
-  "A polymorphic function that return a greetings message
-  depending on the language key with default lang as `:en`"
+  "Uma função polimórfica que retorna uma mensagem de
+  olá dependendo da chave :locale, sendo o padrão `:en`"
   (fn [param] (:locale param))
   :default :en)
 ----
 
-The anonymous function defined within the `defmulti` form is a dispatch function. It
-will be called in every call to the `say-hello` function and should return some kind
-of marker object that will be used for dispatch. In our example, it returns the
-contents of the `:locale` key of the first argument.
+A função anônima definida dentro do `defmulti` é chamada de função _dispatch_. Ela
+é chamada toda vez que a função `say-hello` é chamada e deveria retornar algum tipo
+de valor que será usado para selecionar a implementação correta. No nosso exemplo,
+ela retorna o conteúdo da chave `:locale` do primeiro argumento.
 
-And finally, you should add implementations. That is done with the `defmethod` form:
+E finalmente, devemos adicionar algumas implementações. Isso é feito através do
+`defmethod`:
 
 [source, clojure]
 ----
@@ -2702,12 +2655,11 @@ And finally, you should add implementations. That is done with the `defmethod` f
   (str "Hola " (:name person "Anónimo")))
 ----
 
-So, if you execute that function over a hash map containing the `:locale` and
-optionally the `:name` key, the multimethod will first call the dispatch function to
-determine the dispatch value, then it will search for an implementation for that
-value. If an implementation is found, the dispatcher will execute it. Otherwise, the
-dispatch will search for a default implementation (if one is specified) and execute
-it.
+Então, se executamos essa função com um mapa contendo a chave `:local` e opcionalmente
+a chave `:name`, o _multimethod_ vai primeiro chamar a função `dispatch` para determinar
+o valor de `dispatch`, e então irá procurar pela implementação daquele valor.
+Se uma implementação é encontrada, a respectiva função será executada. Se não, o `dispatch`
+vai procurar pela implementação padrão (se houver) e executará ela.
 
 [source, clojure]
 ----
@@ -2721,29 +2673,30 @@ it.
 ;; => "Hello Anonymous"
 ----
 
-If the default implementation is not specified, an exception will be raised
-notifying you that some value does not have an implementation for that multimethod.
+Se uma implementação padrão não for especificada, uma exceção será gerada,
+notificando que o valor não possui uma implementação para aquele `multimethod`.
 
 
-==== Hierarchies
+==== Hierarquias
 
-Hierarchies are _ClojureScript_’s way to let you build whatever relations that your
-domain may require. Hierarchies are defined in term of relations between named
-objects, such as symbols, keywords, or types.
+Hierarquias são o modo que o _Clojure_ fornece para construir relações que seu domínio
+possa precisar. Hierarquias são definidas em termos de relaçãoes entre objetos
+nomeados como símbolos, _keywords_ ou tipos.
 
-Hierarchies can be defined globally or locally, depending on your needs. Like
-multimethods, hierarchies are not limited to a single namespace. You can extend a
-hierarchy from any namespace, not only from the one in which it is defined.
+Hierarquias podem ser definidas globalmente ou localmente, de acordo com suas
+necessidades. Você pode extender uma hierarquia em qualquer _namespace_, não apenas
+onde ela é definida.
 
-The global namespace is more limited, for good reasons. Keywords or symbols that are
-not namespaced can not be used in the global hierarchy. That behavior helps prevent
-unexpected situations when two or more third party libraries use the same symbol for
-different semantics.
+O _namespace_ global é mais limitado, por boas razões. _Keywords_ e símbolos que não são
+qualificados com um _namespace_ não podem ser usados em uma hierarquia global.
+Esse comportamento previne situações onde duas ou mais bibliotecas tentam utilizar
+o mesmo símbolo com semânticas diferentes.
 
 
-===== Defining a hierarchy
+===== Definindo uma hierarquia
 
-The hierarchy relations should be established using the `derive` function:
+Uma relação dentro de uma hierarquia deveria ser definida usando a função
+`derive`:
 
 [source, clojure]
 ----
@@ -2751,22 +2704,20 @@ The hierarchy relations should be established using the `derive` function:
 (derive ::box ::shape)
 ----
 
-We have just defined a set of relationships between namespaced keywords. In this
-case the `::circle` is a child of `::shape`, and `::box` is also a child of
-`::shape`.
+Nos apenas definimos um conjunto de relações entre _keywords_ qualificadas. Nesse
+caso, o `::circle` é filho de `::shape` e `::box` também é filho de `::shape`.
 
-TIP: The `::circle` keyword syntax is a shorthand for `:current.ns/circle`. So if
-you are executing it in a REPL, `::circle` will be evaluated as `:cljs.user/circle`.
+TIP: A sintaxe `::circle` é um "apelido" para `:current.ns/circle`. Então,
+se você estiver executando isso na REPL, `::circle`  será transformado em `user/circle`.
 
 
-===== Hierarchies and introspection
+===== Hierarquias e introspecção
 
-_ClojureScript_ comes with a little toolset of functions that allows runtime
-introspection of globally or locally defined hierarchies. This toolset consists of
-three functions: `isa?`, `ancestors`, and `descendants`.
+_Clojure_ vem com uma série de funções que permite verificar relações relacionadas
+a hierarquias em runtime. Essas funções são: `isa?`, `ancestors` e `descendants`.
 
-Let's see an example of how it can be used with the hierarchy defined in the
-previous example:
+Vejamos um exemplo de como podemos usá-las com a hierarquia definida no exemplo
+anterior:
 
 [source, clojure]
 ----
@@ -2784,11 +2735,11 @@ previous example:
 ----
 
 
-===== Locally defined hierarchies
+===== Hierarquias definidas localmente
 
-As we mentioned previously, in _ClojureScript_ you also can define local
-hierarchies. This can be done with the `make-hierarchy` function. Here is an example
-of how you can replicate the previous example using a local hierarchy:
+Como mencionamos anteriormente, em _Clojure_ voc6e pode definir uma
+hierarquia local. Isso pode ser feito com a função `make-hierarchy`. Aqui está
+o exemplo anterior com uma hierarquia local.
 
 [source, clojure]
 ----
@@ -2797,8 +2748,7 @@ of how you can replicate the previous example using a local hierarchy:
            (derive :circle :shape)))
 ----
 
-Now you can use the same introspection functions with that locally defined
-hierarchy:
+Agora podemos fazer a mesma instrospecção com a hierarquia local:
 
 [source, clojure]
 ----
@@ -2809,19 +2759,17 @@ hierarchy:
 ;; => false
 ----
 
-As you can observe, in local hierarchies we can use normal (not namespace qualified)
-keywords, and if we execute the `isa?` without passing the local hierarchy
-parameter, it returns `false` as expected.
+Como você pode observar, em uma hierarquia local podemos usar _keywords_ sem _namespaces_,
+e se executamos `isa?` sem passar uma hierarquia local, false é retornado, como esperado.
 
 
-===== Hierarchies in multimethods
+===== Hierarquias em _multimethods_
 
-One of the big advantages of hierarchies is that they work very well together with
-multimethods.  This is because multimethods by default use the `isa?` function for
-the last step of dispatching.
+Uma das grandes vantagens de hierarquias é que elas funcionam junto com _multimethods_.
+Isso é porque os _multimethods_ utilizam _by default_ a função `isa?` como último passo
+do _dispatch_.
 
-Let's see an example to clearly understand what that means. First, we define the
-multimethod with the `defmulti` form:
+Vejamos um exemplo para compreendermos isso. Primeiro vamos definir um _multimethod_:
 
 [source, clojure]
 ----
@@ -2832,10 +2780,10 @@ multimethod with the `defmulti` form:
   :hierarchy #'h)
 ----
 
-With the `:hierarchy` keyword parameter, we indicate to the multimethod what
-hierarchy we want to use; if it is not specified, the global hierarchy will be used.
+Com o parâmetro nomeado `:hierarchy`, nos indicamos ao _multimethod_ que queremos
+usar essa hierarquia; se não for especificado, a hierarquia global será usada.
 
-Second, we define an implementation for our multimethod using the `defmethod` form:
+Em seguida, definimos a implementação de nosso _mulitmethod_:
 
 [source, clojure]
 ----
@@ -2852,7 +2800,7 @@ Second, we define an implementation for our multimethod using the `defmethod` fo
   "Unexpected object")
 ----
 
-Now, let's see what happens if we execute that function with a box:
+Agora, vejamos o que acontece se executarmos essa função com `:box`:
 
 [source, clojure]
 ----
@@ -2860,10 +2808,9 @@ Now, let's see what happens if we execute that function with a box:
 ;; => "A box shape"
 ----
 
-Now everything works as expected; the multimethod executes the direct matching
-implementation for the given parameter. Next, let's see what happens if we execute
-the same function but with the `:circle` keyword as the parameter which does not
-have the direct matching dispatch value:
+Tudo funciona como esperado; o _multimethod_ executa uma _matching_ direto na implementação
+do parâmetro dado. Em seguida, vejamos o que acontece se executarmos a mesma
+função com o parâmetro `:circle`  que não possui uma implementação  "direta":
 
 [source, clojure]
 ----
@@ -2871,11 +2818,12 @@ have the direct matching dispatch value:
 ;; => "A generic shape"
 ----
 
-The multimethod automatically resolves it using the provided hierarchy, and since
-`:circle` is a descendant of `:shape`, the `:shape` implementation is executed.
+O `multimethod` automaticamente resolve qual implementação usar, utilizando a hierarquia
+fornecidade. Como `:circle` é um descendente de `:shape`, a implementação do _multimethod_
+para `:shape` é executada.
 
-Finally, if you give a keyword that isn't part of the hierarchy, you get the
-`:default` implementation:
+Finalmente, se você fornecer uma _keyword_ que não faz parte da hierarquia, você
+obtém a implementação default:
 
 [source,clojure]
 ----
@@ -2884,7 +2832,7 @@ Finally, if you give a keyword that isn't part of the hierarchy, you get the
 ----
 
 
-=== Data types
+=== Tipos de dados
 
 Until now, we have used maps, sets, lists, and vectors to represent our data. And in
 most cases, this is a really great approach. But sometimes we need to define our own
