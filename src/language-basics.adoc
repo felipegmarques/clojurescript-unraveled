@@ -2979,11 +2979,11 @@ Mas como eles existem, vamos dar uma olhada em como usá-los:
 ----
 
 
-==== Implementing protocols
+==== Implementando _protocols_ 
 
-Both type definition primitives that we have seen so far allow inline
-implementations for protocols (explained in a previous section). Let's define one
-for example purposes:
+Tanto `deftype` quanto `defrecord` permitem a implementação de protocolos "inline"
+como fizemos com _extend-type_ e _extend-protocol_. Vamos definir um protocolo
+como exemplo
 
 [source, clojure]
 ----
@@ -2992,8 +2992,7 @@ for example purposes:
   (full-name [_] "Get the full name of the user."))
 ----
 
-Now, you can define a type with inline implementation for an abstraction, in our
-case the `IUser`:
+Agora, podemos definir um tipo que implementando nossa abstração `IUser`:
 
 [source, clojure]
 ----
@@ -3010,14 +3009,13 @@ case the `IUser`:
 ----
 
 
-==== Reify
+==== Reify (Materializar)
 
-The `reify` macro is an _ad hoc constructor_ you can use to create objects without
-pre-defining a type.  Protocol implementations are supplied the same as `deftype`
-and `defrecord`, but in contrast, `reify` does not have accessible fields.
+A macro `reify` é um construtor ad-hoc que podemos usar para criar objectos que implementam
+uma interface sem definir um tipo. Porém, com `reify` não possuímos campos acessíveis
+como em `deftype` e `defrecord`.
 
-This is how we can emulate an instance of the user type that plays well with the
-`IUser` abstraction:
+No exemplo abaixo, podemos criar um objeto que implementa a abstração `IUser`:
 
 [source, clojure]
 ----
@@ -3033,88 +3031,49 @@ This is how we can emulate an instance of the user type that plays well with the
 ;; => "Yennefer of Vengerberg"
 ----
 
-==== Specify
+=== Interoperabilidade com a linguagem hospedeira
 
-`specify!` is an advanced alternative to `reify`, allowing you to add protocol
-implementations to an existing JavaScript object.  This can be useful if you want to
-graft protocols onto a JavaScript library's components.
+_Clojure_ foi feita para ser uma linguagem "convidada". Isso significa que o seu design
+foi pensando para trabalhar bem em cima do eco-sistema já existente da JVM.
 
-[source, clojure]
-----
-(def obj #js {})
+==== Os tipos
 
-(specify! obj
-  IUser
-  (full-name [_]
-    "my full name"))
-
-(full-name obj)
-;; => "my full name"
-----
-
-`specify` is an immutable version of `specify!` that can be used on immutable,
-copyable values implementing `ICloneable` (e.g. ClojureScript collections).
-
-[source, clojure]
-----
-(def a {})
-
-(def b (specify a
-         IUser
-         (full-name [_]
-           "my full name")))
-
-(full-name a)
-;; Error: No protocol method IUser.full-name defined for type cljs.core/PersistentArrayMap: {}
-
-(full-name b)
-;; => "my full name"
-----
-
-
-=== Host interoperability
-
-_ClojureScript_, in the same way as its brother Clojure, is designed to be a "guest"
-language. This means that the design of the language works well on top of an
-existing ecosystem such as JavaScript for _ClojureScript_ and the JVM for _Clojure_.
-
-
-==== The types
-
+_Clojure_ tira vantagens do tipos fornecidos pela plataforma. Essa é uma lista (provavelmente incompleta)
+de tipos que o _Clojure_ utiliza do java.
 _ClojureScript_, unlike what you might expect, tries to take advantage of every type
 that the platform provides. This is a (perhaps incomplete) list of things that
 _ClojureScript_ inherits and reuses from the underlying platform:
 
-* _ClojureScript_ strings are JavaScript *Strings*.
-* _ClojureScript_ numbers are JavaScript *Numbers*.
-* _ClojureScript_ `nil` is a JavaScript *null*.
-* _ClojureScript_ regular expressions are JavaScript `RegExp` instances.
-* _ClojureScript_ is not interpreted; it is always compiled down to JavaScript.
-* _ClojureScript_ allows easy call to platform APIs with the same semantics.
-* _ClojureScript_ data types internally compile to objects in JavaScript.
+* Strings em _Clojure_ são *Strings* do Java.
+* _Clojure_ utiliza os tipos numéricos primitivos do Java além de `BigInteger` e `BigDecimal`.
+* _Clojure_ `nil` tem o mesmo valor que o `null`  em Java..
+*  As expressões regulares em _Clojure_ são instâncias da class `java.util.regex.Pattern`.
+* _Clojure_ não é interpretada, é sempre compilada para Java Bytecode.
+* _Clojure_ permite chamada das APIs da plataforma usando a mesma semântica já existente.
 
-On top of it, _ClojureScript_ builds its own abstractions and types that do not
-exist in the platform, such as Vectors, Maps, Sets, and others that are explained in
-preceding sections of this chapter.
-
-
-==== Interacting with platform types
-
-_ClojureScript_ comes with a little set of special forms that allows it to interact
-with platform types such as calling object methods, creating new instances, and
-accessing object properties.
+Em cima disso, _Clojure_ constroí suas próprias abstrações e tipos que não existem
+na plataforma, como Vectors, Maps, Sets, e outros que foram explicados nas seções
+anteriores.
 
 
-===== Access to the platform
+==== Interagindo com tipos da plataforma
 
-_ClojureScript_ has a special syntax for access to the entire platform environment
-through the `js/` special namespace. This is an example of an expression to execute
-JavaScript's built-in `parseInt` function:
+_Clojure_ vem com um conjunto de formas especiais que nos permite interagir
+com tipos da plataformas como por exemplo chamar métodos de objetos, criar novas
+instâncias, e acessar propriedades de objetos.
+
+===== Acesso a plataforma
+
+_Clojure_ já possui vários símbolos importados do Java que podem ser usados, como
+por exemplo `Integer`, `Long`, `String`, etc:
 
 [source, clojure]
 ----
-(js/parseInt "222")
-;; => 222
+(Integer. 23)
+;; => 23
+(Integer/parseInt "23")
+;; => 23
+
 ----
 
 
