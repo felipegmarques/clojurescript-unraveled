@@ -1,6 +1,6 @@
-= Clojure Unraveled
+= Clojure Revelado
 Felipe Gonçalves Marques <marques.goncalves.felipe@gmail.com>;
-v6, 2016-07-25
+v1, 2016-07-25
 :toc: left
 :toclevels: 2
 :doctype: book
@@ -15,42 +15,37 @@ v6, 2016-07-25
 //^:listing-caption: Listing
 
 
+==  Disclaimer
+
+This is a non-professional translation of https://funcool.github.io/clojurescript-unraveled/[ClojureScript Unraveled] to both
+Portuguese and _Clojure_, done in a spike of energy and motivation over a week, which means that we may not be very
+careful with the translation. However, we tried not to change the content or the opinions of the authors of the
+_ClojureScript Unraveled_ book. I really appreciate their book and the fact that it is written under
+Creative Commons.
+
+
 ==  Sobre esse livro
 
-This book covers the ClojureScript programming language, serves as a detailed guide
-of its tooling for development, and presents a series of articles about topics that
-are applicable to day-to-day programming in ClojureScript.
+Esse livro é uma dupla tradução do livro https://funcool.github.io/clojurescript-unraveled/[ClojureScript Unraveled].
+Dupla tradução pois ele foi traduzido do inglês para o português e de _ClojureScript_ para _Clojure_.
+O objetivo é obter uma guia extenso das funcionalidades do _Clojure_ em português, democratizando
+o acesso a esse conhecimento nos países lusofonos, principalmente no Brasil. 
 
-It is not an introductory book to programming in that it assumes the reader has
-experience programming in at least one language. However, it doesn't assume
-experience with _Clojure_ or functional programming. We'll try to include links to
-reference material when talking about the theoretical underpinnings of ClojureScript
-that may not be familiar to everyone.
+Ele não é um livro introdutório em programação, pois ele assume que o leitor
+tenha experiência em ao menos uma linguagem de programação. Contudo, ele não
+assume nenhuma experiência prévia com _Clojure_ ou programação funcional. Por ser uma
+tradução, muitos dos links ainda referenciam textos em inglês, mas onde foi possível,
+substituí por equivalentes em português.
 
-Since the ClojureScript documentation is good but sparse, we wanted to write a
-compendium of reference information and extensive examples to serve as a
-ClojureScript primer as well as a series of practical how-to's. This document will
-evolve with the ClojureScript language, both as a reference of the language features
-and as a sort of cookbook with practical programming recipes.
+Por ser uma linguagem não tão difundida como Python, Ruby ou Java, não existe tantos
+recursos de _Clojure_ em português, optamos por traduzir esse livro, pois ele cobre
+a maior parte das funcionalidades. Talvez ele não seja tão concreto por não fornecer
+exemplos reais como mini-projetos, ou tão profundo, entrando nas discussões de como
+a língua foi construída. Porém, acho que ele é um bom começo para fornecer material
+gratuito sobre _Clojure_.
 
-You'll get the most out of this book if you:
-
-- are curious about ClojureScript or functional programming and have some programming
-  experience;
-- write JavaScript or any other language that compiles to it and want to know what
-  ClojureScript has to offer;
-- already know some Clojure and want to learn how ClojureScript differs from it, plus
-  practical topics like how to target both languages with the same code base.
-
-Don't be turned off if you don't see yourself in any of the above groups. We
-encourage you to give this book a try and to give us feedback on how we can make it
-more accessible.  Our goal is to make ClojureScript more friendly to newcomers and
-spread the ideas about programming that Clojure has helped popularize, as we see a
-lot of value in them.
-
-This is a list of translations of the book:
-
-- Ukrainian: https://lambdabooks.github.io/clojurescript-unraveled/
+Por enquanto, somente o capítulo "A Linguagem (o básico)" foi traduzido. Em breve, pretendo
+traduzir os outros capítulos do livro que são: "Ferramentas" e "A Linguagem (avançado)".
 
 
 == Introdução
@@ -106,53 +101,21 @@ https://repl.it/languages/clojure
 include::language-basics.adoc[]
 
 
-== Tooling & Compiler
+== Agradecimentos
 
-This chapter will cover a little introduction to existing tooling for making things
-easy when developing using ClojureScript. It will cover:
-
-* Using the REPL
-* Leiningen and cljsbuild
-* Google Closure Library
-* Modules
-* Unit testing
-* Library development
-* Browser based development
-* Server based development
-
-Unlike the previous chapter, this chapter intends to tell different stories each
-independent of the other.
-
-include::compiler.adoc[]
-
-
-== Language (advanced topics)
-
-This chapter intends to explain some advanced topics that are part of the language
-and that does not fit in the first chapter. The good candidates for this section are
-transducers, core protocols, transients, metadata. In summary: topics that are not
-mandatory for understand the language.
-
-include::language-advanced.adoc[]
-
-
-== Appendix
-
-include::appendix.adoc[]
-
-
-== Acknowledgments
+Agradecimentos especiais aos autores originais do livro que fizeram o grande trabalho de escrevê-lo
+e disponibilizá-lo sob um licensa que permita sua tradução e adaptação.
 
 include::acknowledgments.adoc[]
+- Andrey Antukh niwi@niwi.nz
+- Alejandro Gómez alejandro@dialelo.com
 
+== Recursos adicionais
 
-== Further Reading
+Aqui está uma lista de mais recursos sobre _Clojure_.
+A medida que acharmos ou produzirmos mais conteúdo em português, iremos adicionar
+aqui.
 
-Here is a list of more resources about ClojureScript.
+* https://clojure.org/api/cheatsheet/[Clojure Cheatsheet]: uma referência em inglês da linguagem _Clojure_.
+* https://clojuredocs.org/[Clojure Community-docs ]: documentação sobre a linguagem produzida pela comunidade.
 
-* https://github.com/clojure/clojurescript/wiki[ClojureScript wiki]: a community-mantained wiki about ClojureScript.
-* https://github.com/cljsinfo/cljs-api-docs/blob/catalog/INDEX.md[API Reference]: a community-maintained complete language api reference.
-* http://cljs.info/cheatsheet/[ClojureScript Cheatsheet]: a comprehensive reference of the ClojureScript language.
-* http://catcode.com/etudes-for-clojurescript/toc.html[Études for ClojureScript]: a collection of exercises for learning ClojureScript.
-* http://clojurescriptmadeeasy.com/[ClojureScript made easy]: a collection of short articles about solving common problems in ClojureScript.
-* http://google.github.io/closure-library/api/[The Google Closure Library API reference]
