@@ -540,8 +540,8 @@ que são implicitamente declarados quando a macro de leitura vai interpretar e c
 essa forma em uma expressão `fn`.
 
 Se a função aceitar somente um argumento, você pode omitir o número depois do `%`,
-por exemplo, uma função eleva um número ao quadrado pode ser escrita tanto assim
-`#(* %1 %1)` como assim `#(* % %)`.
+por exemplo, uma função que eleva um número ao quadrado pode ser escrita tanto assim
+`#(* %1 %1)` quanto assim `++#++(* % %)`.
 
 Além disso, a sintaxe também suporta a forma de aridade variável com o símbolo `%&`:
 
