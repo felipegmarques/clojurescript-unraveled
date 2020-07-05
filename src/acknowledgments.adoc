@@ -1,6 +1,0 @@
-Special thanks to:
-
-- Andrey Antukh niwi@niwi.nz
-- Alejandro Gómez alejandro@dialelo.com
-
-Who wrote the original book and to all others involved in the elaboration of that book.

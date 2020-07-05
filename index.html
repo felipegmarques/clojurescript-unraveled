@@ -1,0 +1,3976 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="generator" content="Asciidoctor 2.0.10"/>
+<meta name="author" content="Felipe Gonçalves Marques"/>
+<title>Clojure Revelado</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic|Roboto+Mono:400|Roboto+Slab:400,700"/>
+<link rel="stylesheet" href="assets/stylesheet.css" />
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>Clojure Revelado</h1>
+<div class="details">
+<span id="author" class="author">Felipe Gonçalves Marques</span><br/>
+<span id="email" class="email"><a href="mailto:marques.goncalves.felipe@gmail.com">marques.goncalves.felipe@gmail.com</a></span><br/>
+<span id="revnumber">version 1,</span>
+<span id="revdate">2016-07-25</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#disclaimer">1. Disclaimer</a></li>
+<li><a href="#sobre-esse-livro">2. Sobre esse livro</a></li>
+<li><a href="#introdução">3. Introdução</a></li>
+<li><a href="#a-linguagem-o-básico">4. A Linguagem (o básico)</a>
+<ul class="sectlevel2">
+<li><a href="#primeiros-passos-com-a-sintaxe-lisp">4.1. Primeiros passos com a sintaxe Lisp</a></li>
+<li><a href="#os-tipos-básicos">4.2. Os tipos básicos</a></li>
+<li><a href="#vars">4.3. Vars</a></li>
+<li><a href="#function-section">4.4. Funções</a></li>
+<li><a href="#lógica-de-controle">4.5. Lógica de controle</a></li>
+<li><a href="#truthiness-section">4.6. O que é "Verdade" em <em>Clojure</em>?</a></li>
+<li><a href="#locals-blocos-e-loops">4.7. Locals, Blocos, e Loops</a></li>
+<li><a href="#tipos-de-coleções">4.8. Tipos de coleções</a></li>
+<li><a href="#destructuring-section">4.9. Desestruturando (<em>Destructuring</em>)</a></li>
+<li><a href="#threading-macros-ou-ordenando-chamadas-consecutivas-de-funções">4.10. <em>Threading Macros</em> (ou ordenando chamadas consecutivas de funções)</a></li>
+<li><a href="#namespace-section">4.11. Namespaces</a></li>
+<li><a href="#abstrações-e-polimorfismos">4.12. Abstrações e Polimorfismos</a></li>
+<li><a href="#tipos-de-dados">4.13. Tipos de dados</a></li>
+<li><a href="#interoperabilidade-com-a-linguagem-hospedeira">4.14. Interoperabilidade com a linguagem hospedeira</a></li>
+<li><a href="#gerenciamento-de-estado">4.15. Gerenciamento de estado</a></li>
+</ul>
+</li>
+<li><a href="#agradecimentos">5. Agradecimentos</a></li>
+<li><a href="#recursos-adicionais">6. Recursos adicionais</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="disclaimer"><a class="link" href="#disclaimer">1. Disclaimer</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This is a non-professional translation of <a href="https://funcool.github.io/clojurescript-unraveled/">ClojureScript Unraveled</a> to both
+Portuguese and <em>Clojure</em>, done in a spike of energy and motivation over a week, which means that we may not be very
+careful with the translation. However, we tried not to change the content or the opinions of the authors of the
+<em>ClojureScript Unraveled</em> book. I really appreciate their book and the fact that it is written under
+Creative Commons.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="sobre-esse-livro"><a class="link" href="#sobre-esse-livro">2. Sobre esse livro</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Esse livro é uma dupla tradução do livro <a href="https://funcool.github.io/clojurescript-unraveled/">ClojureScript Unraveled</a>.
+Dupla tradução pois ele foi traduzido do inglês para o português e de <em>ClojureScript</em> para <em>Clojure</em>.
+O objetivo é obter uma guia extenso das funcionalidades do <em>Clojure</em> em português, democratizando
+o acesso a esse conhecimento nos países lusofonos, principalmente no Brasil.</p>
+</div>
+<div class="paragraph">
+<p>Ele não é um livro introdutório em programação, pois ele assume que o leitor
+tenha experiência em ao menos uma linguagem de programação. Contudo, ele não
+assume nenhuma experiência prévia com <em>Clojure</em> ou programação funcional. Por ser uma
+tradução, muitos dos links ainda referenciam textos em inglês, mas onde foi possível,
+substituí por equivalentes em português.</p>
+</div>
+<div class="paragraph">
+<p>Por ser uma linguagem não tão difundida como Python, Ruby ou Java, não existe tantos
+recursos de <em>Clojure</em> em português, optamos por traduzir esse livro, pois ele cobre
+a maior parte das funcionalidades. Talvez ele não seja tão concreto por não fornecer
+exemplos reais como mini-projetos, ou tão profundo, entrando nas discussões de como
+a língua foi construída. Porém, acho que ele é um bom começo para fornecer material
+gratuito sobre <em>Clojure</em>.</p>
+</div>
+<div class="paragraph">
+<p>Por enquanto, somente o capítulo "A Linguagem (o básico)" foi traduzido. Em breve, pretendo
+traduzir os outros capítulos do livro que são: "Ferramentas" e "A Linguagem (avançado)".</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="introdução"><a class="link" href="#introdução">3. Introdução</a></h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>_Clojure_ é uma linguagem funcional e dinâmicamente tipada, e direcionada por dados
+(data-driven). Ela foca em ser pratica, por isso foi implementada para a _Java Virtual Machine(JVM)_.
+Clojure é um dialeto de _LISP_ e por tanto oferece todo o poder de macros e da idea de código é dados.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Antes de começarmos, vamos resumir alguma das ideias mais importantes que ClojureScript
+traz. Não se preocupe se não entendê-las de primeira, elas vão ficar claras ao longo desse
+livro.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Clojure favore o paradigma de programção funcional através das suas decisões de design
+e idiomas. Apesar de ser assertiva em relação ao paradigma funcional,
+ela é uma linguagem pragmática: ao invés de buscar uma pureza em relação a programação funcional
+como Haskell, por exemplo, ela foca em ser prática.</p>
+</li>
+<li>
+<p>Encoraja programação utilizando estruturas imutáveis, oferencendo implementações
+de estruturas de dados altamente performáticas.</p>
+</li>
+<li>
+<p>Ela faz uma distinção clara entre identidade e o seu estado, com ferramentas explícitas
+para o gerenciamento de mudanças vinculadas a uma identidade, que é mantida como
+uma série de valores imutáveis ao longo do tempo.</p>
+</li>
+<li>
+<p>Ela possui um polimorfismo baseado em tipos e valores, que resolve o problema de
+expressar o domínio de forma elegante.</p>
+</li>
+<li>
+<p>Ela é um dialeto de Lisp, onde programas são escritos utilizando as mesmas
+estruturas de dados presentes na língua, uma propriedade conhecida como <em>homoiconicity</em>
+que torna a meta-programação (programas que escrevem programas) mais simples e palpável.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Essas ideias influenciam a maneira como desenhamos e implementamos nossos programas,
+mesmo quando não estamos usando Clojure. Programação funciona, desacoplamento dos dados
+das operação que os transformam e ferramentas explícitas para gerenciamento de mudanças
+trazem uma grande simplicidade para os sistemas que escrevemos.</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+Podemos fazer os mesmos softwares que fazemos hoje com ferramentas drasticamente
+mais simples - linguagems, ferramentas, técnicas e abordagens muito mais simples.
+</blockquote>
+<div class="attribution">
+&#8212; Rich Hickey
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>É de longe uma das linguages que mais gostamos de utilizar e nos sintimos extremamente produtivos
+quando a usamos. Espero que você também se sinta assim quando estiver trabalhando com Clojure :).</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="a-linguagem-o-básico"><a class="link" href="#a-linguagem-o-básico">4. A Linguagem (o básico)</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Esse capítulo é uma pequena introdução ao Clojure sem assumir nenhum conhecimento
+prévio da linguagem, ele provê um tour rápido sobre as principais coisas que
+você precisa saber sobre Clojure para entender o resto do livro.</p>
+</div>
+<div class="paragraph">
+<p>Você pode rodar os trechos de código na REPL online interativa em:
+<a href="https://repl.it/languages/clojure" class="bare">https://repl.it/languages/clojure</a></p>
+</div>
+<div class="paragraph">
+<p>/* todo: adicionar tutorial de como rodar clojure */</p>
+</div>
+<div class="sect2">
+<h3 id="primeiros-passos-com-a-sintaxe-lisp"><a class="link" href="#primeiros-passos-com-a-sintaxe-lisp">4.1. Primeiros passos com a sintaxe Lisp</a></h3>
+<div class="paragraph">
+<p>Inventada por John Mccarthy em 1958, Lisp é uma das linguagens de progrmação
+mais antigas que ainda são utilizadas. Ela possui várias outras derivações chamadas
+de dialeto, sendo Clojure uma delas. É uma linguagem de programação escrita utilizando
+suas próprias estrutura de dados - originalmente uma lista rodeada de parênteses -
+mas Clojure evoluiu essa sintaxe para possuir mais estruturas de dados e ser mais
+agradável de escrever.</p>
+</div>
+<div class="paragraph">
+<p>Uma lista com uma função na primeira posição é utilizada para chamar uma função
+em Clojure. No exemplo abaixo, nos aplicamos a função de adição a três argumentos.
+Observe que diferente de outras linguagens, <code>+</code> não é um operado, mas uma função.
+Lisp não possui operadores; somente funções.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(+ 1 2 3)
+;; =&gt; 6</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>No exemplo acima, estamos aplicando a função de adição <code>+</code> aos argumentos <code>1</code>, <code>2</code> e <code>3</code>.
+Clojure permite vários caracteres não muito comuns como <code>?</code> e <code>-</code> em nome de símbolos,
+o que a torna a leitura mais fácil:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(zero? 0)
+;; =&gt; true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Para diferencial chamadas de funções de uma lista de itens, podemos usar uma aspa
+o que evite que a lista seja calculada/avaliada, como no primeiro exemplo. Uma lista
+com aspa no começo (<em>quoted list</em>) será tratada como dado ao invés de uma chamada de
+função:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">'(+ 1 2 3)
+;; =&gt; (+ 1 2 3)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Clojure não usa somente listas para sua sintaxe. Cobriremos isso com mais detalhes mais
+tarde, mas aqui está um exemplo de utilização de um vetor (rodeado por cochetes) para
+definir uma relação entre nome e valor (<em>bidinng</em>) local:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(let [x 1
+      y 2
+      z 3]
+  (+ x y z))
+;; =&gt; 6</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Essa é a sintaxe mínima que voc6e precisa saber para utilizar não só Clojure,
+mas qualquer Lisp. Sendo escrita nas suas próprias estruturas de dados (aquela coisa de <em>homoiconicity</em>)
+é uma propriedade muito poderosa, pois a sintaxe é uniforme e simples, além disso,
+a geração de código através de <a href="#macros-section">macros</a> é mais simples que outras linguagens,
+nos dando poder de ampliar a linguagem para se adequar às nossas necessidades.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="os-tipos-básicos"><a class="link" href="#os-tipos-básicos">4.2. Os tipos básicos</a></h3>
+<div class="paragraph">
+<p>Clojure possui uma conjunto de tipos primitivos como maioria das linguagens.
+Ele prove escalares que serão muito familiar para você como números, strings e
+números de ponto flutuantes (<em>floats</em>). Além desses, ele provê alguns outros tipos
+não muito comuns como símbolos, chaves, expressões regulares (<em>regex</em>), <em>vars</em> e <em>atoms</em>.</p>
+</div>
+<div class="paragraph">
+<p><em>Clojure</em> utiliza a linguagem hospedeira (<em>Java</em>), e quando possível, utiliza os
+tipos fornecidos por ela. Por exemplo, números e strings são usados como providos
+pelo linguagem e se comportam do mesmo jeito que se comportam em Java.</p>
+</div>
+<div class="sect3">
+<h4 id="números"><a class="link" href="#números">4.2.1. Números</a></h4>
+<div class="paragraph">
+<p>Em <em>Clojure</em>, números incluem tanto inteiros quanto floating points (<em>float</em>).
+Tenha em mente, que como uma linguagem hospedada na <em>JVM</em>, os tipos numéricos em <em>Clojure</em>
+são os tipos nativos do Java como Integer e Long  por baixo dos panos,
+mas tanbém provendo alguns outros tipos como BigInt.</p>
+</div>
+<div class="paragraph">
+<p>Como em outras linguagens, números em <em>Clojure</em> são representados da seguinte
+maneira:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">23
++23
+-100
+1.7
+-2
+33e8
+12e-14
+3.2e-4</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="chaves-keywords"><a class="link" href="#chaves-keywords">4.2.2. Chaves (<em>Keywords</em>)</a></h4>
+<div class="paragraph">
+<p>Chaves em <em>Clojure</em> são objetos que sempre são avalidados a eles mesmos. Eles
+são usualmente usado em  <a href="#maps-section">estruturas de dados do tipo mapa</a> para representar
+de maneira eficiente as chaves do mapa (ou dicionário).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">:foobar
+:2
+:?</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como voc6e pode ver, as chaves são todas prefixadas com <code>:</code>, mas esse caracter é
+apenas parte da sintaxe literal e não parte do nome do objeto.</p>
+</div>
+<div class="paragraph">
+<p>Você também pode criar uma chave chamando a função <code>keyword</code>. Não se preocupe se você
+não entende ou nada está claro no próximo exemplo, vamos discutir <a href="#function-section">funções</a>
+em uma seção adiante.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(keyword "foo")
+;; =&gt; :foo</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="chaves-qualificadas-ou-com-namespace"><a class="link" href="#chaves-qualificadas-ou-com-namespace">Chaves qualificadas (ou com <em>Namespace</em>)</a></h5>
+<div class="paragraph">
+<p>Quando prefixamos uma chave com <code>::</code>, essa chave passa a ser prefixada com o <em>namespace</em> atual.
+Note que chaves qualificadas afetam comparações de igualdade.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">---
+::foo
+;; =&gt; :user/foo</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(= ::foo :foo)
+;; &#8658; false
+---</p>
+</div>
+<div class="paragraph">
+<p>Outra alternativa é incluir o <em>namespace</em> na sintaxe literal da chava, isso é útil para criamos chaves qualificadas
+para outro <em>namespace</em>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">---
+:clojure.unraveled/foo
+;; =&gt; :clojure.unraveled/foo
+---</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A função <code>keyword</code> também funciona como uma função que recebe 2 argumentos (<em>arity-2</em>) onde você
+especifica o <em>namespace</em> como primeiro argumento:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">---
+(keyword "clojure.unraveled" "foo")
+;; =&gt; :clojure.unraveled/foo
+---</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="símbolos"><a class="link" href="#símbolos">4.2.3. Símbolos</a></h4>
+<div class="paragraph">
+<p>Símbolos em <em>Clojure</em> são muito parecidos com chaves (que agora você conhece0. Mas ao invés de
+serem avaliados (<em>evaluated</em>) a eles mesmos, os símbolos são avaliados para outra coisa
+a qual eles referem, que pode ser funções, variáveis, etc.</p>
+</div>
+<div class="paragraph">
+<p>Símbolos começam sembre com um caractere não numério e pode conter caracteres alfa-numéricos
+assim como *, +, !, -, -, ', e ? como:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">sample-symbol
+othersymbol
+f1
+my-special-swap!</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Não se preocupe se você não entender isso de imediato, símbolos são usados praticamente
+em todos os nossos outros exemplosl, o que te dá a oportunidade de aprender mais a medida
+que avançamos.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="strings"><a class="link" href="#strings">4.2.4. Strings</a></h4>
+<div class="paragraph">
+<p>Strings em <em>Clojure</em> não são tão diferente de outras linguagens, então você já deve
+saber suficiente sobre elas. Um único ponto interessante de mencionar é que elas
+são imutáveis.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">"An example of a string"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Um aspecto peculiar de strings em <em>Clojure</em> devido a sintaxe de Lisp é que seja
+strings de uma linha ou de várias linhas, elas possuem a mesma sintaxe.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">"This is a multiline
+      string in ClojureScript."</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="caracteres"><a class="link" href="#caracteres">4.2.5. Caracteres</a></h4>
+<div class="paragraph">
+<p><em>Clojure</em> também permite você escrever um único caractere usando a seguinte sintaxe
+literal:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">\a        ; "a" minúsculo
+\newline  ; Caractere que indica uma nova linha</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="coleções"><a class="link" href="#coleções">4.2.6. Coleções</a></h4>
+<div class="paragraph">
+<p>O próximo grande passo em explicar a linguagem é explicar suas coleções e as
+abstrações de coleções. <em>Clojure</em> não é uma exceção a essa regra.</p>
+</div>
+<div class="paragraph">
+<p><em>Clojure</em> vem com vários tipos de coleções. A principal diferenção do <em>Clojure</em> para
+outras linguagens é que suas coleções são persistentes e imutáveis.</p>
+</div>
+<div class="paragraph">
+<p>Antes de entrarmos nesses conceitos (provavelmente) desconhecidos, vamos dar uma
+visão geral das coleções existentes em <em>Clojure</em>.</p>
+</div>
+<div class="sect4">
+<h5 id="listas"><a class="link" href="#listas">Listas</a></h5>
+<div class="paragraph">
+<p>Essa é uma coleção clássica em qualquer linguagem derivada do Lisp.
+Listas são o tipo de coleção mais simples em <em>Clojure</em>. Elas podem conter itens
+de qualquer tipo, incluindo outras coleções.</p>
+</div>
+<div class="paragraph">
+<p>Listas em <em>Clojure</em> são representadas por items envolvidos por parênteses:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">'(1 2 3 4 5)
+'(:foo :bar 2)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como você pode ver, todos os exemplos de listas são prefixados com o caractere <code>'</code>.
+Isso porque em linguagems derivadas do Lisp, listas são usadas para expressar
+chamadas de funções (ou de macros). Nesse caso, o primeiro item deveria ser um
+símbolo que é avaliado a alguma coisa que é chamável (ex: uma função), e o resto dos
+elementos da lista serão argumentos da função. porém, nos exemplos anteriores, nos não
+ queremos que o primeiro item da lista seja um símbolo, nos queremos que seja apenas
+ uma lista de items.</p>
+</div>
+<div class="paragraph">
+<p>O exemplo seguinte mostra a diferença entre listas com e sem uma aspa no começo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(inc 1)
+;; =&gt; 2
+
+'(inc 1)
+;; =&gt; (inc 1)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como você pode ver, se evaluarmos <code>(inc 1)</code> sem prefixar com uma aspa <code>'</code>, ele
+será transformado na função <code>inc</code> (de incrementar) e irá executar essa função com 1
+como seu primeiro argumento, retornando o valor de 2.</p>
+</div>
+<div class="paragraph">
+<p>Você pode também contruir uma lista com a função <code>list</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(list 1 2 3 4 5)
+;; =&gt; (1 2 3 4 5)
+
+(list :foo :bar 2)
+;; =&gt; (:foo :bar 2)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Listas tem a peculiaridade de ser muito eficiente se você acessar elas sequencialmente
+ou os primeiros elementos, porém elas não são uma boa opção se você precisa acessar elementos
+utilizando a posição (index) desses elementos.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="vetores"><a class="link" href="#vetores">Vetores</a></h5>
+<div class="paragraph">
+<p>Como listas, vetores armazenam uma série de valores, mas nesse caso, de forma
+mais eficiente para acesso através do index desses elementos. Não se preocupe, nas seções
+seguintes vamos entrar nos detalhes, mas por hora, essa explicação é mais que suficiente.</p>
+</div>
+<div class="paragraph">
+<p>Vetores usam cochetes como sintaxe literal, vamos ver alguns exemplos:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">[:foo :bar]
+[3 4 5 nil]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como listas, vetores podem contem objetos de qualquer tipo, como mostrado no
+exemplo anterior.</p>
+</div>
+<div class="paragraph">
+<p>Você pode também explicitamente criar um vetor com a função <code>vector</code>, mas esse não é
+o jeito mais comum de fazê-lo em <em>Clojure</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(vector 1 2 3)
+;; =&gt; [1 2 3]
+
+(vector "blah" 3.5 nil)
+;; =&gt; ["blah" 3.5 nil]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="maps-section"><a class="link" href="#maps-section">Mapas (ou dicionários)</a></h5>
+<div class="paragraph">
+<p>Mapas são coleções de abstrações que permite você armazenar pares de chave e valor.
+Em outras linguages, esse tipo de estrutura são comumente conhecidas como has-map ou
+dicionários. Mapas são literais em <em>Clojure</em> e são escritos como pares entre chaves.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">{:foo "bar", :baz 2}
+{:alphabet [:a :b :c]}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>NOTA: Podemos usar vírgulas para separar pares, mas elas são opcionais.
+No geral, a formatação dos arquivos já favorece a leitura. Em <em>Clojure</em>, vírgulas
+são como espaços.</p>
+</div>
+<div class="paragraph">
+<p>Como vetores, cada item em um mapa literal é evaluado antes que seu resultado seja
+armazenado no map, mas a ordem de resolução não é garantida.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="conjuntos"><a class="link" href="#conjuntos">Conjuntos</a></h5>
+<div class="paragraph">
+<p>E finalmente, <strong>sets</strong> (ou conjuntos).</p>
+</div>
+<div class="paragraph">
+<p>Conjuntos armazenam zero ou mais itens únicos de forma não ordenada. Como mapas,
+eles  possuem chaves como sintaxe litera, com a diferença de serem prefixados com <code>#</code>.
+Você também pode usar a função <code>set</code> para converter  uma coleção em um set:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">#{1 2 3 :foo :bar}
+;; =&gt; #{1 :bar 3 :foo 2}
+(set [1 2 1 3 1 4 1 5])
+;; =&gt; #{1 2 3 4 5}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Nas seções seguintes, vamos explorar a fundo conjuntos e outras coleções que vimos
+nessa seção.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="vars"><a class="link" href="#vars">4.3. Vars</a></h3>
+<div class="paragraph">
+<p><em>Clojure</em> é uma linguagem funcional que foca principalmente em imutabilidade.
+Por cause disso, ela não tem o conceito de variáveis como estamos acostumados
+em outras linguagens. A analogia mais próxima de vars são as variáveis que
+definimos na álgebra; quando dizemos <code>x = 6</code> na matemática, estamos dizendo que queremos
+que o símbolo <code>x</code> tenha, ou represente, o número seis.</p>
+</div>
+<div class="paragraph">
+<p>Em <em>Clojure</em>, vars são representadas por símbolos e armazenam um único valor
+junto com alguns meta-dados.</p>
+</div>
+<div class="paragraph">
+<p>Você pode definir uma var utilizando a forma especial <code>def</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def x 22)
+(def y [1 2 3])</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Vars são tempre top level em um <em>namespace</em>(<a href="#namespace-section">which we will
+explain later</a>). Se você usar <code>dev</code> em uma chamada de função, aquela var será definida
+no nível do namespace e poderá ser usada em outros lugares (diferente de variáveis locais
+que algumas linguagens possuem), mas não recomendamos isso - ao invés, você devereria
+utilizar um bloco <code>let</code> para definir variáveis dentro de uma função.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="function-section"><a class="link" href="#function-section">4.4. Funções</a></h3>
+<div class="sect3">
+<h4 id="o-primeiro-contato"><a class="link" href="#o-primeiro-contato">4.4.1. O primeiro contato</a></h4>
+<div class="paragraph">
+<p>É hora de fazer as coisas acontecerem. <em>Clojure</em> possui o que conhecemos como
+<em>first class functions</em>. Funções se comportam como qualquer outro tipo; você pode passá-las
+como argumentos e retorná-las como valores, sempre respeitando o escopo léxico. <em>Clojure</em>
+também possui algumas funcionalidades devido ao escopo dinâmica, mas vamos ver isso em
+outra seção.</p>
+</div>
+<div class="paragraph">
+<p>Se você quer saber mais sobre escopos, esse  <a href="https://pt.wikipedia.org/wiki/Escopo_(computa%C3%A7%C3%A3o))">Artigo da Wikipedia</a> é
+bem completo e explica os diversos tipos de escopo.</p>
+</div>
+<div class="paragraph">
+<p>Como <em>Clojure</em> é um dialeto do Lisp, ela utiliza a notação prefixada para chamar funções:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(inc 1)
+;; =&gt; 2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>No exemplo acima, <code>inc</code> é uma função e é parte da <em>runtime</em> do <em>Clojure</em>, e
+<code>1</code> é o primeiro argumento para a função <code>inc</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(+ 1 2 3)
+;; =&gt; 6</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O símbolo de <code>+</code>  representa a função <code>add</code> (de adição). Ela permite múltiplos parâmetros,
+enquanto em linguagens que seguem o estilo <em>ALGOL</em>, <code>+</code> é um operador e permite somente
+dois parâmetros.</p>
+</div>
+<div class="paragraph">
+<p>A notação prefixada possui algumas vantagens, que não são óbvias. <em>Clojure</em>
+não faz distinção entre função e operador; tudo é uma função. A vantagem imediata é
+que a notação prefixada permite um número arbitrário de argumentos por "operador".
+Isso remove completamente o problema de precedência de operadores.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="definindo-suas-próprias-funções"><a class="link" href="#definindo-suas-próprias-funções">4.4.2. Definindo suas próprias funções</a></h4>
+<div class="paragraph">
+<p>Você pode definir funções sem nome (anônimas) com a forma especial <code>fn</code>. Esse é um tipo
+de definição de função; no exemplo seguinte, a função recebe dois argumentos e retorna
+a média deles.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(fn [param1 param2]
+  (/ (+ param1 param2) 2.0))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Você pode definir a função e chamá-la ao mesmo tempo (em uma única expressão):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">((fn [x] (* x x)) 5)
+;; =&gt; 25</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Agora vamos criar algumas funções com nomes. Mas o que uma <em>função com nome</em> significa?
+Em <em>Clojure</em> é bem simples, funções são <em>first-class</em> e se comportam como qualquer outro valor.
+Então, nomear uma função é feita simplesmente vinculando a função a um símbolo.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def square (fn [x] (* x x)))
+
+(square 12)
+;; =&gt; 144</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><em>Clojure</em> também oferece uma macro <code>defn</code> que permite fazer a mesma coisa de uma
+maneira mais idiomática:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defn square
+  "Return the square of a given number."
+  [x]
+  (* x x))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A string que vem entre o nome da função e o vetor de parâmetros é chamada de  <em>docstring</em>
+(documentation string); existem programas que geram documentação a partir do código fonte
+que utilizam essas <em>docstrings</em>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="funções-com-múltiplas-aridades-ou-diferente-números-de-argumentos"><a class="link" href="#funções-com-múltiplas-aridades-ou-diferente-números-de-argumentos">4.4.3. Funções com múltiplas aridades (ou diferente números de argumentos)</a></h4>
+<div class="paragraph">
+<p><em>Clojure</em> também vem com a habilidade de definir funções com um número arbitrário de argumentos.
+(O termo <em>aridade</em> signifca o número de argumentos que um função aceita.) A sintaxe é praticamente
+idêntica a sintaxe de definição de uma função comum, com a pequana diferenção que ela contém mais
+de um <em>body</em>(ou corpo de expressões).</p>
+</div>
+<div class="paragraph">
+<p>Vejamos um exemplo, o qual vamos explicar melhor:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defn myinc
+  "Self defined version of parameterized `inc`."
+  ([x] (myinc x 1))
+  ([x increment]
+   (+ x increment)))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Essa linha: <code>([x] (myinc x 1))</code> diz que se a função for chamada somente com um argumento,
+chame a função <code>myinc</code> com aquele argumento e o número <code>1`como segundo argumento. O outro
+corpo de expressões `([x increment] (+ x increment))</code> dis que se houver dois
+argumentos, retorna-se o resultado da adição deles.</p>
+</div>
+<div class="paragraph">
+<p>Aqui estão mais alguns exemplos de como usar a função de múltipla aridade definida
+anteriormente. Observe que se você chama uma função com o número errado de argumentos,
+o compilador irá produzir uma mensagem de erro.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(myinc 1)
+;; =&gt; 2
+
+(myinc 1 3)
+;; =&gt; 4
+
+(myinc 1 3 3)
+;; Compiler error</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Explicar o conceito de "aridade" está fora do escopo desse livro,
+entretanto você pode ler mais sobre isso nesse <a href="https://pt.wikipedia.org/wiki/Aridade"> artigo da Wikipedia</a>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="funçòes-de-aridade-variável"><a class="link" href="#funçòes-de-aridade-variável">4.4.4. Funçòes de aridade variável</a></h4>
+<div class="paragraph">
+<p>Outro jeito de aceitar múltiplo número de argumentos é definir uma função aridade variável.
+Essas funções podem aceitar um número arbitrário de argumentos:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defn my-variadic-set
+  [&amp; params]
+  (set params))
+
+(my-variadic-set 1 2 3 1)
+;; =&gt; #{1 2 3}
+
+(my-variadic-set 1 2)
+;; =&gt; #{1 2}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A função acima aceita de 0 a quantos argumentos quisermos, podendo receber 1, 2, 3 ou até mais.
+O jeito de definir uma função com aridade variável é utilizando o símbolo <code>&amp;</code> como prefixo
+no seu vetor de argumentos.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="sintaxe-mais-simmples-para-funções-anônimas"><a class="link" href="#sintaxe-mais-simmples-para-funções-anônimas">4.4.5. Sintaxe mais simmples para funções anônimas</a></h4>
+<div class="paragraph">
+<p><em>Clojure</em> provê uma sintaxe mais compacta para definir funções anônimas usando a macro de leitura
+<code>#()</code> (usualmente consistindo de somente uma linha). Macros de leitura são expressões
+especiais que serão transformadas para algo compatível com a língua em tempo de compilação;
+nesse caso, para uma expressão que usa a forma especial <code>fn</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def average #(/ (+ %1 %2) 2))
+
+(average 3 4)
+;; =&gt; 3.5</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A definição precedente é uma jeito mais curto de escrever:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def average-longer (fn [a b] (/ (+ a b) 2)))
+
+(average-longer 7 8)
+;; =&gt; 7.5</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>%1</code>, <code>%2</code>&#8230;&#8203; <code>%N</code> são marcadores simples da posição dos argumentos no vetor de argumentos
+que são implicitamente declarados quando a macro de leitura vai interpretar e converter
+essa forma em uma expressão <code>fn</code>.</p>
+</div>
+<div class="paragraph">
+<p>Se a função aceitar somente um argumento, você pode omitir o número depois do <code>%</code>,
+por exemplo, uma função que eleva um número ao quadrado pode ser escrita tanto assim
+<code>#(* %1 %1)</code> quanto assim <code>#(* % %)</code>.</p>
+</div>
+<div class="paragraph">
+<p>Além disso, a sintaxe também suporta a forma de aridade variável com o símbolo <code>%&amp;</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def my-variadic-set #(set %&amp;))
+
+(my-variadic-set 1 2 2)
+;; =&gt; #{1 2}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="lógica-de-controle"><a class="link" href="#lógica-de-controle">4.5. Lógica de controle</a></h3>
+<div class="paragraph">
+<p><em>Clojure</em> tem uma abordagem diferente a lógica de controle (if, else, for) do que outras linguagens
+como JavaScript, C, etc.</p>
+</div>
+<div class="sect3">
+<h4 id="executando-coisas-diferentes-com-if"><a class="link" href="#executando-coisas-diferentes-com-if">4.5.1. Executando coisas diferentes com <code>if</code></a></h4>
+<div class="paragraph">
+<p>Vamos começar com o simples <code>if</code>. Em <em>Clojure</em>, o <code>if</code> é uma expressão e não uma
+declaração, e ele recebe três parâmetros: o primeiro é a expressão de condição
+(que define qual expressão vai ser executada), o segundo é a expresão que será executada
+se a expressão de condição for evaluada para algo "verdadeiro", e a terceira expressão
+vai ser executada caso contrário.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defn discount
+  "Você pode obter 5% de disconto se pedir 100 ou mais itens"
+  [quantity]
+  (if (&gt;= quantity 100)
+    0.05
+    0))
+
+(discount 30)
+;; =&gt; 0
+
+(discount 130)
+;; =&gt; 0.05</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O bloco de execução <code>do</code> pode ser usado para termos múltiplas expressoão em um <code>if</code>.
+<a href="#block-section"><code>do</code> is explained in the next section</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="executando-coisas-diferentes-com-cond"><a class="link" href="#executando-coisas-diferentes-com-cond">4.5.2. Executando coisas diferentes com <code>cond</code></a></h4>
+<div class="paragraph">
+<p>Algumas vezes, a expressão <code>if</code> pode ser um pouco limitante porque ela não possui o
+bloco "else if" para adicionarmos mais de uma condição. A macro <code>cond</code> resolve isso.</p>
+</div>
+<div class="paragraph">
+<p>Com a expressão <code>cond</code>, podemos definir múltiplas expressões de condição:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defn mypos?
+  [x]
+  (cond
+    (&gt; x 0) "positive"
+    (&lt; x 0) "negative"
+    :else "zero"))
+
+(mypos? 0)
+;; =&gt; "zero"
+
+(mypos? -2)
+;; =&gt; "negative"
+
+(mypos? 1)
+;; =&gt; "positive"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Também, <code>cond</code> tem outra forma, chamada <code>condp</code>, que trabalha de forma muito similar com
+que o <code>cond</code> trabalha, porém é um pouco mais simples quando a condição (também chamada de predicado0 é
+a mesma para todas as condições:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defn translate-lang-code
+  [code]
+  (condp = (keyword code)
+    :es "Spanish"
+    :en "English"
+    "Unknown"))
+
+(translate-lang-code "en")
+;; =&gt; "English"
+
+(translate-lang-code "fr")
+;; =&gt; "Unknown"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A linha <code>condp = (keyword code)</code> significa que, em cada uma das linhas seguintes,
+<em>Clojure</em> vai aplicar a função <code>=</code> ao resultado de <code>(keyword code)</code> e o argumento
+seguinte. Por exemplo para <code>:es</code>, será executado o seguinte: <code>(= :es (keyword code)</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="case"><a class="link" href="#case">4.5.3. Case</a></h4>
+<div class="paragraph">
+<p>O operador de controle <code>case</code> tem um uso similar ao exemplo do <code>condp</code>. A principal diferença
+é que no <code>case</code> o predicado é sempre <code>=</code> e seus valores de controle (os <code>:es</code> e <code>:en</code> nos exemplos anteriores)
+são evaluados em tempo de compilação. Isso resulta em algo mais performático que <code>cond</code> e <code>condp</code>, com a desvantagem
+de os valores serem estáticos.</p>
+</div>
+<div class="paragraph">
+<p>Aqui está o exemplo anterior, reescrito usando <code>case</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defn translate-lang-code
+  [code]
+  (case code
+    "es" "Spanish"
+    "en" "English"
+    "Unknown"))
+
+(translate-lang-code "en")
+;; =&gt; "English"
+
+(translate-lang-code "fr")
+;; =&gt; "Unknown"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="truthiness-section"><a class="link" href="#truthiness-section">4.6. O que é "Verdade" em <em>Clojure</em>?</a></h3>
+<div class="paragraph">
+<p>Esse é um aspecto onde cada língua possui sua própria semântica. Maioria das línguas
+consideram coleções vazias, o valor 0 e outras coisas como sendo "logicamente falso", isso é
+levam para o <code>else</code> em um <code>if</code>. Em <em>Clojure</em> diferente de outras línguas, somente duas coisas
+são consideradas "logicamente falsas": <code>nil</code> e <code>false</code>. Todo o resto é tratado como
+"logicamente  verdadeiro" (<code>true</code>).</p>
+</div>
+<div class="paragraph">
+<p>Junto com a abilidade de implementar o protocolo "chamável" (<em>callable</em>, o <code>IFN</code> explicado com
+mais detalhes mais tarde), estruturas de dados como sets podem ser usados como predicados, sem
+a necessidade de adicionar funções:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def valid? #{1 2 3})
+
+(valid? 2)
+;; =&gt; true
+
+(valid? 4)
+;; =&gt; nil
+
+(filter valid? (range 1 10))
+;; =&gt; (1 2 3)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Isso funciona porque um set retorna ou o valor do elemento se ele contiver esse elemento
+ou <code>nil</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(valid? 1)
+;; =&gt; 1
+
+(valid? 4)
+;; =&gt; nil</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="locals-blocos-e-loops"><a class="link" href="#locals-blocos-e-loops">4.7. Locals, Blocos, e Loops</a></h3>
+<div class="sect3">
+<h4 id="locals"><a class="link" href="#locals">4.7.1. Locals</a></h4>
+<div class="paragraph">
+<p><em>Clojure</em> não possui o conceito de variáveis como linguagens similares ao <code>ALGOL</code> possuem,
+mas ele possui o conceito de locals. Locals, como sempre, são imutáveis, e se você tentar
+mudá-los, o compilador vai lançar uma exceção.</p>
+</div>
+<div class="paragraph">
+<p>Locals são definidos usando a expressão <code>let</code>. Essa expressão começa com um vetor de vínculos
+e por um número arbitrário de expressões (que chamámos de let-body ou corpo do <code>let</code>). O vetor de vínculos
+deve contar um número arbitrário de pares, onde o primeiro item do par é normalmente um símbolo e
+o segundo item, o valor daquele símbolo, que será usado no corpo do <code>let</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(let [x (inc 1)
+      y (+ x 1)]
+  (println "Uma simples mensagem do corpo do  let")
+  (* x y))
+;; Uma simples mensagem do corpo do let
+;; =&gt; 6</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>No exemplo precedente, o símbolo <code>x</code> está vinculado ao valor <code>(inc 1)</code>, que é evaluado
+como <code>2</code>, e o símbolo <code>y</code> está vinculado a soma de <code>x</code> e <code>1</code>, que passa a ser 3. Dado esses
+vínculos, as expressões <code>(println "Uma simples mensagem do corpo do  let")</code> e <code>(* x y)</code> são
+evaluadas.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="blocos"><a class="link" href="#blocos">4.7.2. Blocos</a></h4>
+<div class="paragraph">
+<p>Blocos de expressões que devem estar juntas, são criados usando a expressão  <code>do</code> em <em>Clojure</em>
+e normalmente são usado para "efeitos" (side effects), como imprimir algo no console ou
+logar algo.</p>
+</div>
+<div class="paragraph">
+<p>Um side effect é alguma coisa que não precisa necessariamente retornar um valor.</p>
+</div>
+<div class="paragraph">
+<p>A expressão <code>do</code> aceita como argumento um número arbitrário de outras expressões, mas retorna
+somente o valor da última expressão:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(do
+  (println "hello world")
+  (println "hola mundo")
+  (* 3 5) ;; this value will not be returned; it is thrown away
+  (+ 1 2))
+
+;; hello world
+;; hola mundo
+;; =&gt; 3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O corpo de uma expressão <code>let</code>, explicado anteriormente, é muito parecido com a expressão <code>do</code>
+no sentido que aceita múltiplas expressões. Na verade, o bloco <code>let</code> possui um bloco <code>do</code> implícito.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="loops"><a class="link" href="#loops">4.7.3. Loops</a></h4>
+<div class="paragraph">
+<p>A abordagem funcional de <em>Clojure</em> significa que ela não possui o tradicional loop
+<code>for</code> de outras línguas como <em>C</em>. Os loops em <em>Clojure</em> funcionam através de recursão.
+Recursão algumas vezes precisa de um esforço adicional de como modelar um problema
+um pouco diferente de como se faz em linguagens imperativas.</p>
+</div>
+<div class="paragraph">
+<p>Muitas dos usos comuns para qual <code>for</code> é utilizado em outras línguas são obtidos com funções
+de <code>high-order</code> - isso é, funções que aceitam outras funções como parâmetros.</p>
+</div>
+<div class="sect4">
+<h5 id="looping-com-looprecur"><a class="link" href="#looping-com-looprecur">Looping com loop/recur</a></h5>
+<div class="paragraph">
+<p>Vamos dar uma olhada em como expressar loops usando recursão com as formas
+<code>loop</code> e  <code>recur</code>. <code>loop</code> define uma lista de vínculos (observe a simetria com <code>let</code>)
+e <code>recur</code> retorna a execução de volta para o loop com novos valores para esses vínculos.</p>
+</div>
+<div class="paragraph">
+<p>Vamos ver um exemplo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(loop [x 0]
+  (println "Looping com " x)
+  (if (= x 2)
+    (println "Terminei o loop!")
+    (recur (inc x))))
+;; Looping com 0
+;; Looping com 1
+;; Looping com 2
+;; Terminei o loop!
+;; =&gt; nil</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>No código acima, nos vinculamos o nome <code>x</code> ao valor <code>0</code> e executamos o corpo do loop.
+Como a condição não é verdadeira na primeira vez, ela é roda novamente com o <code>recur</code>,
+com o novo vínculo de <code>x</code> sendo <code>1</code>, resultado do <code>(inc x)</code>. Fazemos isso mais uma vez
+até que a condição é satisfeita, e não ocorram outras chamadas do <code>recur</code> e saímos do loop.</p>
+</div>
+<div class="paragraph">
+<p>Observe que não estamos restritos a usar o <code>recur</code> somente dentro do <code>loop</code>. Podemos
+usá-lo também na execução do corpo de uma função recursiva:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defn recursive-function
+  [x]
+  (println "Looping com" x)
+  (if (= x 2)
+    (println "Done looping!")
+    (recur (inc x))))
+
+(recursive-function 0)
+;; Looping com 0
+;; Looping com 1
+;; Looping com 2
+;; Terminei o loop!
+;; =&gt; nil</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="substituindo-loops-por-funções-de-high-order"><a class="link" href="#substituindo-loops-por-funções-de-high-order">Substituindo loops por funções de <em>high-order</em></a></h5>
+<div class="paragraph">
+<p>Em linguagens de programação imperativas, é comum o uso de <code>for</code> loops para iterar
+dados e transformá-los, usualmente com algum dos objetivos abaixo:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Transformar cada valor na coleção retornando uma nova coleção</p>
+</li>
+<li>
+<p>Filtrar alguns elementos na coleção baseado em algum critério</p>
+</li>
+<li>
+<p>Converter uma coleção em um valor onde cada iteração depende do resultado da iteração
+anterior</p>
+</li>
+<li>
+<p>Rodar algum tipo de rotina para cada valor na coleção</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As ações acimas são expressas em funções de <em>high-oder</em> e em construções sintáticas do <em>Clojure</em>,
+vamos ver um exemplo para as três primeiras.</p>
+</div>
+<div class="paragraph">
+<p>Para transformar cada valor em uma coleção, nos usamos a função <code>map</code>, que
+recebe uma função e uma sequência e aplica essa função em cada elemento:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(map inc [0 1 2])
+;; =&gt; (1 2 3)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O primeiro argumento do <code>map</code> pode ser qualquer função que receba <strong>um argumento</strong>
+e retorne um valor. Por exemplo, se você tiver uma aplicação gráfica e quiser
+desenhar o gráfico da equação  <code>y&#160;=&#160;3x&#160;+&#160;5</code> para algum conjunto
+de valores de <code>x</code>,  você poderia obter os valores de <code>y</code> assim:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defn y-value [x] (+ (* 3 x) 5))
+
+(map y-value [1 2 3 4 5])
+;; =&gt; (8 11 14 17 20)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Se a função de mapeamento é pequena, você pode usar uma função anônima, seja com a forma
+normal ou com a sintaxe <code>#()</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(map (fn [x] (+ (* 3 x) 5)) [1 2 3 4 5])
+;; =&gt; (8 11 14 17 20)
+
+(map #(+ (* 3 %) 5) [1 2 3 4 5])
+;; =&gt; (8 11 14 17 20)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Para filtrar valores em uma coleção, nos usamos a função <code>filter</code>, que recebe um
+predicado e uma sequência e retorna uma nova sequência somente com os elementos
+que retornaram algum valor "logicamente true" para o predicado fornecido:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(filter odd? [1 2 3 4])
+;; =&gt; (1 3)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Novamente, você pode usar qualquer função que retorne <code>true</code> ou <code>false</code> como o primeiro
+argumento do <code>filter</code>. Aqui está um exemplo que mantém somente as palavras com menos
+de 5 letras. (A função <code>count</code> retorna o comprimento da coleção passada como argumento -
+uma string é uma coleção de caracteres.)</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(filter (fn [word] (&lt; (count word) 5)) ["ant" "baboon" "crab" "duck" "echidna" "fox"])
+;; =&gt; ("ant" "crab" "duck" "fox")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Convertendo uma coleção para um único valor, acumulando o resultado intermediário a
+cada passo da iteraçào pode ser obtido usando a função <code>reduce</code>, que recebe uma função
+para acumular os valores, um valor inicial opcional e uma coleção:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(reduce + 0 [1 2 3 4])
+;; =&gt; 10
+
+(reduce + [1 2 3 4])
+;; =&gt; 10</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Uma outra vez, podemos usar nossa própria função como argumento do <code>reduce</code>, mas ela
+deve receber <strong>dois</strong> argumentos. O primeiro é o resultado intermediário e o segundo
+é o item da coleção sendo processado. A função retorna o valore que se torna o novo
+resultado intermediário para ser usado junto com o próximo item na lista. Por exemplo,
+aqui está o que você obtém a soma dos quadrados de um conjunto de números.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defn sum-squares
+  [accumulator item]
+  (+ accumulator (* item item)))
+
+(reduce sum-squares 0 [3 4 5])
+;; =&gt; 50</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Agora com uma função anônima:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(reduce (fn [acc item] (+ acc (* item item))) 0 [3 4 5])
+;; =&gt; 50</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Aqui um <code>reduce</code> que encontra o total de número de caracteres de um conjunto de palavras:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(reduce (fn [acc word] (+ acc (count word))) 0 ["ant" "bee" "crab" "duck"])
+;; =&gt; 14</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Aque não usamos a sintaxe <code>#()</code>, porque apesar de reduzirmos o tamanho do código, ficaria
+menos legível.</p>
+</div>
+<div class="paragraph">
+<p>Lembre-se de escolher o valor inicial do seu acumulador com atenção. Se você quiser
+usar o <code>reduce</code> para encontrar a multiplicação de uma série de números, você teria
+que começar com 1 ao invés de 0, se não, estaríamos multiplicando os números por zero!</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">;; valor inicial errado
+(reduce * 0 [3 4 5])
+;; =&gt; 0
+
+;; valor inicial correto
+(reduce * 1 [3 4 5])
+;; =&gt; 60</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="sequências-for"><a class="link" href="#sequências-for"><code>sequências for</code></a></h5>
+<div class="paragraph">
+<p>Em <em>Clojure</em>, o <code>for</code> não é usado para iteração, mas para gerar uma sequência, uma
+operação também conhecida como "sequence comprehension". Em esta seção, você vai aprender
+como ela funciona e como usá-la para construir sequências declarativas.</p>
+</div>
+<div class="paragraph">
+<p><code>for</code> recebe um vetor de vínculos e uma expressão e gera uma sequência com o resultado
+de evaluar cada expressão. Vamos ver um exemplo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(for [x [1 2 3]]
+  [x (* x x)])
+;; =&gt; ([1 1] [2 4] [3 9])</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Nesse exemplo, <code>x</code> seria vinculado a cada item do vetor <code>[1 2 3]</code> por vez,
+e retornaria uma nova sequência onde cada item é um vetor de dois itens com o item
+original e o quadrado dele.</p>
+</div>
+<div class="paragraph">
+<p><code>for</code> suporta vários vínculos, o que vai fazer a coleção ser iterada em uma maneira
+aninhada, muito parecido quando colocamos <code>for</code> dentro de <code>for</code> em uma linguagem imperativa.
+O vínculo mais interno itera "mais rápido".</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(for [x [1 2 3]
+      y [4 5]]
+  [x y])
+
+;; =&gt; ([1 4] [1 5] [2 4] [2 5] [3 4] [3 5])</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Podemos também colocar depois dos vínculos, três modificadores: <code>:let</code> para
+criar vínculos locais, <code>:while</code> para parar a geração da sequência, e `:when`para
+filtrar valores.</p>
+</div>
+<div class="paragraph">
+<p>Aqui está um exemplo de vínculos locais utilizando o modificador <code>:let</code>, note
+que os vínculos definitos estarão disponíveis na expressão:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(for [x [1 2 3]
+      y [4 5]
+      :let [z (+ x y)]]
+  z)
+;; =&gt; (5 6 6 7 7 8)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Podemos utilizar o modificador <code>:while</code> para expressar a condição que uma vez que deixar
+de ser verdade, vamos parar a geraçào da sequência. Aqui está um exemplo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(for [x [1 2 3]
+      y [4 5]
+      :while (= y 4)]
+  [x y])
+
+;; =&gt; ([1 4] [2 4] [3 4])</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Para fitrar os valores gerados, podemos usar o modificador <code>:when</code> como no exemplo
+a seguir:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(for [x [1 2 3]
+      y [4 5]
+      :when (= (+ x y) 6)]
+  [x y])
+
+;; =&gt; ([1 5] [2 4])</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Podemos combinar os modificados acima para expressar geração de sequências mais complexas
+ou expressar a intenção do nosso <code>for</code> loop de maneira mais clara:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(for [x [1 2 3]
+      y [4 5]
+      :let [z (+ x y)]
+      :when (= z 6)]
+  [x y])
+
+;; =&gt; ([1 5] [2 4])</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Quando listamos os usos mais comuns do <code>for</code> loop em linguagens imperativas,
+nós mencionamos que algumas vezes queremos rodar alguma rotina pra
+cada valor na sequência, sem nos importarmos com o resultado. Normalmente,
+fazemos isso para realizar algum efeito (<em>side-effect</em>) com os valores da sequência.</p>
+</div>
+<div class="paragraph">
+<p><em>Clojure</em> provê o construtor <code>doseq</code>, que é análogo ao <code>for</code>, mas executa a expressão,
+descarta o resultado, e retorna <code>nil</code>. Como o <code>for</code>, ele aceita os mesmos modificadores
+<code>:let</code>, <code>:when</code> e <code>:while</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(doseq [x [1 2 3]
+        y [4 5]
+       :let [z (+ x y)]]
+  (println x "+" y "=" z))
+
+;; 1 + 4 = 5
+;; 1 + 5 = 6
+;; 2 + 4 = 6
+;; 2 + 5 = 7
+;; 3 + 4 = 7
+;; 3 + 5 = 8
+;; =&gt; nil</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Se você quer simplesmente iterar e aplicar alguma rotina com efeito (<em>side-effect</em>) como
+<code>println</code> para cada item na coleção, você usar a função especializada <code>run!</code> que internamente
+usa uma "redução" mais rápida.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(run! println [1 2 3])
+;; 1
+;; 2
+;; 3
+;; =&gt; nil</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Essa função explicitamente retorna <code>nil</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="tipos-de-coleções"><a class="link" href="#tipos-de-coleções">4.8. Tipos de coleções</a></h3>
+<div class="sect3">
+<h4 id="imutáveis-e-persistentes"><a class="link" href="#imutáveis-e-persistentes">4.8.1. Imutáveis e persistentes</a></h4>
+<div class="paragraph">
+<p>Como mencionamos antes, as coleções no <em>Clojure</em> são persistentes e imutáveis, mas
+nós não explicamos o que isso significa.</p>
+</div>
+<div class="paragraph">
+<p>Uma estrutura de dado imutável, como o nome sugere, são estrutura de dados que não
+podem ser mudadas. Alterações in-loco não são permitidas em estruturas imutáveis.</p>
+</div>
+<div class="paragraph">
+<p>Vamos ilustrar isso com um exemplo: adicionando valores a um vetor usando <code>conj</code>(conjoin).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(let [xs [1 2 3]
+      ys (conj xs 4)]
+  (println "xs:" xs)
+  (println "ys:" ys))
+
+;; xs: [1 2 3]
+;; ys: [1 2 3 4]
+;; =&gt; nil</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como você pode ver, nós derivamos uma versão do vetor <code>xs</code> ao adicionar um elmento
+a ele, e obtemos um novo vetor <code>ys</code> com esse elemento adicionado. Entretanto,
+o vetor <code>xs</code> se mantém inalterado, porque ele é imutável.</p>
+</div>
+<div class="paragraph">
+<p>Uma estrutura persistente é uma estrutura de dados que retorna uma nova versão
+dela mesmo enquanto a transforma, deixando o original não modificado. <em>Clojure</em>
+faz isso ser eficiente em termos de memória e tempo usando uma técnica de implementação
+chamada <em>structural sharing</em> (compartilhamento de estrutura), onde a maioria dos dados
+são compartilhados entre as duas versões e não duplicada e as transformações
+copiam o mínimo possível de dados.</p>
+</div>
+<div class="paragraph">
+<p>Se você quer saber mais como esse compartilhamento funciona, continue lendo. Se não
+está interessado em saber mais dos detalhes, sinta-se livre para pular para <a href="#the-sequence-abstraction">próxima seção</a>.</p>
+</div>
+<div class="paragraph">
+<p>Para ilustrar melhor esse <em>structural sharing</em> nas estruturas do <em>Clojure</em>, vamos
+comparar se algumas partes da velha e nova versão da estrutura de dados são
+na verdade o mesmo objeto usando a função <code>identical?</code>. Nós vamos usar uma lista
+para isso:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(let [xs (list 1 2 3)
+      ys (cons 0 xs)]
+  (println "xs:" xs)
+  (println "ys:" ys)
+  (println "(rest ys):" (rest ys))
+  (identical? xs (rest ys)))
+
+;; xs: (1 2 3)
+;; ys: (0 1 2 3)
+;; (rest ys): (1 2 3)
+;; =&gt; true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como você pode ver no exemplo, nós usamos <code>cons</code> (construct0 para prefixar um valor
+a lista <code>xs</code> e obtemos uma nova lista <code>ys</code> com o elemento adicionado. O resto de <code>ys</code>
+obtidos usando a função <code>rest</code>, é o mesmo objeto em memória que a lista <code>xs</code>, e então
+<code>xs</code> e <code>ys</code> compartilham a mesma estrutura.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="the-sequence-abstraction"><a class="link" href="#the-sequence-abstraction">4.8.2. A Abstração de Sequências</a></h4>
+<div class="paragraph">
+<p>Uma das abstrações centrais do <em>Clojure</em> é a <em>sequence</em> que pode ser pensando como
+uma lista e pode ser derivada de qualquer tipo de coleção. É uma coleção persistente
+e imutável como todos os tipos de coleção, e muitas funções centrais do <em>Clojure</em>
+retornam sequências.</p>
+</div>
+<div class="paragraph">
+<p>Os tipos que podem ser usados para gerar uma sequência são chamados de  "seqables";
+nos podemos chamar <code>seq</code> com eles como argumento e obter uma sequência de volta.
+Sequências suportam duas operações básicas: <code>first</code> e <code>rest</code>. Ambas chamam <code>seq</code>
+no argumento fornecidos a eles:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(first [1 2 3])
+;; =&gt; 1
+
+(rest [1 2 3])
+;; =&gt; (2 3)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Chamando <code>seq</code> em um <em>seqable</em>, podemos obter resultados diferentes se o <em>seqable</em> está
+vazio ou não. Ele irá retornar <code>nil</code> quando a coleção está vazia ou se não, uma sequence:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(seq [])
+;; =&gt; nil
+
+(seq [1 2 3])
+;; =&gt; (1 2 3)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>next</code> é similar a operação <code>rest</code>, exceto que ela retorna <code>nil</code> quando chamada
+com uma sequência com um ou zero elementos. note que, quando chamamos <code>rest</code> com
+uma sequência vazia, ela retornará um valor "logicamente true"(<code>()</code>), enquanto <code>next</code>
+irá retornar um valor "logicalmente false" (<code>nil</code>).
+(<a href="#truthiness-section">revise a seção sobre "O que é verdade em Clojure" caso tenha alguma dúvida sobre isso</a>).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(rest [])
+;; =&gt; ()
+
+(next [])
+;; =&gt; nil
+
+(rest [1 2 3])
+;; =&gt; (2 3)
+
+(next [1 2 3])
+;; =&gt; (2 3)</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="nil-punning"><a class="link" href="#nil-punning">nil-punning</a></h5>
+<div class="paragraph">
+<p>Como <code>seq</code> retorna <code>nil</code> quando a coleção está valia, e <code>nil</code> é considerado um valor
+"logicalmente false", você pode checar se uma coleção está vazia usando a função <code>seq</code>.
+O termo técnico para isso é nil-punning.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defn print-coll
+  [coll]
+  (when (seq coll)
+    (println "Saw " (first coll))
+    (recur (rest coll))))
+
+(print-coll [1 2 3])
+;; Vi 1
+;; Vi 2
+;; Vi 3
+;; =&gt; nil
+
+(print-coll #{1 2 3})
+;; Vi 1
+;; Vi 3
+;; Vi 2
+;; =&gt; nil</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Apesar de <code>nil</code> não ser  nem um <em>seqable</em> nem uma sequência, ele é suportado por todas
+as funções que vimos até agora:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(seq nil)
+;; =&gt; nil
+
+(first nil)
+;; =&gt; nil
+
+(rest nil)
+;; =&gt; ()</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="funções-que-trabalham-com-sequências"><a class="link" href="#funções-que-trabalham-com-sequências">Funções que trabalham com sequências</a></h5>
+<div class="paragraph">
+<p>As funções centrais do <em>Clojure</em> para transformar coleções criam sequências a partir
+dos seus argumentos e são implementadas em termos das operações genéricas que aprendemos
+na seção precedente. Isso faz com que elas sejam super genéricas porque podemos usar
+em qualquer tipo de dado que seja um <em>seqable</em>. vamos ver como <code>map</code> funciona nos diversos
+tipos de coleções:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(map inc [1 2 3])
+;; =&gt; (2 3 4)
+
+(map inc #{1 2 3})
+;; =&gt; (2 4 3)
+
+(map count {:a 41 :b 40})
+;; =&gt; (2 2)
+
+(map inc '(1 2 3))
+;; =&gt; (2 3 4)</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Quando usamos <code>map</code> em uma coleção do tipo map, sua função de mapeamento irá receber como
+argumento um vetor com dois items, contendo chave e valor contidos no mapa.
+O exemplo abaixo usa <a href="#destructuring-section">destructuring</a> para acessar a chave e o valor de maneira mais simples.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(map (fn [[key value]] (* value value))
+     {:ten 10 :seven 7 :four 4})
+;; =&gt; (100 49 16)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Obviamente a mesma operação pode ser feita de forma mais idiomática obtendo somente uma
+<em>seq</em> dos valores do mapa:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(map (fn [value] (* value value))
+     (vals {:ten 10 :seven 7 :four 4}))
+;; =&gt; (100 49 16)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como você pode notar, funções que operam em sequências são seguras para serem
+usadas com coleções vazias ou até mesmo <code>nil</code> já que elas não precisam fazer nada
+a não ser retornar um sequência vazia quando encontram tais valores.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(map inc [])
+;; =&gt; ()
+
+(map inc #{})
+;; =&gt; ()
+
+(map inc nil)
+;; =&gt; ()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Nós já vimos alguns exemplos com as funções como <code>map</code>, <code>filter</code>, e <code>reduce</code>, mas
+<em>Clojure</em> fornece uma variedade de funções genéricas que operam em sequências no
+seu <em>core namespace</em>. Note qua muitas das operações que aprendemos até agora
+funcionam com <em>seqables</em> e são extensíveis a tipos definidos pelo usuário.</p>
+</div>
+<div class="paragraph">
+<p>Podemos verificar se um valor é uma coleção através da função predicado
+<code>coll?</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(coll? nil)
+;; =&gt; false
+
+(coll? [1 2 3])
+;; =&gt; true
+
+(coll? {:language "ClojureScript" :file-extension "cljs"})
+;; =&gt; true
+
+(coll? "ClojureScript")
+;; =&gt; false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Existem funções predicados similares para checarem se um valor é uma sequência (<code>seq?</code>) ou
+um <em>seqable</em> (<code>seqable?</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(seq? nil)
+;; =&gt; false
+(seqable? nil)
+;; =&gt; false
+
+(seq? [])
+;; =&gt; false
+(seqable? [])
+;; =&gt; true
+
+(seq? #{1 2 3})
+;; =&gt; false
+(seqable? #{1 2 3})
+;; =&gt; true
+
+(seq? "ClojureScript")
+;; =&gt; false
+(seqable? "ClojureScript")
+;; =&gt; false
+
+(seq? '(1 2 3))
+;; =&gt; true
+(seqable? '(1 2 3))
+;; =&gt; true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Para coleções que podem ser contadas em tempo constante, podemos utilizar a
+função <code>count</code>. Essa operação inclusive funciona com strings, apesar de elas não serem
+uma coleção, sequência, ou seqable.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(count nil)
+;; =&gt; 0
+
+(count [1 2 3])
+;; =&gt; 3
+
+(count {:language "ClojureScript" :file-extension "cljs"})
+;; =&gt; 2
+
+(count "ClojureScript")
+;; =&gt; 13</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Nós também podemos obterm uma variante vazia de uma certa coleção através da
+função <code>empty</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(empty nil)
+;; =&gt; nil
+
+(empty [1 2 3])
+;; =&gt; []
+
+(empty #{1 2 3})
+;; =&gt; #{}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A função predicado <code>empty?</code> retorna <code>true</code> se uma certa coleção está vazia:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(empty? nil)
+;; =&gt; true
+
+(empty? [])
+;; =&gt; true
+
+(empty? #{1 2 3})
+;; =&gt; false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A função <code>conj</code>(conjoin) adiciona um elemento a um coleção e pode adicionar ela
+em diferentes "lugares" dependendo do tipo da coleção. O elemento é adicionado
+onde é mais performático, mas note que nem toda coleção possui uma ordem definida.</p>
+</div>
+<div class="paragraph">
+<p>Podemos passar muitos elementos quanto quisermos para <code>conj</code>; vamos ver alguns exemplos:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(conj nil 42)
+;; =&gt; (42)
+
+(conj [1 2] 3)
+;; =&gt; [1 2 3]
+
+(conj [1 2] 3 4 5)
+;; =&gt; [1 2 3 4 5]
+
+(conj '(1 2) 0)
+;; =&gt; (0 1 2)
+
+(conj #{1 2 3} 4)
+;; =&gt; #{1 3 2 4}
+
+(conj {:language "ClojureScript"} [:file-extension "cljs"])
+;; =&gt; {:language "ClojureScript", :file-extension "cljs"}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="lazinesspreguiça"><a class="link" href="#lazinesspreguiça">Laziness/Preguiça</a></h5>
+<div class="paragraph">
+<p>Maioria das funções que retornam sequência no <em>Clojure</em> retornam uma sequência "preguiçosa"
+ao invés de calcular todos os elementos da nova sequênica. Sequências <em>Lazy</em> geram seu
+conteúdo a medida que são solicitadas a fazê-lo, normalmente quando estamos iterando sob
+elas. Laziness/Preguiça garante que não estamos fazendo mais trabalho do que precisamos e nos dá
+a possibilidade de tratar sequências potencialmente infinitas como sequências comuns.</p>
+</div>
+<div class="paragraph">
+<p>Considere a função <code>rage</code>, que gera uma sequência de inteiros:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(range 5)
+;; =&gt; (0 1 2 3 4)
+(range 1 10)
+;; =&gt; (1 2 3 4 5 6 7 8 9)
+(range 10 100 15)
+;; (10 25 40 55 70 85)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Se você dizer apenas <code>(range)</code>, você irá obter uma sequência de todos os inteiros.
+Não tente isso dentro de uma REPL, pois ela tentará evaluar a expressão e todos os
+elementos da sequência.</p>
+</div>
+<div class="paragraph">
+<p>Aqui está um exemplo controlado. Supondo que você esteja escrevendo um programa
+gráfico e queira desenhar o gráfico da equação <em>y</em>= 2 <em>x</em> <sup>2</sup> + 5, e queira somente
+aqueles valores de <code>x</code> para quais <code>y</code> é menor que 100. Você pode geral todos os números
+entre 0 e 100, que certamente serão suficientes, e então usar <code>take-while</code> com a condição <code>y &#8656; 100</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(take-while (fn [x] (&lt; (+ (* 2 x x) 5) 100))
+            (range 0 100))
+;; =&gt; (0 1 2 3 4 5 6)</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="entendendo-coleções-a-fundo"><a class="link" href="#entendendo-coleções-a-fundo">4.8.3. Entendendo Coleções a fundo</a></h4>
+<div class="paragraph">
+<p>Agora que conhecemos a abstração de serquências de Clojure e algum das funções
+para manipulá-las, é hora de conhecermos alguns tipos de coleções concretas
+e as operações que elas suportam.</p>
+</div>
+<div class="sect4">
+<h5 id="listas-2"><a class="link" href="#listas-2">Listas</a></h5>
+<div class="paragraph">
+<p>Em <em>Clojure</em>, listas são uma estrutura de dados usada principalmente par agrupar
+símbolos juntos para criar programas. Diferente de outras Lisps, muitas construções
+sintáticas do <em>Clojure</em> usam estruturas sintáticas diferentes da lista (como vetores e mapas).
+Isso torna o código menos uniforme, porém aumenta a facilidade de leitura.</p>
+</div>
+<div class="paragraph">
+<p>Você pode pensar nas listas do <em>Clojure</em> como listas ligadas (mas não duplamente), onde
+cada nó contém um valor e um ponteiro para o resto da lista. Isso faz com que seja
+natural (e rápido) adicionar items ao começo da lista, já que adicionar ao fim iria
+criar a necessidade de percorrer toda a lista. Essa adição é feita utilizando
+a função <code>cons</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(cons 0 (cons 1 (cons 2 ())))
+;; =&gt; (0 1 2)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Nós usamos a sintaxe literal <code>()</code> para representar uma lista vazia. Já que ela não
+contém nenhum símbolo, não é tratada como uma chamada de função. porém, quando usando
+a sintaxe literal de listas que contenham elementos, precisamos prefixá-la com aspa
+<code>'</code> para previnir que <em>Clojure</em> evalue ela como uma chamada de função:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(cons 0 '(1 2))
+;; =&gt; (0 1 2)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como adicionar ao começo (ou cabeça, ou head) leva tempo constante para ser
+feito, a função <code>conj</code> operando em listas adiciona items ao começo.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(conj '(1 2) 0)
+;; =&gt; (0 1 2)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Listas e outras estruturas de dados do <em>Clojure</em> podem ser usadas como pilhas
+usando as funções <code>peek</code>, <code>pop</code> e <code>conj</code>. Note que o topo da pilha será o lugar
+onde <code>conj</code> vai adicionar elementos, fazendo <code>conj</code> equivalente a função <code>push</code>
+de uma pilha. No caso de listas, <code>conj</code> adiciona elementos no começo da lista,
+e <code>peek</code> retorna o primeiro elemento da lista, e <code>pop</code> retorna a lista com todos
+os elementos exceto o primeiro.</p>
+</div>
+<div class="paragraph">
+<p>Note que as duas operações que retornam a pilha (<code>conj</code> e <code>pop</code>) não mudam o tipo da
+coleção usada pela pilha.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def list-stack '(0 1 2))
+
+(peek list-stack)
+;; =&gt; 0
+
+(pop list-stack)
+;; =&gt; (1 2)
+
+(type (pop list-stack))
+;; =&gt; cljs.core/List
+
+(conj list-stack -1)
+;; =&gt; (-1 0 1 2)
+
+(type (conj list-stack -1))
+;; =&gt; cljs.core/List</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Uma coisa que listas não particularmente goas é acesso arbitrário de elementos através
+de um index. Como elas são armazenadas como listas ligadas em memória, para acesso arbitrário
+a um certo index, é necessário percorrer a lista em ordem para obter o elemento desejado, ou
+lançar uma exceção de index não presente na lista, caso o index maior que a quantidade
+de elementos na lista. Outras coleções que não possuem index também sofrem
+dessa limitação como <em>lazy sequences</em> .</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="vetores-2"><a class="link" href="#vetores-2">Vetores</a></h5>
+<div class="paragraph">
+<p>Vetores são uma das estruturas de dados mais comum em <em>Clojure</em>. Elas são usadas como
+estrutura sintática em vários lugares em que Lisps mais tradicionais utilizam lista, como
+por exemplo em declaração de argumentos de funções e em blocos de vínculos <code>let</code>.</p>
+</div>
+<div class="paragraph">
+<p>Vetores em <em>Clojure</em> são delimitados por cochetes <code>[]</code> como sintaxe literal. Eles
+também podem ser criados com a função <code>vector</code> ou a partir de outra coleção
+utilizando a função <code>vec</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(vector? [0 1 2])
+;; =&gt; true
+
+(vector 0 1 2)
+;; =&gt; [0 1 2]
+
+(vec '(0 1 2))
+;; =&gt; [0 1 2]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Vetores são, como listas, coleções ordenadas de valores heterogêneos. Diferente de listas,
+vetores crescem naturalmente a partir do fim deles (ou cauda), então a função <code>conj</code>
+adiciona itens ao final do vetor. Adições ao fim do vetor são feitas em tempo constante:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(conj [0 1] 2)
+;; =&gt; [0 1 2]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Outra coisa que diferencia listas de vetores é que vetores são coleções indexadas
+e suportam acesso eficiente a items através de índices e atualizações nào destrutivas.
+Nós usamos a função <code>nth</code> para obter valores de um certo index:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(nth [0 1 2] 0)
+;; =&gt; 0
+
+(nth [0 1 2] 2)
+;; =&gt; 2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como vetores associam chaves sequênciais númericas (indexes) aos valroes, podemos
+tratar eles como uma estrutura associativa. <em>Clojure</em> provê a função <code>assoc</code>
+que dado uma estrutura de dados associativa, um conjunto de pares de chave e valores
+retorna uma nova estrutura de dados com as chaves fornecidas modificadas. O index
+começa em 0 referindo-se ao primeiro elemento do vetor.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(assoc ["cero" "uno" "two"] 2 "dos")
+;; =&gt; ["cero" "uno" "dos"]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note que podemos somente associar uma chave que já está no vetor ou é a última
+posição do vetor (fazendo ele crescer):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(assoc ["cero" "uno" "dos"] 3 "tres")
+;; =&gt; ["cero" "uno" "dos" "tres"]
+
+(assoc ["cero" "uno" "dos"] 4 "cuatro")
+;; Error: Index 4 out of bounds [0,3]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Algo supreendente é que estruturas de dados associativas podem ser usadas
+como funções. Elas sào funções das suas chaves para os valores associado a elas.
+No caso dos vetores, se uma certa chave não está presente uma exceção é
+lançada:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(["cero" "uno" "dos"] 0)
+;; =&gt; "cero"
+
+(["cero" "uno" "dos"] 2)
+;; =&gt; "dos"
+
+(["cero" "uno" "dos"] 3)
+;; Error: Not item 3 in vector of length 3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como listas, vetores podem também ser usadas como pilhas com as funções <code>peek</code>, <code>pop</code>
+e <code>conj</code>. É importante notar que vetores crescem na direção contrária das listas:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def vector-stack [0 1 2])
+
+(peek vector-stack)
+;; =&gt; 2
+
+(pop vector-stack)
+;; =&gt; [0 1]
+
+(type (pop vector-stack))
+;; =&gt; cljs.core/PersistentVector
+
+(conj vector-stack 3)
+;; =&gt; [0 1 2 3]
+
+(type (conj vector-stack 3))
+;; =&gt; cljs.core/PersistentVector</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As funções <code>map</code> e <code>filter</code> são operações que retornam uma <em>lazy sequence</em>, mas é comum
+precisarmos de sequências onde todos os valores já foram computados. Por isso,
+existem as funções <code>mapv</code> e <code>filterv</code> que funcionam igual <code>map</code> e <code>filter</code> porém
+retornam vetores. Elas tem a vantagem de serem mais rápidas do que construir um vetor
+a partir de uma <em>lazy sequence</em> e fazendo a intenção do código mais explícita:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(map inc [0 1 2])
+;; =&gt; (1 2 3)
+
+(type (map inc [0 1 2]))
+;; =&gt; cljs.core/LazySeq
+
+(mapv inc [0 1 2])
+;; =&gt; [1 2 3]
+
+(type (mapv inc [0 1 2]))
+;; =&gt; cljs.core/PersistentVector</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="mapas"><a class="link" href="#mapas">Mapas</a></h5>
+<div class="paragraph">
+<p>Mapas são onipresente em <em>Clojure</em>. Como vetores, eles também são usados
+como parte da sintaxe da linguagem, principalmente para adição de <a href="#metadata-section">metadadaos</a>
+a uma var. Qualquer estrutura de dados em <em>Clojure</em> pode ser usada como
+uma chave em um mapa, apesar de ser comum usarmos <em>keywords</em> pois elas
+também podem ser chamadas como funções.</p>
+</div>
+<div class="paragraph">
+<p>Mapas em <em>Clojure</em> são escritos literalmente como pares chave-valor envoltos
+por chaves <code>{}</code>. Alternativamente, eles também pode ser criados usando a
+função <code>hash-map</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(map? {:name "Cirilla"})
+;; =&gt; true
+
+(hash-map :name "Cirilla")
+;; =&gt; {:name "Cirilla"}
+
+(hash-map :name "Cirilla" :surname "Fiona")
+;; =&gt; {:name "Cirilla" :surname "Fiona"}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como mapas não possuem uma ordem específica, a função <code>conj</code> apenas adiciona um
+ou mais pares de chave-valor ao mapa. <code>conj</code> para mapas espera um ou mais sequência
+de pares chave-valor como seus últimos argumentos:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def ciri {:name "Cirilla"})
+
+(conj ciri [:surname "Fiona"])
+;; =&gt; {:name "Cirilla", :surname "Fiona"}
+
+(conj ciri [:surname "Fiona"] [:occupation "Wizard"])
+;; =&gt; {:name "Cirilla", :surname "Fiona", :occupation "Wizard"}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>No exemplo anterior, por causalidade, a ordem foi preservada, mas para muitas chaves,
+você verá que a ordem não é preservada.</p>
+</div>
+<div class="paragraph">
+<p>Mapas associam chaves a valores e são portanto uma estrutura de dados associativa.
+Eles suportam a adição de novas associaçòes usando a função <code>assoc</code> e, diferente de vetores,
+a remoção usando <code>dissoc</code>. <code>assoc</code> também pode atualizar valores de uma chave existente.
+Vamos ver como essas funções funcionam:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(assoc {:name "Cirilla"} :surname "Fiona")
+;; =&gt; {:name "Cirilla", :surname "Fiona"}
+(assoc {:name "Cirilla"} :name "Alfonso")
+;; =&gt; {:name "Alfonso"}
+(dissoc {:name "Cirilla"} :name)
+;; =&gt; {}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Mapas também são funções das suas chaves, retornando os valores relacionados com
+a chave passada como argumentol. Diferente de vetores, eles retornam <code>nil</code> caso a
+chave não esteja presente no mapa:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">({:name "Cirilla"} :name)
+;; =&gt; "Cirilla"
+
+({:name "Cirilla"} :surname)
+;; =&gt; nil</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><em>Clojure</em> também fornece hash maps ordenados que se comportam como sua versão não ordenada
+mas preservam a ordem quando iteramos sob seus elementos. Podemos criar um mapa ordenado
+com um ordenamento padrão usando a função <code>sorted-map</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def sm (sorted-map :c 2 :b 1 :a 0))
+;; =&gt; {:a 0, :b 1, :c 2}
+
+(keys sm)
+;; =&gt; (:a :b :c)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Se precisarmos de um ordenamento diferente, podemos prover uma função comparadora
+a função <code>sorted-map-by</code>, vamos ver um exemplo em que invertemos a ordem retornada
+pela função <code>compare</code>. Uma função comparadora recebe dois items para comparar
+e retorna -1 (se o primeiro item é menor que o segundo), 0 (se eles são iguais) e
+1 (se o primeiro item é maior que o segundo).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defn reverse-compare [a b] (compare b a))
+
+(def sm (sorted-map-by reverse-compare :a 0 :b 1 :c 2))
+;; =&gt; {:c 2, :b 1, :a 0}
+
+(keys sm)
+;; =&gt; (:c :b :a)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="conjuntos-ou-sets"><a class="link" href="#conjuntos-ou-sets">Conjuntos (ou Sets)</a></h5>
+<div class="paragraph">
+<p>Sets em <em>Clojure</em> também possuem uma sintaxe literal que é <code>#{}</code> e também podem
+ser criados utilizando a função <code>set</code>. Eles são coleções não ordenadas de valores sem
+duplicações.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(set? #{\a \e \i \o \u})
+;; =&gt; true
+
+(set [1 1 2 3])
+;; =&gt; #{1 2 3}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A sintaxe literal não permite duplicações. Se você escrever um set literal com duplicações
+um erro será lançado:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">#{1 1 2 3}
+;; clojure.lang.ExceptionInfo: Duplicate key: 1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Existem várias operações que podem ser realizadas com sets, porem elas estão
+localizadas no <em>namespace</em> <code>clojure.set</code> e portanto precisam ser importadas. Você vai
+aprender <a href="#namespace-section">os detalhes sobre namespaces</a> mais tarde, por hora, você só
+precisa saber que estamos carregando um <em>namespace</em> chamado <code>clojure.set</code> e vinculá-lo
+ao símbolo <code>s</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(require '[clojure.set :as s])
+
+(def danish-vowels #{\a \e \i \o \u \æ \ø \å})
+;; =&gt; #{"a" "e" "å" "æ" "i" "o" "u" "ø"}
+
+(def spanish-vowels #{\a \e \i \o \u})
+;; =&gt; #{"a" "e" "i" "o" "u"}
+
+(s/difference danish-vowels spanish-vowels)
+;; =&gt; #{"å" "æ" "ø"}
+
+(s/union danish-vowels spanish-vowels)
+;; =&gt; #{"a" "e" "å" "æ" "i" "o" "u" "ø"}
+
+(s/intersection danish-vowels spanish-vowels)
+;; =&gt; #{"a" "e" "i" "o" "u"}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Uma propriedade interessante dos sets é que eles podem ser aninhados. Linguagens
+que possuem sets mutáveis podem acabar contendo valores duplicados, mas isso não
+pode acontecer no <em>Clojure</em>. Todas as estruturas de dado do <em>Clojure</em> podém ser aninhadas
+de forma arbitrária devido a imutabilidade.</p>
+</div>
+<div class="paragraph">
+<p>Sets também suportam a operação genérica <code>conj</code> como todas as outras coleções suportam.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def spanish-vowels #{\a \e \i \o \u})
+;; =&gt; #{"a" "e" "i" "o" "u"}
+
+(def danish-vowels (conj spanish-vowels \æ \ø \å))
+;; =&gt; #{"a" "e" "i" "o" "u" "æ" "ø" "å"}
+
+(conj #{1 2 3} 1)
+;; =&gt; #{1 3 2}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Sets funcionam como uma estrutura associativa que associam os valores que ele contém a eles
+mesmos. E como qualquer valore exceto <code>nil</code> e <code>false</code> são "logicamente verdade" em
+<em>Clojure</em>, podemos usar os sets como funções predicados:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def vowels #{\a \e \i \o \u})
+;; =&gt; #{"a" "e" "i" "o" "u"}
+
+(get vowels \b)
+;; =&gt; nil
+
+(contains? vowels \b)
+;; =&gt; false
+
+(vowels \a)
+;; =&gt; "a"
+
+(vowels \z)
+;; =&gt; nil
+
+(filter vowels "Hound dog")
+;; =&gt; ("o" "u" "o")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Sets também possuem uma variante ordenada como mapas que é criada
+utilizando as funções <code>sorted-set</code> e <code>sorted-set-by</code> que são análogas as funções
+<code>sorted-map</code> e <code>sorted-map-by</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def unordered-set #{[0] [1] [2]})
+;; =&gt; #{[0] [2] [1]}
+
+(seq unordered-set)
+;; =&gt; ([0] [2] [1])
+
+(def ordered-set (sorted-set [0] [1] [2]))
+;; =&gt;# {[0] [1] [2]}
+
+(seq ordered-set)
+;; =&gt; ([0] [1] [2])</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="filas"><a class="link" href="#filas">Filas</a></h5>
+<div class="paragraph">
+<p><em>Clojure</em> também provê uma fila persistente e imutável. Filas não são usadas tanto
+quanto outros tipos de coleções. Elas podem ser criadas utilizando a sintaxe literal
+<code>#queue []</code>, mas não existe uma função para criá-las.
+ClojureScript also provides a persistent and immutable queue. Queues are not used as
+pervasively as other collection types.  They can be created by simply getting the empty
+queue: <code>(clojure.lang.PersistentQueue/EMPTY)</code>. Porém não existe nenhuma função
+construtora para criá-las.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def pq (conj (clojure.lang.PersistentQueue/EMPTY) 1 2 3))
+;; =&gt; #object[clojure.lang.PersistentQueue 0x28cb9120 "clojure.lang.PersistentQueue@7861"]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Usar <code>conj</code> para adiconar valores a files, os adiciona ao fim dela:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def pq (conj (clojure.lang.PersistentQueue/EMPTY) 1 2 3))
+;; =&gt; #object[clojure.lang.PersistentQueue 0x28cb9120 "clojure.lang.PersistentQueue@7861"]
+
+(last (conj pq 4 5))
+;; =&gt; 5</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Infelizmente, as filas não são impressas de forma muito legível na Repl.
+É importante lembrar que as operações que usamos para pilha funcionam de maneira
+diferente para filas. <code>pop</code> retira valores do começo da fila, e <code>conj</code> coloca valores
+no fim da fila.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def pq (conj (clojure.lang.PersistentQueue/EMPTY) 1 2 3))
+;; =&gt; #object[clojure.lang.PersistentQueue 0x28cb9120 "clojure.lang.PersistentQueue@7861"]
+
+(peek pq)
+;; =&gt; 1
+
+(println (mapv identity (pop pq)))
+;; =&gt; [2 3]
+
+(println (mapv identity (conj pq 4)))
+;; =&gt; [1 2 3 4]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Filas não são usadas com muita frequência como lista ou vetores, mas é bom saber
+que elas estão disponíveis em <em>Clojure</em>, e podem eventualmente serem úteis.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="destructuring-section"><a class="link" href="#destructuring-section">4.9. Desestruturando (<em>Destructuring</em>)</a></h3>
+<div class="paragraph">
+<p><em>Destructuring,</em> como o nome sugere, é um modo de quebrar uma estrutura de dados
+como coleções e focar em partes individuais dela. <em>Clojure</em> oferece uma
+sintaxe concisa para desestruturar seja sequência indexadas ou estruturas
+associativas que pode ser usada onde criamos vínculos entre símbolos e valores.</p>
+</div>
+<div class="paragraph">
+<p>Vamos ver um exemplo de <em>destructuring</em> que é útil pare entendermos o parágrafo
+anterior. Imagine que você tem uma sequência e esteja interessado somente
+no primeiro e terceiro item. Você pode obter uma referência a eles usando
+a função <code>nth</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(let [v [0 1 2]
+      fst (nth v 0)
+      thrd (nth v 2)]
+  [thrd fst])
+;; =&gt; [2 0]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Porém, o código anterior é um pouco verboso. <em>Destructuring</em> pode nos ajudar a
+extrair valores de uma sequência indexada de maneira mais sucinta se usarmos
+um vetor no lado esquerdo do vínculo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(let [[fst _ thrd] [0 1 2]]
+  [thrd fst])
+;; =&gt; [2 0]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>No exemplo acima, <code>[fst _ thrd]</code> é uma expressão de <em>destructuring</em>. Ela é representada
+como um vetor e é usada para vincular valores indexados aos símbolos <code>fst</code> e <code>thrd</code>,
+correspondendo aos valores com index <code>0</code> e <code>2</code> respectivamente. O símbolo <code>_</code> é utilizado
+como um placeholder para valores que não estamos interessados, nesse caso <code>1</code>.</p>
+</div>
+<div class="paragraph">
+<p>Note que <em>destructuring</em> não está limitado aos vínculos criados dentro de um <code>let</code>;
+ele funciona em qualquer lugar que criámos um vínculo entre valores e símbolos como
+nas formas especiais <code>for</code> e <code>doseq</code> ou em argumentos de funções. Podemos escrever uma
+função que receba um pair e troque as posiçòes desse par de maneira muito sucinta
+utilizando a sintaxe do <em>destructuring</em> como argumento da função:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defn swap-pair [[fst snd]]
+  [snd fst])
+
+(swap-pair [1 2])
+;; =&gt; [2 1]
+
+(swap-pair '(3 4))
+;; =&gt; [4 3]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><em>Destructuring</em> posicional com vetores é bastante útil para tirarmos valores indexados
+de uma sequência, mas algumas vezes não queremos descartar o resto dos elementos
+na sequência. Similar com ao <code>&amp;</code> usado em funções de aridade variável, o <code>&amp;</code> pode ser usado
+dentro do <em>destructuring</em> de um vetor para agrupar o resto dos elementos de uma sequência:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(let [[fst snd &amp; more] (range 10)]
+  {:first fst
+   :snd snd
+   :rest more})
+;; =&gt; {:first 0, :snd 1, :rest (2 3 4 5 6 7 8 9)}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note que o valor na posição <code>0</code> foi vinculado a <code>fst</code>, o valor na posição <code>1</code>
+foi vinculado a <code>snd</code>, e a sequência de elementos a partir da posição <code>2</code> foi vinculada
+ao símbolo <code>more</code>.</p>
+</div>
+<div class="paragraph">
+<p>Nós podemos ainda estar interessados na estrutura de dados como um todo, mesmo
+quando estamos fazendo um <em>destructuring</em>. Podemos manter a referência a estrutura
+usando a <em>keyword</em> <code>:as</code>. Se usada dentro de um <em>destructuring</em>, a estrutura de dados
+original fica vinculada ao símbolo que segue a <em>keyword</em> <code>:as</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(let [[fst snd &amp; more :as original] (range 10)]
+  {:first fst
+   :snd snd
+   :rest more
+   :original original})
+;; =&gt; {:first 0, :snd 1, :rest (2 3 4 5 6 7 8 9), :original (0 1 2 3 4 5 6 7 8 9)}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Não só podemos usar <em>destructuring</em> com sequências, mas estruturas associativas ainda
+podem ser desestruturadas. Nesse caso, o <em>destructuring</em> é representado utilizando
+um map ao invés de um vetor. Nesse mapa, as chaves são símbolos que queremos vincular aos valores
+e os valores são as chaves que queremos usar para obter os valores dentro da estrutura
+associativa que queremos desestruturar. Vamos ver um exemplo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(let [{language :language} {:language "ClojureScript"}]
+  language)
+;; =&gt; "ClojureScript"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>No exemplo acima, estamos extraindo o valor associado com a chave <code>:language</code> e
+vinculando ele com o símbolo <code>language</code>. Quando procuramos o map por uma chave que não
+está presente, o símbolo é vinculado a <code>nil</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(let [{name :name} {:language "ClojureScript"}]
+  name)
+;; =&gt; nil</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><em>Destructuring</em> associative permite o fornecimento de valores <em>default</em> caso a chave não
+esteja presente no mapa. Um mapa seguido da chave <code>:or</code> é usada para valores
+<em>default</em> como o exemplo seguinte mostra:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(let [{name :name :or {name "Anonymous"}} {:language "ClojureScript"}]
+  name)
+;; =&gt; "Anonymous"
+
+(let [{name :name :or {name "Anonymous"}} {:name "Cirilla"}]
+  name)
+;; =&gt; "Cirilla"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><em>Destructuing</em> associativo também suporta vincular a estrutura de dados original a um
+símbolo colocado depois da keyword <code>:as</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(let [{name :name :as person} {:name "Cirilla" :age 49}]
+  [name person])
+;; =&gt; ["Cirilla" {:name "Cirilla" :age 49}]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><em>Keyword</em> não são as únicas coisas que podem ser chaves em uma estrutura associative.
+Números, strings, símbolos e muitas outras estruturas de dados podem ser usadas como
+chave, então também podemos usá-las no <em>destruturing</em>. Mas note que para símbolos, precisamos
+prefixá-los com aspa <code>'</code> para evitar que sejam evaluados.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(let [{one 1} {0 "zero" 1 "one"}]
+  one)
+;; =&gt; "one"
+
+(let [{name "name"} {"name" "Cirilla"}]
+  name)
+;; =&gt; "Cirilla"
+
+(let [{lang 'language} {'language "ClojureScript"}]
+  lang)
+;; =&gt; "ClojureScript"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como normalmente os valores correspondente as chaves são usualmente vinculado
+a símbolos com o mesmo nome (Ex: <code>:language</code> e <code>language</code>) e chaves normalmente
+são keywords, strings ou símbolos, <em>Clojure</em> oferece uma sintaxe mais simples
+para esses casos.</p>
+</div>
+<div class="paragraph">
+<p>Vamos ver alguns exemplos desses casos, começando pelas <em>keywords</em> usando <code>:keys</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(let [{:keys [name surname]} {:name "Cirilla" :surname "Fiona"}]
+  [name surname])
+;; =&gt; ["Cirilla" "Fiona"]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como você pode ver, utilizamos a <em>keyword</em> <code>:keys</code> e associamos ela a um vetor de símbolos,
+os valores correspondentes as versões chaves do símbolo são vinculado a eles. A expressão
+<code>{:keys [name surname]}</code> é equivalente a  <code>{name :name surname :surname}</code>, porém mais
+sucinta.</p>
+</div>
+<div class="paragraph">
+<p>A versão string e simbólica dessa sintaxe funciona exatamente igual, só que nesses casos
+usamos <code>:strs</code> e <code>:syms</code> respectivamente:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(let [{:strs [name surname]} {"name" "Cirilla" "surname" "Fiona"}]
+  [name surname])
+;; =&gt; ["Cirilla" "Fiona"]
+
+(let [{:syms [name surname]} {'name "Cirilla" 'surname "Fiona"}]
+  [name surname])
+;; =&gt; ["Cirilla" "Fiona"]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Uma propriedade interessante do <em>destruturing</em> é que podemos ter um dentro do outro de maneira
+arbitrária, o que torna o código para acesso de estruturas aninhadas muito fácil de compreender,
+uma vez que ele faz mímica da estrutura da coleção:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(let [{[fst snd] :languages} {:languages ["ClojureScript" "Clojure"]}]
+  [snd fst])
+;; =&gt; ["Clojure" "ClojureScript"]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="threading-macros-ou-ordenando-chamadas-consecutivas-de-funções"><a class="link" href="#threading-macros-ou-ordenando-chamadas-consecutivas-de-funções">4.10. <em>Threading Macros</em> (ou ordenando chamadas consecutivas de funções)</a></h3>
+<div class="paragraph">
+<p><em>Threading macros</em>, também conhecido como funções flecha, permite que escrevamos código
+mais fácil de ler quando possuímos várias chamadas de funções aninhadas.</p>
+</div>
+<div class="paragraph">
+<p>Imagine que você tenha <code>(f (g (h x)))</code> onde a função <code>f</code> recebe como seu primeiro argumento
+o resultado da chamada da função <code>g</code> repetida e assim por diante. Com a <em>threading macro</em>
+mais básica <code>&#8594;</code> podemos converter essa expressào em <code>(-&gt; x (h) (g) (f))</code> que é muito
+mais fácil de ler.</p>
+</div>
+<div class="paragraph">
+<p>O resulta é uma sintaxe mais simples, porque a função flecha é definida como macro
+e não impacta na performance do código. A forma <code>(-&gt; x (h) (g) (f))</code> é convertida
+automaticamente para <code>(f (g (h x)))</code> durante a compilação</p>
+</div>
+<div class="paragraph">
+<p>Observe que os parenteses em <code>h</code>, <code>g</code> e <code>f</code> são opcionais e podem ser omitidos:
+<code>(f (g (h x)))</code> é o mesmo que <code>(-&gt; x h g f)</code>.</p>
+</div>
+<div class="sect3">
+<h4 id="thread-first-macro"><a class="link" href="#thread-first-macro">4.10.1. <em>Thread-first macro</em> (<code>-&gt;</code>)</a></h4>
+<div class="paragraph">
+<p>Isso é chamado de <em>thread first</em>, ou thread primeiro, poque o primeiro argumento das diferentes
+funções é o resultado da expressão anterior.</p>
+</div>
+<div class="paragraph">
+<p>Usando um exemplo mais concreto, assim é como seria o código sem utilizarmos
+<em>threading macro</em>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def book {:name "Lady of the Lake"
+           :readers 0})
+
+(update (assoc book :age 1999) :readers inc)
+;; =&gt; {:name "Lady of the lake" :age 1999 :readers 1}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Podemos reescrevê-lo com a _threading macro <code>-&gt;</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(-&gt; book
+    (assoc :age 1999)
+    (update :readers inc))
+;; =&gt; {:name "Lady of the lake" :age 1999 :readers 1}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Esse <em>threading macro</em> é especialmente útil para transformarmos estrutura de dados, porque
+em <em>Clojure</em>, funções que transforma estruturas de dados recebem como primeiro argumento
+a estrutura de dados.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="thread-last-macro-ou-thread-por-último"><a class="link" href="#thread-last-macro-ou-thread-por-último">4.10.2. Thread-last macro, ou thread por último (<code>-&gt;&gt;</code>)</a></h4>
+<div class="paragraph">
+<p>A principal diferença entre <em>thread-last</em> e <em>thread-first</em> é que ao invés do retorno
+ser utilizado como primeiro argumento das funções, ele é utilizado como último.</p>
+</div>
+<div class="paragraph">
+<p>Vejamos um exemplo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def numbers [1 2 3 4 5 6 7 8 9 0])
+
+(take 2 (filter odd? (map inc numbers)))
+;; =&gt; (3 5)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O mesmo código reescrito com <code>-&gt;&gt;</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(-&gt;&gt; numbers
+     (map inc)
+     (filter odd?)
+     (take 2))
+;; =&gt; (3 5)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Esse thread macro é especialmente útil para transformarmos sequências ou coleções com
+<code>map</code> , <code>filter</code>, <code>reduce</code> e outras funções, pois no <em>Clojure</em> essas funções recebem como
+último argumento a sequência.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="thread-as-macro-ou-thread-como-as"><a class="link" href="#thread-as-macro-ou-thread-como-as">4.10.3. Thread-as macro ou thread-como (<code>as-&gt;</code>)</a></h4>
+<div class="paragraph">
+<p>Finalmente, tem os casos que nem  <code>-&gt;</code> nem <code>-&gt;&gt;</code> são aplicáveis. Nesses casos,
+tudo que você precisa utilizar é <code>as-&gt;</code>, a alternativa mais flexível, que permite
+aplicar o retorno em qualquer posição da chamada de função, e não somente a primeira
+ou a última.</p>
+</div>
+<div class="paragraph">
+<p>Essa forma espera dois argumentos fixos e um número arbitrário de expressões.
+Assim como <code>-&gt;</code>, o primeiro argumento é o valor a ser utilizado nas formas seguintes.
+O segundo arbumento é um símbolo ao qual esse valor estará vinculado. Em cada forma subsequente,
+podemos utilizar esse símbolo para nos referirmos ao valor retornado na forma anterior.</p>
+</div>
+<div class="paragraph">
+<p>Vejamos um exemplo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(as-&gt; numbers $
+  (map inc $)
+  (filter odd? $)
+  (first $)
+  (hash-map :result $ :id 1))
+;; =&gt; {:result 3 :id 1}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="thread-some-macros-ou-thread-se-algo-some-and-some"><a class="link" href="#thread-some-macros-ou-thread-se-algo-some-and-some">4.10.4. Thread-some macros ou thread se algo (<code>some-&gt;</code> and <code>some-&gt;&gt;</code>)</a></h4>
+<div class="paragraph">
+<p>Duas outras <em>threading macros</em> mais especializadas que o <em>Clojure</em> possui são as <em>thread-some</em>.
+Elas funcionam de forma semelhante a <code>-&gt;</code> e <code>-&gt;&gt;</code> exceto que elas encerram a execução
+das formas uma vez que alguma expressão retorne <code>nil</code>.</p>
+</div>
+<div class="paragraph">
+<p>Vejamos um exemplo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(some-&gt; (rand-nth [1 nil])
+        (inc))
+;; =&gt; 2
+
+(some-&gt; (rand-nth [1 nil])
+        (inc))
+;; =&gt; nil</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Esse é um modo fácil de evitar uma null pointer exception.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="thread-cond-macros-ou-thread-se-cond-and-cond"><a class="link" href="#thread-cond-macros-ou-thread-se-cond-and-cond">4.10.5. Thread-cond macros ou thread se (<code>cond-&gt;</code> and <code>cond-&gt;&gt;</code>)</a></h4>
+<div class="paragraph">
+<p>As macros <code>cond-&gt;</code> and <code>cond-&gt;&gt;</code> são análogas a <code>-&gt;</code>  e <code>-&gt;&gt;</code> e oferecem
+a abilidade de pularmos alguns itens na pipeline. Vejamos um exemplo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defn describe-number
+  [n]
+  (cond-&gt; []
+    (odd? n) (conj "odd")
+    (even? n) (conj "even")
+    (zero? n) (conj "zero")
+    (pos? n) (conj "positive")))
+
+(describe-number 3)
+;; =&gt; ["odd" "positive"]
+
+(describe-number 4)
+;; =&gt; ["even" "positive"]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A expressão seguinte é executada somente quando a condição é "logicamente true".</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="leituras-adicionais-em-inglês"><a class="link" href="#leituras-adicionais-em-inglês">4.10.6. Leituras adicionais (em inglês)</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://www.spacjer.com/blog/2015/11/09/lesser-known-clojure-variants-of-threading-macro/" class="bare">http://www.spacjer.com/blog/2015/11/09/lesser-known-clojure-variants-of-threading-macro/</a></p>
+</li>
+<li>
+<p><a href="http://clojure.org/guides/threading_macros" class="bare">http://clojure.org/guides/threading_macros</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="namespace-section"><a class="link" href="#namespace-section">4.11. Namespaces</a></h3>
+<div class="sect3">
+<h4 id="definindo-um-namespace"><a class="link" href="#definindo-um-namespace">4.11.1. Definindo um <em>namespace</em></a></h4>
+<div class="paragraph">
+<p>Um <em>namespace</em> é um peça fundamental de modularizar o código. <em>Namespaces</em> são
+análagos aos pacotes em Java ou módulos em Ruby ou Python e podem ser definidos
+com a macro <code>ns</code>. Se você já deu uma olhada algum código em <em>Clojure</em>, você terá
+notado que alguns arquivoc começam com:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(ns myapp.core
+  "Alguma string de documentação.")
+
+(def x "hello")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><em>Namespaces</em> são dinâmicos, significando que você pode criá-los a qualquer momento.
+Entretanto a convenção é possuir um <em>namespace</em> por arquivo. Naturalmente,
+a definição de um <em>namespace</em> está usualmente no começo de um arquivo, seguida
+de um docstring opcional.</p>
+</div>
+<div class="paragraph">
+<p>Antes, explicamos vars e símbolos. Cada var que definimos será associada com
+um namespace. Se você não define um <em>namespace</em>, então o default, "user" será usado:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def x "hello")
+;; =&gt; #'user/x</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="carregando-outros-namespaces"><a class="link" href="#carregando-outros-namespaces">4.11.2. Carregando outros <em>namespaces</em></a></h4>
+<div class="paragraph">
+<p>Definir um <em>namespace</em> e  variáveis dentro dele, mas não é muito útil se não podemos
+utilizar símbolos de outros namespaces. Para isso, a macro <code>ns</code> oferece um jeito
+simpels de carregar outros <em>namespaces</em>:</p>
+</div>
+<div class="paragraph">
+<p>Observe o exemplo seguinte:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(ns myapp.main
+  (:require myapp.core
+            clojure.string))
+
+(clojure.string/upper-case myapp.core/x)
+;; =&gt; "HELLO"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como você pode observar, estamos usando nomes qualificados (<em>namespace</em> + nome da var)
+para acessar vars e funções de um outros <em>namespaces</em>.</p>
+</div>
+<div class="paragraph">
+<p>Isso permite acessarmos outros <em>namespaces</em>, mas também é repetitivo e extremamente
+verbose. E será bem mais verbose se o nome do namespace for muito grande. Para resolver isso
+podemos utilizar a diretiva <code>:as</code> para criar um "apelido" (<em>alias</em>) para o <em>namespace</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(ns myapp.main
+  (:require [myapp.core :as core]
+            [clojure.string :as str]))
+
+(str/upper-case core/x)
+;; =&gt; "HELLO"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Adicionalmente, <em>Clojure</em> oferece um jeito simples de se refer a uma var ou função
+de um <em>namespace</em> usando a diretiva <code>:refer</code>, seguido pela sequência de símbolos
+que vão referir-se as vars daquele <em>namespace</em>. Efetivamente, é como se essas
+vars e funções fizessem parte do seu <em>namespace</em>, e não precisamos qualificá-las.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(ns myapp.main
+  (:require [clojure.string :refer [upper-case]]))
+(upper-case x)
+;; =&gt; "HELLO"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>E finalmente, é importante saber que tudo localizado no <em>namespace</em> <code>clojure.core</code>
+é automaticamente carregado e não deveria ser feito o <code>require</code> de forma explícita.
+Algumas vezes, você pode querer definir vars com nomes que conflituam com aqueles
+definidos no <em>namespace</em> <code>clojure.core</code>. Para fazer isso, a macro <code>ns</code> oferece outra
+diretiva que permite excluir alguns símbolos específicos e prevenir que eles sejam
+carregados.</p>
+</div>
+<div class="paragraph">
+<p>Vejamos um exemplo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(ns myapp.main
+  (:refer-clojure :exclude [min]))
+
+(defn min
+  [x y]
+  (if (&gt; x y)
+    y
+    x))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A macro <code>ns</code> tem outras diretivas para carregar classes da linguagem hospeira , Java,
+com <code>:import</code>, mas isso é explicado em outra seção.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="namespaces-e-nome-de-arquivos"><a class="link" href="#namespaces-e-nome-de-arquivos">4.11.3. <em>Namespaces</em> e nome de arquivos</a></h4>
+<div class="paragraph">
+<p>Quando você possui um <em>namespace</em> como <code>myapp.core</code>, o código deve estar em
+um arquivo chamado <code>core.clj</code> dentro do diretório <code>myapp</code>. Entào, no exemplo precedente
+com os <em>namespaces</em> <code>myapp.core</code> e <code>myapp.main</code> seriam encontrados em um projeto
+com uma estrutura de arquivos assim:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>myapp
+└── src
+    └── myapp
+        ├── core.cljs
+        └── main.cljs</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="abstrações-e-polimorfismos"><a class="link" href="#abstrações-e-polimorfismos">4.12. Abstrações e Polimorfismos</a></h3>
+<div class="paragraph">
+<p>Tenho certeza que em mais de uma vez você se encontrou em uma situação somo essa:
+você definiu uma ótima abstração (utilizando interfaces ou algo similar) para sua
+"lógica de negócio", e você precisa lidar com outro módulo sob o qual você não tem
+nenhum controle, e você provavelmente estava pensando em criar adapters, proxies, e
+outras abordagens que implicam em um grande volume de complexidade adicional.</p>
+</div>
+<div class="paragraph">
+<p>Algumas linguagens dinâmicas permitem "mokey-patching": linguagems onde as classes
+são abertas e qualquer método pode ser definido e redefinido a qualquer momento.
+Também sabemos que essa é uma má prática.</p>
+</div>
+<div class="paragraph">
+<p>Nós nào podemos confiar em uma linguagem que permite que você sobreescreva métodos
+que você está usando quando importarmos uma biblioteca de um terceiro. Não podemos
+esperar um comportamento consistente quando isso acontece.</p>
+</div>
+<div class="paragraph">
+<p>Esses sintomas são comumente chamados de "problema de expressão"
+veja <a href="http://en.wikipedia.org/wiki/Expression_problem" class="bare">http://en.wikipedia.org/wiki/Expression_problem</a> para mais detalhes.</p>
+</div>
+<div class="sect3">
+<h4 id="protocolos"><a class="link" href="#protocolos">4.12.1. Protocolos</a></h4>
+<div class="paragraph">
+<p>O mecanismo em <em>Clojure</em> para definir "interfaces" é chamado protocolo (<em>protocol</em>).
+Um protocolo consiste de um nome e um conjunto de assinaturas de funções.
+Todas as funções tem ao menos um argumento correspondendo ao <code>this</code> em Javascript
+ou <code>self</code> em Python.</p>
+</div>
+<div class="paragraph">
+<p>Protocolos provém um polimorfismo baseado em tipos, e eles escolhem qual função
+executar baseado no tipo do primeiro argumento.</p>
+</div>
+<div class="paragraph">
+<p>Um protocolo parece o seguinte:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(ns myapp.testproto)
+
+(defprotocol IProtocolName
+  "A docstring describing the protocol."
+  (sample-method [this] "A doc string associated with this function."))</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+o prefixo "I" é comumente usado para criar uma separação entre protocolos
+e tipos. Na comunidade <em>Clojure</em>, existe opiniões muitas diferentes sobre como
+o prefixo "I" deveria ser usado. Na nossa opinião, é uma solução aceitável para
+evitar conflito de nomes e possíveis confusões. Porém, nào utilizar esse prefixo
+não é considerado uma prática ruim.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Da perspectiva do usuário, funções de um protocolo são simpels funções definidas no
+<em>namespace</em> onde o protocolo foi definido. Isso permite uma abordagem fácil e simples
+para evitar conflitos entre diferentes protocolos implementados para o mesmo tipo que
+contém nomes de funções iguais.</p>
+</div>
+<div class="paragraph">
+<p>Aqui está um exemplo. Vamos criar um protocolo chamado <code>IInvertible</code> para os dados
+que podem ser "invertidos". Ele irá conter um único método chamado <code>invert</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defprotocol IInvertible
+  "Esse protocolo é para tipos de dados que são 'invertíveis'"
+  (invert [this] "Invert the given item."))</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="extendendo-tipos-já-existentes"><a class="link" href="#extendendo-tipos-já-existentes">Extendendo tipos já existentes</a></h5>
+<div class="paragraph">
+<p>Uma dos pontos positivos de protocolos é a habilidade de extender tipos existentes
+e talvez tipos providos por bibliotecas de terceiros. Essa operação pode ser feito
+de jeitos diferentes.</p>
+</div>
+<div class="paragraph">
+<p>A maioria das vezes você irá usar as macros <strong>extend-protocol</strong> ou <strong>extend-type</strong>. A sintaxe
+do <code>extend-type</code> é assim:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(extend-type TypeA
+  ProtocolA
+  (function-from-protocol-a [this]
+    ;; implementação aqui
+    )
+
+  ProtocolB
+  (function-from-protocol-b-1 [this parameter1]
+    ;; implementação aqui
+    )
+  (function-from-protocol-b-2 [this parameter1 parameter2]
+    ;; implementação aqui
+    ))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como você pode observar, que com <strong>extend-type</strong> você pode extender um só tipo com
+diferentes protocolos em uma única expressão.</p>
+</div>
+<div class="paragraph">
+<p>Vamos brincar com o nosso protocolo <code>IInvertible</code> definido anteriormente:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(extend-type String
+  IInvertible
+  (invert [this] (apply str (reverse this))))
+
+(extend-type clojure.lang.PersistentList
+  IInvertible
+  (invert [this] (reverse this)))
+
+(extend-type clojure.lang.PersistentVector
+  IInvertible
+  (invert [this] (into [] (reverse this))))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Agora, é hora de testarmos a implementação do nosso protocolo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(invert "abc")
+;; =&gt; "cba"
+
+(invert 0)
+;; =&gt; 0
+
+(invert '(1 2 3))
+;; =&gt; (3 2 1)
+
+(invert [1 2 3])
+;; =&gt; [3 2 1]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Em comparação, <strong>extend-protocol</strong> faz o inverso; dado um protocolo, ele adiciona
+uma implementação para vários tipos. A sintaxe é assim:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(extend-protocol ProtocolA
+  TypeA
+  (function-from-protocol-a [this]
+    ;; implementação aqui
+    )
+
+  TypeB
+  (function-from-protocol-a [this]
+    ;; implementação aqui
+    ))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Então, o exemplo anterior poderia ser escrito também dessa maneira:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(extend-protocol IInvertible
+  String
+  (invert [this] (apply str (reverse this)))
+
+  clojure.lang.PersistentList
+  (invert [this] (reverse this))
+
+  clojure.lang.PersistentVector
+  (invert [this] (into [] (reverse this))))</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="introspeção-usando-protocolos"><a class="link" href="#introspeção-usando-protocolos">Introspeção usando Protocolos</a></h5>
+<div class="paragraph">
+<p><em>Clojure</em> vem com algumas funções úteis que permitem verificar se algo implementa
+um protocolo usando a função <code>satisfies?</code>. O propósito dessa função é determinar
+em runtime se algum objeto satisfaz um protocolo.</p>
+</div>
+<div class="paragraph">
+<p>Se definirmos um protocolo Baz e um record Foo que implementa esse protocolo,
+podemos verificar isso com a função <code>satisfies?</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defprotocol Baz
+             (bar [this]))
+
+(defrecord Foo [some-name]
+           Baz
+           (bar [this] (str "Hello, " some-name)))
+
+
+(satisfies? Baz (-&gt;Foo "Alguém"))
+;; =&gt; true</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="multimethods"><a class="link" href="#multimethods">4.12.2. Multimethods</a></h4>
+<div class="paragraph">
+<p>Protocolos resolvem um problema muito comum de polimorfismo: despachar uma função
+por tipo. Mas em algumas circunstâncias, essa abordagem pode ser limitante.
+E são nesses casos que usamos <em>multimethods</em></p>
+</div>
+<div class="paragraph">
+<p>Esses <em>multimethods</em> não estão limitados apenas por tipos; ao invés, eles oferecem
+a possibilidade de chamar funções de acordo com tipos de múltiplos argumentos
+ou por valor. Eles também permitem criarmos hierarquias. Além disso, como protocolos,
+<em>multimethods</em> são um sistema aberto de extensão que pode ser usado por outras
+bibliotecas.</p>
+</div>
+<div class="paragraph">
+<p>As funções básicas dos <em>multimethods</em> são <code>defmulti</code> e <code>defmethod</code>. O <code>defmulti</code> é
+utilizado para criar uma função <em>dispatch</em> inicial.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defmulti say-hello
+  "Uma função polimórfica que retorna uma mensagem de
+  olá dependendo da chave :locale, sendo o padrão `:en`"
+  (fn [param] (:locale param))
+  :default :en)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A função anônima definida dentro do <code>defmulti</code> é chamada de função <em>dispatch</em>. Ela
+é chamada toda vez que a função <code>say-hello</code> é chamada e deveria retornar algum tipo
+de valor que será usado para selecionar a implementação correta. No nosso exemplo,
+ela retorna o conteúdo da chave <code>:locale</code> do primeiro argumento.</p>
+</div>
+<div class="paragraph">
+<p>E finalmente, devemos adicionar algumas implementações. Isso é feito através do
+<code>defmethod</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defmethod say-hello :en
+  [person]
+  (str "Hello " (:name person "Anonymous")))
+
+(defmethod say-hello :es
+  [person]
+  (str "Hola " (:name person "Anónimo")))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Então, se executamos essa função com um mapa contendo a chave <code>:local</code> e opcionalmente
+a chave <code>:name</code>, o <em>multimethod</em> vai primeiro chamar a função <code>dispatch</code> para determinar
+o valor de <code>dispatch</code>, e então irá procurar pela implementação daquele valor.
+Se uma implementação é encontrada, a respectiva função será executada. Se não, o <code>dispatch</code>
+vai procurar pela implementação padrão (se houver) e executará ela.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(say-hello {:locale :es})
+;; =&gt; "Hola Anónimo"
+
+(say-hello {:locale :en :name "Ciri"})
+;; =&gt; "Hello Ciri"
+
+(say-hello {:locale :fr})
+;; =&gt; "Hello Anonymous"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Se uma implementação padrão não for especificada, uma exceção será gerada,
+notificando que o valor não possui uma implementação para aquele <code>multimethod</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="hierarquias"><a class="link" href="#hierarquias">4.12.3. Hierarquias</a></h4>
+<div class="paragraph">
+<p>Hierarquias são o modo que o <em>Clojure</em> fornece para construir relações que seu domínio
+possa precisar. Hierarquias são definidas em termos de relaçãoes entre objetos
+nomeados como símbolos, <em>keywords</em> ou tipos.</p>
+</div>
+<div class="paragraph">
+<p>Hierarquias podem ser definidas globalmente ou localmente, de acordo com suas
+necessidades. Você pode extender uma hierarquia em qualquer <em>namespace</em>, não apenas
+onde ela é definida.</p>
+</div>
+<div class="paragraph">
+<p>O <em>namespace</em> global é mais limitado, por boas razões. <em>Keywords</em> e símbolos que não são
+qualificados com um <em>namespace</em> não podem ser usados em uma hierarquia global.
+Esse comportamento previne situações onde duas ou mais bibliotecas tentam utilizar
+o mesmo símbolo com semânticas diferentes.</p>
+</div>
+<div class="sect4">
+<h5 id="definindo-uma-hierarquia"><a class="link" href="#definindo-uma-hierarquia">Definindo uma hierarquia</a></h5>
+<div class="paragraph">
+<p>Uma relação dentro de uma hierarquia deveria ser definida usando a função
+<code>derive</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(derive ::circle ::shape)
+(derive ::box ::shape)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Nos apenas definimos um conjunto de relações entre <em>keywords</em> qualificadas. Nesse
+caso, o <code>::circle</code> é filho de <code>::shape</code> e <code>::box</code> também é filho de <code>::shape</code>.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+A sintaxe <code>::circle</code> é um "apelido" para <code>:current.ns/circle</code>. Então,
+se você estiver executando isso na REPL, <code>::circle</code>  será transformado em <code>user/circle</code>.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="hierarquias-e-introspecção"><a class="link" href="#hierarquias-e-introspecção">Hierarquias e introspecção</a></h5>
+<div class="paragraph">
+<p><em>Clojure</em> vem com uma série de funções que permite verificar relações relacionadas
+a hierarquias em runtime. Essas funções são: <code>isa?</code>, <code>ancestors</code> e <code>descendants</code>.</p>
+</div>
+<div class="paragraph">
+<p>Vejamos um exemplo de como podemos usá-las com a hierarquia definida no exemplo
+anterior:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(ancestors ::box)
+;; =&gt; #{:cljs.user/shape}
+
+(descendants ::shape)
+;; =&gt; #{:cljs.user/circle :cljs.user/box}
+
+(isa? ::box ::shape)
+;; =&gt; true
+
+(isa? ::rect ::shape)
+;; =&gt; false</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="hierarquias-definidas-localmente"><a class="link" href="#hierarquias-definidas-localmente">Hierarquias definidas localmente</a></h5>
+<div class="paragraph">
+<p>Como mencionamos anteriormente, em <em>Clojure</em> voc6e pode definir uma
+hierarquia local. Isso pode ser feito com a função <code>make-hierarchy</code>. Aqui está
+o exemplo anterior com uma hierarquia local.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def h (-&gt; (make-hierarchy)
+           (derive :box :shape)
+           (derive :circle :shape)))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Agora podemos fazer a mesma instrospecção com a hierarquia local:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(isa? h :box :shape)
+;; =&gt; true
+
+(isa? :box :shape)
+;; =&gt; false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como você pode observar, em uma hierarquia local podemos usar <em>keywords</em> sem <em>namespaces</em>,
+e se executamos <code>isa?</code> sem passar uma hierarquia local, false é retornado, como esperado.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="hierarquias-em-multimethods"><a class="link" href="#hierarquias-em-multimethods">Hierarquias em <em>multimethods</em></a></h5>
+<div class="paragraph">
+<p>Uma das grandes vantagens de hierarquias é que elas funcionam junto com <em>multimethods</em>.
+Isso é porque os <em>multimethods</em> utilizam <em>by default</em> a função <code>isa?</code> como último passo
+do <em>dispatch</em>.</p>
+</div>
+<div class="paragraph">
+<p>Vejamos um exemplo para compreendermos isso. Primeiro vamos definir um <em>multimethod</em>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defmulti stringify-shape
+  "A function that prints a human readable representation
+  of a shape keyword."
+  identity
+  :hierarchy #'h)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Com o parâmetro nomeado <code>:hierarchy</code>, nos indicamos ao <em>multimethod</em> que queremos
+usar essa hierarquia; se não for especificado, a hierarquia global será usada.</p>
+</div>
+<div class="paragraph">
+<p>Em seguida, definimos a implementação de nosso <em>mulitmethod</em>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defmethod stringify-shape :box
+  [_]
+  "A box shape")
+
+(defmethod stringify-shape :shape
+  [_]
+  "A generic shape")
+
+(defmethod stringify-shape :default
+  [_]
+  "Unexpected object")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Agora, vejamos o que acontece se executarmos essa função com <code>:box</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(stringify-shape :box)
+;; =&gt; "A box shape"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Tudo funciona como esperado; o <em>multimethod</em> executa uma <em>matching</em> direto na implementação
+do parâmetro dado. Em seguida, vejamos o que acontece se executarmos a mesma
+função com o parâmetro <code>:circle</code>  que não possui uma implementação  "direta":</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(stringify-shape :circle)
+;; =&gt; "A generic shape"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>O <code>multimethod</code> automaticamente resolve qual implementação usar, utilizando a hierarquia
+fornecidade. Como <code>:circle</code> é um descendente de <code>:shape</code>, a implementação do <em>multimethod</em>
+para <code>:shape</code> é executada.</p>
+</div>
+<div class="paragraph">
+<p>Finalmente, se você fornecer uma <em>keyword</em> que não faz parte da hierarquia, você
+obtém a implementação default:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(stringify-shape :triangle)
+;; =&gt; "Unexpected object"</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="tipos-de-dados"><a class="link" href="#tipos-de-dados">4.13. Tipos de dados</a></h3>
+<div class="paragraph">
+<p>Até agora, nós usamos mapas, <code>sets</code>, listas e vetores para representar nossos dados.
+E na maioria dos casos, essa é um abordagem muito boa. Mas algumas vezes precisamos
+definir nossos próprios tipos, e nesse livro vamos chamá-los de <em>data types</em>.</p>
+</div>
+<div class="paragraph">
+<p>Um <em>data type</em> fornece o seguinte:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Um tipo único fornecido pelo host, seja nomeado ou anônimo.</p>
+</li>
+<li>
+<p>A habilidade de implementar protocolos.</p>
+</li>
+<li>
+<p>Estrutura explicitamente declarada utilizando campos e <em>closures</em>.</p>
+</li>
+<li>
+<p>Comportamento similar a mapas (via <em>records</em>, que veremos em seguida)</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="deftype"><a class="link" href="#deftype">4.13.1. Deftype</a></h4>
+<div class="paragraph">
+<p>A opção mais baixo nível para criar seus próprios tipos em <em>Clojure</em> é a macro
+<code>deftype</code>. Como demonstração, vamos definir um tipo chamado <code>User</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(deftype User [firstname lastname])</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Uma vez que o tipo foi definido, podemos criar uma instância do nosso <code>User</code>. No
+exemplo a seguir, o <code>.</code> depois do <code>User</code> indica que estamos chamando um construtor.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def person (User. "Triss" "Merigold"))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Os campos do <code>User</code> podem ser acessados usando a notação prefixada com <code>.</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(.-firstname person)
+;; =&gt; "Triss"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Tipos definidos com <code>deftype</code> (e <code>defrecord</code>, que veremos depois0 criam uma
+classe na linguagem host associada com o <em>namespace</em> atual. Por conveniência,
+<em>Clojure</em> também define uma função construtora chamada <code>&#8594;User</code> que pode ser importada
+utilizando a diretiva <code>:require</code>.</p>
+</div>
+<div class="paragraph">
+<p>Nós, pessoalmente, não gostamos desse tipo de função, e prefirimos definir nossos
+próprios construtores com nomes mais idiomáticos.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defn make-user
+  [firstname lastname]
+  (User. firstname lastname))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Usamos essa função no nosso código ao invés de <code>&#8594;User</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="defrecord"><a class="link" href="#defrecord">4.13.2. Defrecord</a></h4>
+<div class="paragraph">
+<p>Um <em>record</em> é uma abstração um pouco mais alto nível para definirmos tipos
+em <em>Clojure</em> e deveria ser favorecido em relação a <code>deftype</code>.</p>
+</div>
+<div class="paragraph">
+<p>Como sabemos, <em>Clojure</em> tende a usar tipos de dados como <code>map</code>, mas na maioria dos
+casos precisamos tipos vinculados a um nome para representar entidades
+na nossa aplicação. Para isso usamos os <em>records</em>:</p>
+</div>
+<div class="paragraph">
+<p>Um <em>record</em> é um tipo de dado que implementa a interface do mapa e portanto pode ser
+utilizado como qualquer outro mapa. E como <em>records</em> são tipos, eles suportam
+polimorfismo baseado em tipos através de protocolos.</p>
+</div>
+<div class="paragraph">
+<p>Em resumo: com <em>records</em> temos o melhor dos dois mundos, mapas que podem participar
+em diferentes abstrações.</p>
+</div>
+<div class="paragraph">
+<p>Vamos começar definindo o tipo <code>User</code> mas utilizando <em>records</em>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defrecord User [firstname lastname])</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Parece muito com a sintaxe de <code>deftype</code>, e na verdade, <code>defrecord</code> utililiza o <code>deftype</code>
+por baixo dos panos como um função de baixo nível para definir tipos.</p>
+</div>
+<div class="paragraph">
+<p>Agora, perceba a diferença para acessar campos:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def person (User. "Yennefer" "of Vengerberg"))
+
+(:firstname person)
+;; =&gt; "Yennefer"
+
+(get person :firstname)
+;; =&gt; "Yennefer"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como mencionamos, <em>records</em> são mapas e agem como tais:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(map? person)
+;; =&gt; true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>E como mapas, eles suportam campos extras que não definimos inicialmente:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def person2 (assoc person :age 92))
+
+(:age person2)
+;; =&gt; 92</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Como podemos ver, a função <code>assoc</code> funciona como esperado e retorna uma instância do
+mesmo tipo, porém com um novo par chave-valor. Porém tome cuidado com o <code>dissoc</code>!
+Seu comportamento com <code>records</code> é um pouco diferente do que com mapas; ele vai retornar
+um novo <em>record</em> se o campo desassociado for opcional, se não ele vai retornar um
+mapa normal.</p>
+</div>
+<div class="paragraph">
+<p>Outra diferença com mapas é que os <em>records</em> não agem como funções:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def plain-person {:firstname "Yennefer", :lastname "of Vengerberg"})
+
+(plain-person :firstname)
+;; =&gt; "Yennefer"
+
+(person :firstname)
+;; =&gt; class user.User cannot be cast to class clojure.lang.IFn</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Por conveniência, a macro <code>defrecord</code>, como <code>deftype</code>, expõe uma função <code>&#8594;User</code>,
+assim como uma função construtora adicional <code>map&#8594;User</code>. Mas mantemos nossa
+opinião de criar nossos próprios construtores ao invés de usar os outros.
+Mas como eles existem, vamos dar uma olhada em como usá-los:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def cirilla (-&gt;User "Cirilla" "Fiona"))
+(def yen (map-&gt;User {:firstname "Yennefer"
+                     :lastname "of Vengerberg"}))</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementando-protocols"><a class="link" href="#implementando-protocols">4.13.3. Implementando <em>protocols</em></a></h4>
+<div class="paragraph">
+<p>Tanto <code>deftype</code> quanto <code>defrecord</code> permitem a implementação de protocolos "inline"
+como fizemos com <em>extend-type</em> e <em>extend-protocol</em>. Vamos definir um protocolo
+como exemplo</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defprotocol IUser
+  "A common abstraction for working with user types."
+  (full-name [_] "Get the full name of the user."))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Agora, podemos definir um tipo que implementando nossa abstração <code>IUser</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defrecord User [firstname lastname]
+  IUser
+  (full-name [_]
+    (str firstname " " lastname)))
+
+;; Create an instance.
+(def user (User. "Yennefer" "of Vengerberg"))
+
+(full-name user)
+;; =&gt; "Yennefer of Vengerberg"</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="reify-materializar"><a class="link" href="#reify-materializar">4.13.4. Reify (Materializar)</a></h4>
+<div class="paragraph">
+<p>A macro <code>reify</code> é um construtor ad-hoc que podemos usar para criar objectos que implementam
+uma interface sem definir um tipo. Porém, com <code>reify</code> não possuímos campos acessíveis
+como em <code>deftype</code> e <code>defrecord</code>.</p>
+</div>
+<div class="paragraph">
+<p>No exemplo abaixo, podemos criar um objeto que implementa a abstração <code>IUser</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(defn user
+  [firstname lastname]
+  (reify
+    IUser
+    (full-name [_]
+      (str firstname " " lastname))))
+
+(def yen (user "Yennefer" "of Vengerberg"))
+(full-name yen)
+;; =&gt; "Yennefer of Vengerberg"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="interoperabilidade-com-a-linguagem-hospedeira"><a class="link" href="#interoperabilidade-com-a-linguagem-hospedeira">4.14. Interoperabilidade com a linguagem hospedeira</a></h3>
+<div class="paragraph">
+<p><em>Clojure</em> foi feita para ser uma linguagem "convidada". Isso significa que o seu design
+foi pensando para trabalhar bem em cima do eco-sistema já existente da JVM.</p>
+</div>
+<div class="sect3">
+<h4 id="os-tipos"><a class="link" href="#os-tipos">4.14.1. Os tipos</a></h4>
+<div class="paragraph">
+<p><em>Clojure</em> tira vantagens do tipos fornecidos pela plataforma. Essa é uma lista (provavelmente incompleta)
+de tipos que o <em>Clojure</em> utiliza do java.
+<em>ClojureScript</em>, unlike what you might expect, tries to take advantage of every type
+that the platform provides. This is a (perhaps incomplete) list of things that
+<em>ClojureScript</em> inherits and reuses from the underlying platform:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Strings em <em>Clojure</em> são <strong>Strings</strong> do Java.</p>
+</li>
+<li>
+<p><em>Clojure</em> utiliza os tipos numéricos primitivos do Java além de <code>BigInteger</code> e <code>BigDecimal</code>.</p>
+</li>
+<li>
+<p><em>Clojure</em> <code>nil</code> tem o mesmo valor que o <code>null</code>  em Java..</p>
+</li>
+<li>
+<p>As expressões regulares em <em>Clojure</em> são instâncias da class <code>java.util.regex.Pattern</code>.</p>
+</li>
+<li>
+<p><em>Clojure</em> não é interpretada, é sempre compilada para Java Bytecode.</p>
+</li>
+<li>
+<p><em>Clojure</em> permite chamada das APIs da plataforma usando a mesma semântica já existente.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Em cima disso, <em>Clojure</em> constroí suas próprias abstrações e tipos que não existem
+na plataforma, como Vectors, Maps, Sets, e outros que foram explicados nas seções
+anteriores.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="interagindo-com-tipos-da-plataforma"><a class="link" href="#interagindo-com-tipos-da-plataforma">4.14.2. Interagindo com tipos da plataforma</a></h4>
+<div class="paragraph">
+<p><em>Clojure</em> vem com um conjunto de formas especiais que nos permite interagir
+com tipos da plataformas como por exemplo chamar métodos de objetos, criar novas
+instâncias, e acessar propriedades de objetos.</p>
+</div>
+<div class="sect4">
+<h5 id="acesso-a-plataforma"><a class="link" href="#acesso-a-plataforma">Acesso a plataforma</a></h5>
+<div class="paragraph">
+<p><em>Clojure</em> já possui vários símbolos importados do Java que podem ser usados, como
+por exemplo <code>Integer</code>, <code>Long</code>, <code>String</code>, etc:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(Integer. 23)
+;; =&gt; 23
+(Integer/parseInt "23")
+;; =&gt; 23</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="criando-novas-instâncias"><a class="link" href="#criando-novas-instâncias">Criando novas instâncias</a></h5>
+<div class="paragraph">
+<p><em>Clojure</em> fornece dois modos de criar uma nova instância de uma classe Java:</p>
+</div>
+<div class="paragraph">
+<p>Usando a forma special <code>new</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(import 'java.io.File)
+(new File "some_file.txt")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Usando a forma especial <code>.</code>:
+Using the <code>.</code> special form</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(import 'java.io.File)
+(File. "some_file.txt")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A última opção é o modo recomendado de criar instâncias. Não sabemos de nenhuma diferença
+real entre as duas formas, porém na comunidade <em>Clojure</em>, a última é mais utilizada.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="chamando-métodos-dos-objetos"><a class="link" href="#chamando-métodos-dos-objetos">Chamando métodos dos objetos</a></h5>
+<div class="paragraph">
+<p>Para chamar métodos de algum objeto, ao invés de fazermos como fazemos
+em Java, como <code>obj.method()</code>,  o método vem primeiro prefixado com <code>.</code> e o objeto
+como o primeiro argumento, seguido pelos argumentos do método.
+To invoke methods of some object instance, as opposed to how it is done in
+JavaScript (e.g., <code>obj.method()</code>, the method name comes first like any other
+standard function in Lisp languages but with a little variation: the function name
+starts with special form <code>.</code>.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s see how we can call the <code>.test()</code> method of a regexp instance:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def java-map (java.util.HashMap.))
+(.put java-map "a 1)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="acessar-e-modificar-propriedades-de-um-objeto"><a class="link" href="#acessar-e-modificar-propriedades-de-um-objeto">Acessar e modificar propriedades de um objeto</a></h5>
+<div class="paragraph">
+<p>Acesso a uma propriedade de um objeto é muito similar a chamar um método. A unica diferença
+é que ao invés de ser prefixado com <code>.</code> prefixamos o nome da propriedade com <code>.-</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def point (java.awt.Point. 1 2))
+(.-y point)
+;; =&gt; 2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Para modificar uma propriedade utilizamos a forma especial <code>set!</code> passando
+um um lista que realiza acesso a propriedade e o novo valor:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def point (java.awt.Point. 1 2))
+(set! (.-y point) 3)
+;; =&gt; 3
+
+(.-y point)
+;; =&gt; 3</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="arrays"><a class="link" href="#arrays">Arrays</a></h5>
+<div class="paragraph">
+<p>Algumas funções do Java aceitam somente arrays. Para isso <em>Clojure</em> fornece
+algumas funções que permitem que criarmos arrays do Java a partir de coleções
+do <em>Clojure</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def path ["username" "dev" "clojure"])
+(java.nio.file.Paths/get "/Users" path)
+;; =&gt; class clojure.lang.PersistentVector cannot be cast to class [Ljava.lang.String;
+
+(java.nio.file.Paths/get "/Users" (into-array ["username" "dev" "clojure"]))
+;; #object[sun.nio.fs.UnixPath 0x1f193686 "/Users/username/dev/clojure"]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Em <em>Clojure</em>, arrays também funcionam bem com a abstração de sequências, então podemos
+usar funções como:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(count (into-array ["username" "dev" "clojure"]))
+;; =&gt; 10</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="gerenciamento-de-estado"><a class="link" href="#gerenciamento-de-estado">4.15. Gerenciamento de estado</a></h3>
+<div class="paragraph">
+<p>Nós aprendemos que uma das ideias fundamentais do <em>Clojure</em> é a imutabilidade. Tanto
+valores escalres quanto coleções são imutáveis em <em>Clojure</em>.</p>
+</div>
+<div class="paragraph">
+<p>Imutabilidade possui muitas propriedades interessantes, mas algumas vezes precisamos
+modelar valores que mudam ao longo do tempo. Como podemos fazer isso se não podemos
+mutar as estruturas de dado?</p>
+</div>
+<div class="sect3">
+<h4 id="vars-2"><a class="link" href="#vars-2">4.15.1. Vars</a></h4>
+<div class="paragraph">
+<p><em>Vars</em> podem ser redefinidas como desejarmos dentro de um <em>namespace</em>,  mas não existe
+jeito de saber <strong>quando</strong> elas mudam. A inabilidade de redefinir <em>vars</em> de outros <em>namespaces</em>
+é um pouco limitante; além disso, se estamos modificando estado, provavelmente estamos
+interessados em saber quando isso ocorre.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="atoms"><a class="link" href="#atoms">4.15.2. Atoms</a></h4>
+<div class="paragraph">
+<p><em>Clojure</em> nos da o tipo <code>Atom</code>, que é um objeto contendo um valor que pode ser alterado
+quando quisermos. Além de alterar seu valor, eles também suportam serem observados
+através de funções <em>watcher</em>(observadores) que podem ser vinculados e desvinculados do átomo
+e validações para garantir que o valor associado é sempre válido.</p>
+</div>
+<div class="paragraph">
+<p>Se queremos modelar uma identidade correspondende a um pessoa chamada Ciri, podemos
+colocar uma estrutura imutável dentro de um átomo. Note que podemos obter o valor
+do átomo com a função <code>deref</code> ou usando a forma especial mais curta <code>@</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def ciri (atom {:name "Cirilla" :lastname "Fiona" :age 20}))
+;; #&lt;Atom: {:name "Cirilla", :lastname "Fiona", :age 20}&gt;
+
+(deref ciri)
+;; {:name "Cirilla", :lastname "Fiona", :age 20}
+
+@ciri
+;; {:name "Cirilla", :lastname "Fiona", :age 20}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Podemos utilizar a função <code>swap!</code> para alterar seu valor com uma função, como na função update.
+Como o aniversário da Ciri é hoje, vamos incrementar sua idade:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(swap! ciri update :age inc)
+;; {:name "Cirilla", :lastname "Fiona", :age 21}
+
+@ciri
+;; {:name "Cirilla", :lastname "Fiona", :age 21}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A função <code>reset!</code> substitui o valor presenter no átomo por um novo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(reset! ciri {:name "Cirilla", :lastname "Fiona", :age 22})
+;; {:name "Cirilla", :lastname "Fiona", :age 22}
+
+@ciri
+;; {:name "Cirilla", :lastname "Fiona", :age 22}</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="observabilidade"><a class="link" href="#observabilidade">Observabilidade</a></h5>
+<div class="paragraph">
+<p>Nós podemos adicionar e remover funções <em>watchers</em>(observadoras) de átomos. Quando
+um átomo é alterado através de <code>swap!</code> ou <code>reset!</code>, todos os <em>watchers</em> de um átomo são
+chamados. <em>Watchers</em> podem ser adicionados através da função <code>add-watch</code>. Note que cada
+<em>watcher</em> tem uma chave associada com ele (<code>:logger</code> por exemplo) que usada para remover
+o <em>watch</em> do átomo.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def a (atom))
+
+(add-watch a :logger (fn [key the-atom old-value new-value]
+                       (println "Key:" key "Old:" old-value "New:" new-value)))
+
+(reset! a 42)
+;; Key: :logger Old: nil New: 42
+;; =&gt; 42
+
+(swap! a inc)
+;; Key: :logger Old: 42 New: 43
+;; =&gt; 43
+
+(remove-watch a :logger)</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="volatiles"><a class="link" href="#volatiles">4.15.3. Volatiles</a></h4>
+<div class="paragraph">
+<p>Volatiles, como átomos, são objetos que possuem um valor que pode ser alterado. Contudo,
+eles não provem a possibilidade de validação observação que átomos possuem.
+Isso faz com que eles sejam mais performáticos e mais adequados para serem
+usados dentro de funções que não precisam de observação ou validação.</p>
+</div>
+<div class="paragraph">
+<p>API deles é muito parecida com a dos átomos. Eles podem ser <em>dereferenced</em> para obtermos
+o valor deles e suportam mudanças através de <code>vswap!</code> e <code>vreset!</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="clojure">(def ciri (volatile! {:name "Cirilla" :lastname "Fiona" :age 20}))
+;; #&lt;Volatile: {:name "Cirilla", :lastname "Fiona", :age 20}&gt;
+
+(volatile? ciri)
+;; =&gt; true
+
+(deref ciri)
+;; {:name "Cirilla", :lastname "Fiona", :age 20}
+
+(vswap! ciri update :age inc)
+;; {:name "Cirilla", :lastname "Fiona", :age 21}
+
+(vreset! ciri {:name "Cirilla", :lastname "Fiona", :age 22})
+;; {:name "Cirilla", :lastname "Fiona", :age 22}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note que outra diferença com átomos é o construtor que é <code>volatile!</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="agradecimentos"><a class="link" href="#agradecimentos">5. Agradecimentos</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Agradecimentos especiais aos autores originais do livro que fizeram o grande trabalho de escrevê-lo
+e disponibilizá-lo sob um licensa que permita sua tradução e adaptação.</p>
+</div>
+<div class="paragraph">
+<p>Special thanks to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Andrey Antukh <a href="mailto:niwi@niwi.nz">niwi@niwi.nz</a></p>
+</li>
+<li>
+<p>Alejandro Gómez <a href="mailto:alejandro@dialelo.com">alejandro@dialelo.com</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Who wrote the original book and to all others involved in the elaboration of that book.
+- Andrey Antukh <a href="mailto:niwi@niwi.nz">niwi@niwi.nz</a>
+- Alejandro Gómez <a href="mailto:alejandro@dialelo.com">alejandro@dialelo.com</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="recursos-adicionais"><a class="link" href="#recursos-adicionais">6. Recursos adicionais</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Aqui está uma lista de mais recursos sobre <em>Clojure</em>.
+A medida que acharmos ou produzirmos mais conteúdo em português, iremos adicionar
+aqui.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://clojure.org/api/cheatsheet/">Clojure Cheatsheet</a>: uma referência em inglês da linguagem <em>Clojure</em>.</p>
+</li>
+<li>
+<p><a href="https://clojuredocs.org/">Clojure Community-docs </a>: documentação sobre a linguagem produzida pela comunidade.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 1<br/>
+Last updated 2020-07-05 15:33:52 -0300
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,2460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?asciidoc-toc maxdepth="2"?>
+<?asciidoc-numbered?>
+<book xmlns="http://docbook.org/ns/docbook" xmlns:xl="http://www.w3.org/1999/xlink" version="5.0" xml:lang="en">
+<info>
+<title>Clojure Revelado</title>
+<date>2016-07-25</date>
+<author>
+<personname>
+<firstname>Felipe</firstname>
+<othername>Gonçalves</othername>
+<surname>Marques</surname>
+</personname>
+<email>marques.goncalves.felipe@gmail.com</email>
+</author>
+<authorinitials>FGM</authorinitials>
+<revhistory>
+<revision>
+<revnumber>1</revnumber>
+<date>2016-07-25</date>
+<authorinitials>FGM</authorinitials>
+</revision>
+</revhistory>
+</info>
+<chapter xml:id="disclaimer">
+<title>Disclaimer</title>
+<simpara>This is a non-professional translation of <link xl:href="https://funcool.github.io/clojurescript-unraveled/">ClojureScript Unraveled</link> to both
+Portuguese and <emphasis>Clojure</emphasis>, done in a spike of energy and motivation over a week, which means that we may not be very
+careful with the translation. However, we tried not to change the content or the opinions of the authors of the
+<emphasis>ClojureScript Unraveled</emphasis> book. I really appreciate their book and the fact that it is written under
+Creative Commons.</simpara>
+</chapter>
+<chapter xml:id="sobre-esse-livro">
+<title>Sobre esse livro</title>
+<simpara>Esse livro é uma dupla tradução do livro <link xl:href="https://funcool.github.io/clojurescript-unraveled/">ClojureScript Unraveled</link>.
+Dupla tradução pois ele foi traduzido do inglês para o português e de <emphasis>ClojureScript</emphasis> para <emphasis>Clojure</emphasis>.
+O objetivo é obter uma guia extenso das funcionalidades do <emphasis>Clojure</emphasis> em português, democratizando
+o acesso a esse conhecimento nos países lusofonos, principalmente no Brasil.</simpara>
+<simpara>Ele não é um livro introdutório em programação, pois ele assume que o leitor
+tenha experiência em ao menos uma linguagem de programação. Contudo, ele não
+assume nenhuma experiência prévia com <emphasis>Clojure</emphasis> ou programação funcional. Por ser uma
+tradução, muitos dos links ainda referenciam textos em inglês, mas onde foi possível,
+substituí por equivalentes em português.</simpara>
+<simpara>Por ser uma linguagem não tão difundida como Python, Ruby ou Java, não existe tantos
+recursos de <emphasis>Clojure</emphasis> em português, optamos por traduzir esse livro, pois ele cobre
+a maior parte das funcionalidades. Talvez ele não seja tão concreto por não fornecer
+exemplos reais como mini-projetos, ou tão profundo, entrando nas discussões de como
+a língua foi construída. Porém, acho que ele é um bom começo para fornecer material
+gratuito sobre <emphasis>Clojure</emphasis>.</simpara>
+<simpara>Por enquanto, somente o capítulo "A Linguagem (o básico)" foi traduzido. Em breve, pretendo
+traduzir os outros capítulos do livro que são: "Ferramentas" e "A Linguagem (avançado)".</simpara>
+</chapter>
+<chapter xml:id="introdução">
+<title>Introdução</title>
+<literallayout class="monospaced">_Clojure_ é uma linguagem funcional e dinâmicamente tipada, e direcionada por dados
+(data-driven). Ela foca em ser pratica, por isso foi implementada para a _Java Virtual Machine(JVM)_.
+Clojure é um dialeto de _LISP_ e por tanto oferece todo o poder de macros e da idea de código é dados.</literallayout>
+<simpara>Antes de começarmos, vamos resumir alguma das ideias mais importantes que ClojureScript
+traz. Não se preocupe se não entendê-las de primeira, elas vão ficar claras ao longo desse
+livro.</simpara>
+<itemizedlist>
+<listitem>
+<simpara>Clojure favore o paradigma de programção funcional através das suas decisões de design
+e idiomas. Apesar de ser assertiva em relação ao paradigma funcional,
+ela é uma linguagem pragmática: ao invés de buscar uma pureza em relação a programação funcional
+como Haskell, por exemplo, ela foca em ser prática.</simpara>
+</listitem>
+<listitem>
+<simpara>Encoraja programação utilizando estruturas imutáveis, oferencendo implementações
+de estruturas de dados altamente performáticas.</simpara>
+</listitem>
+<listitem>
+<simpara>Ela faz uma distinção clara entre identidade e o seu estado, com ferramentas explícitas
+para o gerenciamento de mudanças vinculadas a uma identidade, que é mantida como
+uma série de valores imutáveis ao longo do tempo.</simpara>
+</listitem>
+<listitem>
+<simpara>Ela possui um polimorfismo baseado em tipos e valores, que resolve o problema de
+expressar o domínio de forma elegante.</simpara>
+</listitem>
+<listitem>
+<simpara>Ela é um dialeto de Lisp, onde programas são escritos utilizando as mesmas
+estruturas de dados presentes na língua, uma propriedade conhecida como <emphasis>homoiconicity</emphasis>
+que torna a meta-programação (programas que escrevem programas) mais simples e palpável.</simpara>
+</listitem>
+</itemizedlist>
+<simpara>Essas ideias influenciam a maneira como desenhamos e implementamos nossos programas,
+mesmo quando não estamos usando Clojure. Programação funciona, desacoplamento dos dados
+das operação que os transformam e ferramentas explícitas para gerenciamento de mudanças
+trazem uma grande simplicidade para os sistemas que escrevemos.</simpara>
+<blockquote>
+<attribution>
+Rich Hickey
+</attribution>
+<simpara>Podemos fazer os mesmos softwares que fazemos hoje com ferramentas drasticamente
+mais simples - linguagems, ferramentas, técnicas e abordagens muito mais simples.</simpara>
+</blockquote>
+<literallayout class="monospaced">É de longe uma das linguages que mais gostamos de utilizar e nos sintimos extremamente produtivos
+quando a usamos. Espero que você também se sinta assim quando estiver trabalhando com Clojure :).</literallayout>
+</chapter>
+<chapter xml:id="a-linguagem-o-básico">
+<title>A Linguagem (o básico)</title>
+<simpara>Esse capítulo é uma pequena introdução ao Clojure sem assumir nenhum conhecimento
+prévio da linguagem, ele provê um tour rápido sobre as principais coisas que
+você precisa saber sobre Clojure para entender o resto do livro.</simpara>
+<simpara>Você pode rodar os trechos de código na REPL online interativa em:
+<link xl:href="https://repl.it/languages/clojure">https://repl.it/languages/clojure</link></simpara>
+<simpara>/* todo: adicionar tutorial de como rodar clojure */</simpara>
+<section xml:id="primeiros-passos-com-a-sintaxe-lisp">
+<title>Primeiros passos com a sintaxe Lisp</title>
+<simpara>Inventada por John Mccarthy em 1958, Lisp é uma das linguagens de progrmação
+mais antigas que ainda são utilizadas. Ela possui várias outras derivações chamadas
+de dialeto, sendo Clojure uma delas. É uma linguagem de programação escrita utilizando
+suas próprias estrutura de dados - originalmente uma lista rodeada de parênteses -
+mas Clojure evoluiu essa sintaxe para possuir mais estruturas de dados e ser mais
+agradável de escrever.</simpara>
+<simpara>Uma lista com uma função na primeira posição é utilizada para chamar uma função
+em Clojure. No exemplo abaixo, nos aplicamos a função de adição a três argumentos.
+Observe que diferente de outras linguagens, <literal>+</literal> não é um operado, mas uma função.
+Lisp não possui operadores; somente funções.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(+ 1 2 3)
+;; =&gt; 6</programlisting>
+<simpara>No exemplo acima, estamos aplicando a função de adição <literal>+</literal> aos argumentos <literal>1</literal>, <literal>2</literal> e <literal>3</literal>.
+Clojure permite vários caracteres não muito comuns como <literal>?</literal> e <literal>-</literal> em nome de símbolos,
+o que a torna a leitura mais fácil:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(zero? 0)
+;; =&gt; true</programlisting>
+<simpara>Para diferencial chamadas de funções de uma lista de itens, podemos usar uma aspa
+o que evite que a lista seja calculada/avaliada, como no primeiro exemplo. Uma lista
+com aspa no começo (<emphasis>quoted list</emphasis>) será tratada como dado ao invés de uma chamada de
+função:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">'(+ 1 2 3)
+;; =&gt; (+ 1 2 3)</programlisting>
+<simpara>Clojure não usa somente listas para sua sintaxe. Cobriremos isso com mais detalhes mais
+tarde, mas aqui está um exemplo de utilização de um vetor (rodeado por cochetes) para
+definir uma relação entre nome e valor (<emphasis>bidinng</emphasis>) local:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(let [x 1
+      y 2
+      z 3]
+  (+ x y z))
+;; =&gt; 6</programlisting>
+<simpara>Essa é a sintaxe mínima que voc6e precisa saber para utilizar não só Clojure,
+mas qualquer Lisp. Sendo escrita nas suas próprias estruturas de dados (aquela coisa de <emphasis>homoiconicity</emphasis>)
+é uma propriedade muito poderosa, pois a sintaxe é uniforme e simples, além disso,
+a geração de código através de <link linkend="macros-section">macros</link> é mais simples que outras linguagens,
+nos dando poder de ampliar a linguagem para se adequar às nossas necessidades.</simpara>
+</section>
+<section xml:id="os-tipos-básicos">
+<title>Os tipos básicos</title>
+<simpara>Clojure possui uma conjunto de tipos primitivos como maioria das linguagens.
+Ele prove escalares que serão muito familiar para você como números, strings e
+números de ponto flutuantes (<emphasis>floats</emphasis>). Além desses, ele provê alguns outros tipos
+não muito comuns como símbolos, chaves, expressões regulares (<emphasis>regex</emphasis>), <emphasis>vars</emphasis> e <emphasis>atoms</emphasis>.</simpara>
+<simpara><emphasis>Clojure</emphasis> utiliza a linguagem hospedeira (<emphasis>Java</emphasis>), e quando possível, utiliza os
+tipos fornecidos por ela. Por exemplo, números e strings são usados como providos
+pelo linguagem e se comportam do mesmo jeito que se comportam em Java.</simpara>
+<section xml:id="números">
+<title>Números</title>
+<simpara>Em <emphasis>Clojure</emphasis>, números incluem tanto inteiros quanto floating points (<emphasis>float</emphasis>).
+Tenha em mente, que como uma linguagem hospedada na <emphasis>JVM</emphasis>, os tipos numéricos em <emphasis>Clojure</emphasis>
+são os tipos nativos do Java como Integer e Long  por baixo dos panos,
+mas tanbém provendo alguns outros tipos como BigInt.</simpara>
+<simpara>Como em outras linguagens, números em <emphasis>Clojure</emphasis> são representados da seguinte
+maneira:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">23
++23
+-100
+1.7
+-2
+33e8
+12e-14
+3.2e-4</programlisting>
+</section>
+<section xml:id="chaves-keywords">
+<title>Chaves (<emphasis>Keywords</emphasis>)</title>
+<simpara>Chaves em <emphasis>Clojure</emphasis> são objetos que sempre são avalidados a eles mesmos. Eles
+são usualmente usado em  <link linkend="maps-section">estruturas de dados do tipo mapa</link> para representar
+de maneira eficiente as chaves do mapa (ou dicionário).</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">:foobar
+:2
+:?</programlisting>
+<simpara>Como voc6e pode ver, as chaves são todas prefixadas com <literal>:</literal>, mas esse caracter é
+apenas parte da sintaxe literal e não parte do nome do objeto.</simpara>
+<simpara>Você também pode criar uma chave chamando a função <literal>keyword</literal>. Não se preocupe se você
+não entende ou nada está claro no próximo exemplo, vamos discutir <link linkend="function-section">funções</link>
+em uma seção adiante.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(keyword "foo")
+;; =&gt; :foo</programlisting>
+<section xml:id="chaves-qualificadas-ou-com-namespace">
+<title>Chaves qualificadas (ou com <emphasis>Namespace</emphasis>)</title>
+<simpara>Quando prefixamos uma chave com <literal>::</literal>, essa chave passa a ser prefixada com o <emphasis>namespace</emphasis> atual.
+Note que chaves qualificadas afetam comparações de igualdade.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">---
+::foo
+;; =&gt; :user/foo</programlisting>
+<simpara>(= ::foo :foo)
+;; &#8658; false
+---</simpara>
+<simpara>Outra alternativa é incluir o <emphasis>namespace</emphasis> na sintaxe literal da chava, isso é útil para criamos chaves qualificadas
+para outro <emphasis>namespace</emphasis>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">---
+:clojure.unraveled/foo
+;; =&gt; :clojure.unraveled/foo
+---</programlisting>
+<simpara>A função <literal>keyword</literal> também funciona como uma função que recebe 2 argumentos (<emphasis>arity-2</emphasis>) onde você
+especifica o <emphasis>namespace</emphasis> como primeiro argumento:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">---
+(keyword "clojure.unraveled" "foo")
+;; =&gt; :clojure.unraveled/foo
+---</programlisting>
+</section>
+</section>
+<section xml:id="símbolos">
+<title>Símbolos</title>
+<simpara>Símbolos em <emphasis>Clojure</emphasis> são muito parecidos com chaves (que agora você conhece0. Mas ao invés de
+serem avaliados (<emphasis>evaluated</emphasis>) a eles mesmos, os símbolos são avaliados para outra coisa
+a qual eles referem, que pode ser funções, variáveis, etc.</simpara>
+<simpara>Símbolos começam sembre com um caractere não numério e pode conter caracteres alfa-numéricos
+assim como *, +, !, -, -, ', e ? como:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">sample-symbol
+othersymbol
+f1
+my-special-swap!</programlisting>
+<simpara>Não se preocupe se você não entender isso de imediato, símbolos são usados praticamente
+em todos os nossos outros exemplosl, o que te dá a oportunidade de aprender mais a medida
+que avançamos.</simpara>
+</section>
+<section xml:id="strings">
+<title>Strings</title>
+<simpara>Strings em <emphasis>Clojure</emphasis> não são tão diferente de outras linguagens, então você já deve
+saber suficiente sobre elas. Um único ponto interessante de mencionar é que elas
+são imutáveis.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">"An example of a string"</programlisting>
+<simpara>Um aspecto peculiar de strings em <emphasis>Clojure</emphasis> devido a sintaxe de Lisp é que seja
+strings de uma linha ou de várias linhas, elas possuem a mesma sintaxe.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">"This is a multiline
+      string in ClojureScript."</programlisting>
+</section>
+<section xml:id="caracteres">
+<title>Caracteres</title>
+<simpara><emphasis>Clojure</emphasis> também permite você escrever um único caractere usando a seguinte sintaxe
+literal:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">\a        ; "a" minúsculo
+\newline  ; Caractere que indica uma nova linha</programlisting>
+</section>
+<section xml:id="coleções">
+<title>Coleções</title>
+<simpara>O próximo grande passo em explicar a linguagem é explicar suas coleções e as
+abstrações de coleções. <emphasis>Clojure</emphasis> não é uma exceção a essa regra.</simpara>
+<simpara><emphasis>Clojure</emphasis> vem com vários tipos de coleções. A principal diferenção do <emphasis>Clojure</emphasis> para
+outras linguagens é que suas coleções são persistentes e imutáveis.</simpara>
+<simpara>Antes de entrarmos nesses conceitos (provavelmente) desconhecidos, vamos dar uma
+visão geral das coleções existentes em <emphasis>Clojure</emphasis>.</simpara>
+<section xml:id="listas">
+<title>Listas</title>
+<simpara>Essa é uma coleção clássica em qualquer linguagem derivada do Lisp.
+Listas são o tipo de coleção mais simples em <emphasis>Clojure</emphasis>. Elas podem conter itens
+de qualquer tipo, incluindo outras coleções.</simpara>
+<simpara>Listas em <emphasis>Clojure</emphasis> são representadas por items envolvidos por parênteses:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">'(1 2 3 4 5)
+'(:foo :bar 2)</programlisting>
+<simpara>Como você pode ver, todos os exemplos de listas são prefixados com o caractere <literal>'</literal>.
+Isso porque em linguagems derivadas do Lisp, listas são usadas para expressar
+chamadas de funções (ou de macros). Nesse caso, o primeiro item deveria ser um
+símbolo que é avaliado a alguma coisa que é chamável (ex: uma função), e o resto dos
+elementos da lista serão argumentos da função. porém, nos exemplos anteriores, nos não
+ queremos que o primeiro item da lista seja um símbolo, nos queremos que seja apenas
+ uma lista de items.</simpara>
+<simpara>O exemplo seguinte mostra a diferença entre listas com e sem uma aspa no começo:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(inc 1)
+;; =&gt; 2
+
+'(inc 1)
+;; =&gt; (inc 1)</programlisting>
+<simpara>Como você pode ver, se evaluarmos <literal>(inc 1)</literal> sem prefixar com uma aspa <literal>'</literal>, ele
+será transformado na função <literal>inc</literal> (de incrementar) e irá executar essa função com 1
+como seu primeiro argumento, retornando o valor de 2.</simpara>
+<simpara>Você pode também contruir uma lista com a função <literal>list</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(list 1 2 3 4 5)
+;; =&gt; (1 2 3 4 5)
+
+(list :foo :bar 2)
+;; =&gt; (:foo :bar 2)</programlisting>
+<simpara>Listas tem a peculiaridade de ser muito eficiente se você acessar elas sequencialmente
+ou os primeiros elementos, porém elas não são uma boa opção se você precisa acessar elementos
+utilizando a posição (index) desses elementos.</simpara>
+</section>
+<section xml:id="vetores">
+<title>Vetores</title>
+<simpara>Como listas, vetores armazenam uma série de valores, mas nesse caso, de forma
+mais eficiente para acesso através do index desses elementos. Não se preocupe, nas seções
+seguintes vamos entrar nos detalhes, mas por hora, essa explicação é mais que suficiente.</simpara>
+<simpara>Vetores usam cochetes como sintaxe literal, vamos ver alguns exemplos:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">[:foo :bar]
+[3 4 5 nil]</programlisting>
+<simpara>Como listas, vetores podem contem objetos de qualquer tipo, como mostrado no
+exemplo anterior.</simpara>
+<simpara>Você pode também explicitamente criar um vetor com a função <literal>vector</literal>, mas esse não é
+o jeito mais comum de fazê-lo em <emphasis>Clojure</emphasis>.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(vector 1 2 3)
+;; =&gt; [1 2 3]
+
+(vector "blah" 3.5 nil)
+;; =&gt; ["blah" 3.5 nil]</programlisting>
+</section>
+<section xml:id="maps-section">
+<title>Mapas (ou dicionários)</title>
+<simpara>Mapas são coleções de abstrações que permite você armazenar pares de chave e valor.
+Em outras linguages, esse tipo de estrutura são comumente conhecidas como has-map ou
+dicionários. Mapas são literais em <emphasis>Clojure</emphasis> e são escritos como pares entre chaves.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">{:foo "bar", :baz 2}
+{:alphabet [:a :b :c]}</programlisting>
+<simpara>NOTA: Podemos usar vírgulas para separar pares, mas elas são opcionais.
+No geral, a formatação dos arquivos já favorece a leitura. Em <emphasis>Clojure</emphasis>, vírgulas
+são como espaços.</simpara>
+<simpara>Como vetores, cada item em um mapa literal é evaluado antes que seu resultado seja
+armazenado no map, mas a ordem de resolução não é garantida.</simpara>
+</section>
+<section xml:id="conjuntos">
+<title>Conjuntos</title>
+<simpara>E finalmente, <emphasis role="strong">sets</emphasis> (ou conjuntos).</simpara>
+<simpara>Conjuntos armazenam zero ou mais itens únicos de forma não ordenada. Como mapas,
+eles  possuem chaves como sintaxe litera, com a diferença de serem prefixados com <literal>#</literal>.
+Você também pode usar a função <literal>set</literal> para converter  uma coleção em um set:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">#{1 2 3 :foo :bar}
+;; =&gt; #{1 :bar 3 :foo 2}
+(set [1 2 1 3 1 4 1 5])
+;; =&gt; #{1 2 3 4 5}</programlisting>
+<simpara>Nas seções seguintes, vamos explorar a fundo conjuntos e outras coleções que vimos
+nessa seção.</simpara>
+</section>
+</section>
+</section>
+<section xml:id="vars">
+<title>Vars</title>
+<simpara><emphasis>Clojure</emphasis> é uma linguagem funcional que foca principalmente em imutabilidade.
+Por cause disso, ela não tem o conceito de variáveis como estamos acostumados
+em outras linguagens. A analogia mais próxima de vars são as variáveis que
+definimos na álgebra; quando dizemos <literal>x = 6</literal> na matemática, estamos dizendo que queremos
+que o símbolo <literal>x</literal> tenha, ou represente, o número seis.</simpara>
+<simpara>Em <emphasis>Clojure</emphasis>, vars são representadas por símbolos e armazenam um único valor
+junto com alguns meta-dados.</simpara>
+<simpara>Você pode definir uma var utilizando a forma especial <literal>def</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def x 22)
+(def y [1 2 3])</programlisting>
+<simpara>Vars são tempre top level em um <emphasis>namespace</emphasis>(<link linkend="namespace-section">which we will
+explain later</link>). Se você usar <literal>dev</literal> em uma chamada de função, aquela var será definida
+no nível do namespace e poderá ser usada em outros lugares (diferente de variáveis locais
+que algumas linguagens possuem), mas não recomendamos isso - ao invés, você devereria
+utilizar um bloco <literal>let</literal> para definir variáveis dentro de uma função.</simpara>
+</section>
+<section xml:id="function-section">
+<title>Funções</title>
+<section xml:id="o-primeiro-contato">
+<title>O primeiro contato</title>
+<simpara>É hora de fazer as coisas acontecerem. <emphasis>Clojure</emphasis> possui o que conhecemos como
+<emphasis>first class functions</emphasis>. Funções se comportam como qualquer outro tipo; você pode passá-las
+como argumentos e retorná-las como valores, sempre respeitando o escopo léxico. <emphasis>Clojure</emphasis>
+também possui algumas funcionalidades devido ao escopo dinâmica, mas vamos ver isso em
+outra seção.</simpara>
+<simpara>Se você quer saber mais sobre escopos, esse  <link xl:href="https://pt.wikipedia.org/wiki/Escopo_(computa%C3%A7%C3%A3o))">Artigo da Wikipedia</link> é
+bem completo e explica os diversos tipos de escopo.</simpara>
+<simpara>Como <emphasis>Clojure</emphasis> é um dialeto do Lisp, ela utiliza a notação prefixada para chamar funções:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(inc 1)
+;; =&gt; 2</programlisting>
+<simpara>No exemplo acima, <literal>inc</literal> é uma função e é parte da <emphasis>runtime</emphasis> do <emphasis>Clojure</emphasis>, e
+<literal>1</literal> é o primeiro argumento para a função <literal>inc</literal>.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(+ 1 2 3)
+;; =&gt; 6</programlisting>
+<simpara>O símbolo de <literal>+</literal>  representa a função <literal>add</literal> (de adição). Ela permite múltiplos parâmetros,
+enquanto em linguagens que seguem o estilo <emphasis>ALGOL</emphasis>, <literal>+</literal> é um operador e permite somente
+dois parâmetros.</simpara>
+<simpara>A notação prefixada possui algumas vantagens, que não são óbvias. <emphasis>Clojure</emphasis>
+não faz distinção entre função e operador; tudo é uma função. A vantagem imediata é
+que a notação prefixada permite um número arbitrário de argumentos por "operador".
+Isso remove completamente o problema de precedência de operadores.</simpara>
+</section>
+<section xml:id="definindo-suas-próprias-funções">
+<title>Definindo suas próprias funções</title>
+<simpara>Você pode definir funções sem nome (anônimas) com a forma especial <literal>fn</literal>. Esse é um tipo
+de definição de função; no exemplo seguinte, a função recebe dois argumentos e retorna
+a média deles.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(fn [param1 param2]
+  (/ (+ param1 param2) 2.0))</programlisting>
+<simpara>Você pode definir a função e chamá-la ao mesmo tempo (em uma única expressão):</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">((fn [x] (* x x)) 5)
+;; =&gt; 25</programlisting>
+<simpara>Agora vamos criar algumas funções com nomes. Mas o que uma <emphasis>função com nome</emphasis> significa?
+Em <emphasis>Clojure</emphasis> é bem simples, funções são <emphasis>first-class</emphasis> e se comportam como qualquer outro valor.
+Então, nomear uma função é feita simplesmente vinculando a função a um símbolo.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def square (fn [x] (* x x)))
+
+(square 12)
+;; =&gt; 144</programlisting>
+<simpara><emphasis>Clojure</emphasis> também oferece uma macro <literal>defn</literal> que permite fazer a mesma coisa de uma
+maneira mais idiomática:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn square
+  "Return the square of a given number."
+  [x]
+  (* x x))</programlisting>
+<simpara>A string que vem entre o nome da função e o vetor de parâmetros é chamada de  <emphasis>docstring</emphasis>
+(documentation string); existem programas que geram documentação a partir do código fonte
+que utilizam essas <emphasis>docstrings</emphasis>.</simpara>
+</section>
+<section xml:id="funções-com-múltiplas-aridades-ou-diferente-números-de-argumentos">
+<title>Funções com múltiplas aridades (ou diferente números de argumentos)</title>
+<simpara><emphasis>Clojure</emphasis> também vem com a habilidade de definir funções com um número arbitrário de argumentos.
+(O termo <emphasis>aridade</emphasis> signifca o número de argumentos que um função aceita.) A sintaxe é praticamente
+idêntica a sintaxe de definição de uma função comum, com a pequana diferenção que ela contém mais
+de um <emphasis>body</emphasis>(ou corpo de expressões).</simpara>
+<simpara>Vejamos um exemplo, o qual vamos explicar melhor:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn myinc
+  "Self defined version of parameterized `inc`."
+  ([x] (myinc x 1))
+  ([x increment]
+   (+ x increment)))</programlisting>
+<simpara>Essa linha: <literal>([x] (myinc x 1))</literal> diz que se a função for chamada somente com um argumento,
+chame a função <literal>myinc</literal> com aquele argumento e o número <literal>1`como segundo argumento. O outro
+corpo de expressões `([x increment] (+ x increment))</literal> dis que se houver dois
+argumentos, retorna-se o resultado da adição deles.</simpara>
+<simpara>Aqui estão mais alguns exemplos de como usar a função de múltipla aridade definida
+anteriormente. Observe que se você chama uma função com o número errado de argumentos,
+o compilador irá produzir uma mensagem de erro.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(myinc 1)
+;; =&gt; 2
+
+(myinc 1 3)
+;; =&gt; 4
+
+(myinc 1 3 3)
+;; Compiler error</programlisting>
+<note>
+<simpara>Explicar o conceito de "aridade" está fora do escopo desse livro,
+entretanto você pode ler mais sobre isso nesse <link xl:href="https://pt.wikipedia.org/wiki/Aridade"> artigo da Wikipedia</link>.</simpara>
+</note>
+</section>
+<section xml:id="funçòes-de-aridade-variável">
+<title>Funçòes de aridade variável</title>
+<simpara>Outro jeito de aceitar múltiplo número de argumentos é definir uma função aridade variável.
+Essas funções podem aceitar um número arbitrário de argumentos:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn my-variadic-set
+  [&amp; params]
+  (set params))
+
+(my-variadic-set 1 2 3 1)
+;; =&gt; #{1 2 3}
+
+(my-variadic-set 1 2)
+;; =&gt; #{1 2}</programlisting>
+<simpara>A função acima aceita de 0 a quantos argumentos quisermos, podendo receber 1, 2, 3 ou até mais.
+O jeito de definir uma função com aridade variável é utilizando o símbolo <literal>&amp;</literal> como prefixo
+no seu vetor de argumentos.</simpara>
+</section>
+<section xml:id="sintaxe-mais-simmples-para-funções-anônimas">
+<title>Sintaxe mais simmples para funções anônimas</title>
+<simpara><emphasis>Clojure</emphasis> provê uma sintaxe mais compacta para definir funções anônimas usando a macro de leitura
+<literal>#()</literal> (usualmente consistindo de somente uma linha). Macros de leitura são expressões
+especiais que serão transformadas para algo compatível com a língua em tempo de compilação;
+nesse caso, para uma expressão que usa a forma especial <literal>fn</literal>.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def average #(/ (+ %1 %2) 2))
+
+(average 3 4)
+;; =&gt; 3.5</programlisting>
+<simpara>A definição precedente é uma jeito mais curto de escrever:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def average-longer (fn [a b] (/ (+ a b) 2)))
+
+(average-longer 7 8)
+;; =&gt; 7.5</programlisting>
+<simpara><literal>%1</literal>, <literal>%2</literal>&#8230;&#8203; <literal>%N</literal> são marcadores simples da posição dos argumentos no vetor de argumentos
+que são implicitamente declarados quando a macro de leitura vai interpretar e converter
+essa forma em uma expressão <literal>fn</literal>.</simpara>
+<simpara>Se a função aceitar somente um argumento, você pode omitir o número depois do <literal>%</literal>,
+por exemplo, uma função que eleva um número ao quadrado pode ser escrita tanto assim
+<literal>#(* %1 %1)</literal> quanto assim <literal>#(* % %)</literal>.</simpara>
+<simpara>Além disso, a sintaxe também suporta a forma de aridade variável com o símbolo <literal>%&amp;</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def my-variadic-set #(set %&amp;))
+
+(my-variadic-set 1 2 2)
+;; =&gt; #{1 2}</programlisting>
+</section>
+</section>
+<section xml:id="lógica-de-controle">
+<title>Lógica de controle</title>
+<simpara><emphasis>Clojure</emphasis> tem uma abordagem diferente a lógica de controle (if, else, for) do que outras linguagens
+como JavaScript, C, etc.</simpara>
+<section xml:id="executando-coisas-diferentes-com-if">
+<title>Executando coisas diferentes com <literal>if</literal></title>
+<simpara>Vamos começar com o simples <literal>if</literal>. Em <emphasis>Clojure</emphasis>, o <literal>if</literal> é uma expressão e não uma
+declaração, e ele recebe três parâmetros: o primeiro é a expressão de condição
+(que define qual expressão vai ser executada), o segundo é a expresão que será executada
+se a expressão de condição for evaluada para algo "verdadeiro", e a terceira expressão
+vai ser executada caso contrário.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn discount
+  "Você pode obter 5% de disconto se pedir 100 ou mais itens"
+  [quantity]
+  (if (&gt;= quantity 100)
+    0.05
+    0))
+
+(discount 30)
+;; =&gt; 0
+
+(discount 130)
+;; =&gt; 0.05</programlisting>
+<simpara>O bloco de execução <literal>do</literal> pode ser usado para termos múltiplas expressoão em um <literal>if</literal>.
+<link linkend="block-section"><literal>do</literal> is explained in the next section</link>.</simpara>
+</section>
+<section xml:id="executando-coisas-diferentes-com-cond">
+<title>Executando coisas diferentes com <literal>cond</literal></title>
+<simpara>Algumas vezes, a expressão <literal>if</literal> pode ser um pouco limitante porque ela não possui o
+bloco "else if" para adicionarmos mais de uma condição. A macro <literal>cond</literal> resolve isso.</simpara>
+<simpara>Com a expressão <literal>cond</literal>, podemos definir múltiplas expressões de condição:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn mypos?
+  [x]
+  (cond
+    (&gt; x 0) "positive"
+    (&lt; x 0) "negative"
+    :else "zero"))
+
+(mypos? 0)
+;; =&gt; "zero"
+
+(mypos? -2)
+;; =&gt; "negative"
+
+(mypos? 1)
+;; =&gt; "positive"</programlisting>
+<simpara>Também, <literal>cond</literal> tem outra forma, chamada <literal>condp</literal>, que trabalha de forma muito similar com
+que o <literal>cond</literal> trabalha, porém é um pouco mais simples quando a condição (também chamada de predicado0 é
+a mesma para todas as condições:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn translate-lang-code
+  [code]
+  (condp = (keyword code)
+    :es "Spanish"
+    :en "English"
+    "Unknown"))
+
+(translate-lang-code "en")
+;; =&gt; "English"
+
+(translate-lang-code "fr")
+;; =&gt; "Unknown"</programlisting>
+<simpara>A linha <literal>condp = (keyword code)</literal> significa que, em cada uma das linhas seguintes,
+<emphasis>Clojure</emphasis> vai aplicar a função <literal>=</literal> ao resultado de <literal>(keyword code)</literal> e o argumento
+seguinte. Por exemplo para <literal>:es</literal>, será executado o seguinte: <literal>(= :es (keyword code)</literal>.</simpara>
+</section>
+<section xml:id="case">
+<title>Case</title>
+<simpara>O operador de controle <literal>case</literal> tem um uso similar ao exemplo do <literal>condp</literal>. A principal diferença
+é que no <literal>case</literal> o predicado é sempre <literal>=</literal> e seus valores de controle (os <literal>:es</literal> e <literal>:en</literal> nos exemplos anteriores)
+são evaluados em tempo de compilação. Isso resulta em algo mais performático que <literal>cond</literal> e <literal>condp</literal>, com a desvantagem
+de os valores serem estáticos.</simpara>
+<simpara>Aqui está o exemplo anterior, reescrito usando <literal>case</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn translate-lang-code
+  [code]
+  (case code
+    "es" "Spanish"
+    "en" "English"
+    "Unknown"))
+
+(translate-lang-code "en")
+;; =&gt; "English"
+
+(translate-lang-code "fr")
+;; =&gt; "Unknown"</programlisting>
+</section>
+</section>
+<section xml:id="truthiness-section">
+<title>O que é "Verdade" em <emphasis>Clojure</emphasis>?</title>
+<simpara>Esse é um aspecto onde cada língua possui sua própria semântica. Maioria das línguas
+consideram coleções vazias, o valor 0 e outras coisas como sendo "logicamente falso", isso é
+levam para o <literal>else</literal> em um <literal>if</literal>. Em <emphasis>Clojure</emphasis> diferente de outras línguas, somente duas coisas
+são consideradas "logicamente falsas": <literal>nil</literal> e <literal>false</literal>. Todo o resto é tratado como
+"logicamente  verdadeiro" (<literal>true</literal>).</simpara>
+<simpara>Junto com a abilidade de implementar o protocolo "chamável" (<emphasis>callable</emphasis>, o <literal>IFN</literal> explicado com
+mais detalhes mais tarde), estruturas de dados como sets podem ser usados como predicados, sem
+a necessidade de adicionar funções:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def valid? #{1 2 3})
+
+(valid? 2)
+;; =&gt; true
+
+(valid? 4)
+;; =&gt; nil
+
+(filter valid? (range 1 10))
+;; =&gt; (1 2 3)</programlisting>
+<simpara>Isso funciona porque um set retorna ou o valor do elemento se ele contiver esse elemento
+ou <literal>nil</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(valid? 1)
+;; =&gt; 1
+
+(valid? 4)
+;; =&gt; nil</programlisting>
+</section>
+<section xml:id="locals-blocos-e-loops">
+<title>Locals, Blocos, e Loops</title>
+<section xml:id="locals">
+<title>Locals</title>
+<simpara><emphasis>Clojure</emphasis> não possui o conceito de variáveis como linguagens similares ao <literal>ALGOL</literal> possuem,
+mas ele possui o conceito de locals. Locals, como sempre, são imutáveis, e se você tentar
+mudá-los, o compilador vai lançar uma exceção.</simpara>
+<simpara>Locals são definidos usando a expressão <literal>let</literal>. Essa expressão começa com um vetor de vínculos
+e por um número arbitrário de expressões (que chamámos de let-body ou corpo do <literal>let</literal>). O vetor de vínculos
+deve contar um número arbitrário de pares, onde o primeiro item do par é normalmente um símbolo e
+o segundo item, o valor daquele símbolo, que será usado no corpo do <literal>let</literal>.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(let [x (inc 1)
+      y (+ x 1)]
+  (println "Uma simples mensagem do corpo do  let")
+  (* x y))
+;; Uma simples mensagem do corpo do let
+;; =&gt; 6</programlisting>
+<simpara>No exemplo precedente, o símbolo <literal>x</literal> está vinculado ao valor <literal>(inc 1)</literal>, que é evaluado
+como <literal>2</literal>, e o símbolo <literal>y</literal> está vinculado a soma de <literal>x</literal> e <literal>1</literal>, que passa a ser 3. Dado esses
+vínculos, as expressões <literal>(println "Uma simples mensagem do corpo do  let")</literal> e <literal>(* x y)</literal> são
+evaluadas.</simpara>
+</section>
+<section xml:id="blocos">
+<title>Blocos</title>
+<simpara>Blocos de expressões que devem estar juntas, são criados usando a expressão  <literal>do</literal> em <emphasis>Clojure</emphasis>
+e normalmente são usado para "efeitos" (side effects), como imprimir algo no console ou
+logar algo.</simpara>
+<simpara>Um side effect é alguma coisa que não precisa necessariamente retornar um valor.</simpara>
+<simpara>A expressão <literal>do</literal> aceita como argumento um número arbitrário de outras expressões, mas retorna
+somente o valor da última expressão:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(do
+  (println "hello world")
+  (println "hola mundo")
+  (* 3 5) ;; this value will not be returned; it is thrown away
+  (+ 1 2))
+
+;; hello world
+;; hola mundo
+;; =&gt; 3</programlisting>
+<simpara>O corpo de uma expressão <literal>let</literal>, explicado anteriormente, é muito parecido com a expressão <literal>do</literal>
+no sentido que aceita múltiplas expressões. Na verade, o bloco <literal>let</literal> possui um bloco <literal>do</literal> implícito.</simpara>
+</section>
+<section xml:id="loops">
+<title>Loops</title>
+<simpara>A abordagem funcional de <emphasis>Clojure</emphasis> significa que ela não possui o tradicional loop
+<literal>for</literal> de outras línguas como <emphasis>C</emphasis>. Os loops em <emphasis>Clojure</emphasis> funcionam através de recursão.
+Recursão algumas vezes precisa de um esforço adicional de como modelar um problema
+um pouco diferente de como se faz em linguagens imperativas.</simpara>
+<simpara>Muitas dos usos comuns para qual <literal>for</literal> é utilizado em outras línguas são obtidos com funções
+de <literal>high-order</literal> - isso é, funções que aceitam outras funções como parâmetros.</simpara>
+<section xml:id="looping-com-looprecur">
+<title>Looping com loop/recur</title>
+<simpara>Vamos dar uma olhada em como expressar loops usando recursão com as formas
+<literal>loop</literal> e  <literal>recur</literal>. <literal>loop</literal> define uma lista de vínculos (observe a simetria com <literal>let</literal>)
+e <literal>recur</literal> retorna a execução de volta para o loop com novos valores para esses vínculos.</simpara>
+<simpara>Vamos ver um exemplo:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(loop [x 0]
+  (println "Looping com " x)
+  (if (= x 2)
+    (println "Terminei o loop!")
+    (recur (inc x))))
+;; Looping com 0
+;; Looping com 1
+;; Looping com 2
+;; Terminei o loop!
+;; =&gt; nil</programlisting>
+<simpara>No código acima, nos vinculamos o nome <literal>x</literal> ao valor <literal>0</literal> e executamos o corpo do loop.
+Como a condição não é verdadeira na primeira vez, ela é roda novamente com o <literal>recur</literal>,
+com o novo vínculo de <literal>x</literal> sendo <literal>1</literal>, resultado do <literal>(inc x)</literal>. Fazemos isso mais uma vez
+até que a condição é satisfeita, e não ocorram outras chamadas do <literal>recur</literal> e saímos do loop.</simpara>
+<simpara>Observe que não estamos restritos a usar o <literal>recur</literal> somente dentro do <literal>loop</literal>. Podemos
+usá-lo também na execução do corpo de uma função recursiva:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn recursive-function
+  [x]
+  (println "Looping com" x)
+  (if (= x 2)
+    (println "Done looping!")
+    (recur (inc x))))
+
+(recursive-function 0)
+;; Looping com 0
+;; Looping com 1
+;; Looping com 2
+;; Terminei o loop!
+;; =&gt; nil</programlisting>
+</section>
+<section xml:id="substituindo-loops-por-funções-de-high-order">
+<title>Substituindo loops por funções de <emphasis>high-order</emphasis></title>
+<simpara>Em linguagens de programação imperativas, é comum o uso de <literal>for</literal> loops para iterar
+dados e transformá-los, usualmente com algum dos objetivos abaixo:</simpara>
+<itemizedlist>
+<listitem>
+<simpara>Transformar cada valor na coleção retornando uma nova coleção</simpara>
+</listitem>
+<listitem>
+<simpara>Filtrar alguns elementos na coleção baseado em algum critério</simpara>
+</listitem>
+<listitem>
+<simpara>Converter uma coleção em um valor onde cada iteração depende do resultado da iteração
+anterior</simpara>
+</listitem>
+<listitem>
+<simpara>Rodar algum tipo de rotina para cada valor na coleção</simpara>
+</listitem>
+</itemizedlist>
+<simpara>As ações acimas são expressas em funções de <emphasis>high-oder</emphasis> e em construções sintáticas do <emphasis>Clojure</emphasis>,
+vamos ver um exemplo para as três primeiras.</simpara>
+<simpara>Para transformar cada valor em uma coleção, nos usamos a função <literal>map</literal>, que
+recebe uma função e uma sequência e aplica essa função em cada elemento:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(map inc [0 1 2])
+;; =&gt; (1 2 3)</programlisting>
+<simpara>O primeiro argumento do <literal>map</literal> pode ser qualquer função que receba <emphasis role="strong">um argumento</emphasis>
+e retorne um valor. Por exemplo, se você tiver uma aplicação gráfica e quiser
+desenhar o gráfico da equação  <literal>y&#160;=&#160;3x&#160;+&#160;5</literal> para algum conjunto
+de valores de <literal>x</literal>,  você poderia obter os valores de <literal>y</literal> assim:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn y-value [x] (+ (* 3 x) 5))
+
+(map y-value [1 2 3 4 5])
+;; =&gt; (8 11 14 17 20)</programlisting>
+<simpara>Se a função de mapeamento é pequena, você pode usar uma função anônima, seja com a forma
+normal ou com a sintaxe <literal>#()</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(map (fn [x] (+ (* 3 x) 5)) [1 2 3 4 5])
+;; =&gt; (8 11 14 17 20)
+
+(map #(+ (* 3 %) 5) [1 2 3 4 5])
+;; =&gt; (8 11 14 17 20)</programlisting>
+<simpara>Para filtrar valores em uma coleção, nos usamos a função <literal>filter</literal>, que recebe um
+predicado e uma sequência e retorna uma nova sequência somente com os elementos
+que retornaram algum valor "logicamente true" para o predicado fornecido:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(filter odd? [1 2 3 4])
+;; =&gt; (1 3)</programlisting>
+<simpara>Novamente, você pode usar qualquer função que retorne <literal>true</literal> ou <literal>false</literal> como o primeiro
+argumento do <literal>filter</literal>. Aqui está um exemplo que mantém somente as palavras com menos
+de 5 letras. (A função <literal>count</literal> retorna o comprimento da coleção passada como argumento -
+uma string é uma coleção de caracteres.)</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(filter (fn [word] (&lt; (count word) 5)) ["ant" "baboon" "crab" "duck" "echidna" "fox"])
+;; =&gt; ("ant" "crab" "duck" "fox")</programlisting>
+<simpara>Convertendo uma coleção para um único valor, acumulando o resultado intermediário a
+cada passo da iteraçào pode ser obtido usando a função <literal>reduce</literal>, que recebe uma função
+para acumular os valores, um valor inicial opcional e uma coleção:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(reduce + 0 [1 2 3 4])
+;; =&gt; 10
+
+(reduce + [1 2 3 4])
+;; =&gt; 10</programlisting>
+<simpara>Uma outra vez, podemos usar nossa própria função como argumento do <literal>reduce</literal>, mas ela
+deve receber <emphasis role="strong">dois</emphasis> argumentos. O primeiro é o resultado intermediário e o segundo
+é o item da coleção sendo processado. A função retorna o valore que se torna o novo
+resultado intermediário para ser usado junto com o próximo item na lista. Por exemplo,
+aqui está o que você obtém a soma dos quadrados de um conjunto de números.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn sum-squares
+  [accumulator item]
+  (+ accumulator (* item item)))
+
+(reduce sum-squares 0 [3 4 5])
+;; =&gt; 50</programlisting>
+<simpara>Agora com uma função anônima:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(reduce (fn [acc item] (+ acc (* item item))) 0 [3 4 5])
+;; =&gt; 50</programlisting>
+<simpara>Aqui um <literal>reduce</literal> que encontra o total de número de caracteres de um conjunto de palavras:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(reduce (fn [acc word] (+ acc (count word))) 0 ["ant" "bee" "crab" "duck"])
+;; =&gt; 14</programlisting>
+<simpara>Aque não usamos a sintaxe <literal>#()</literal>, porque apesar de reduzirmos o tamanho do código, ficaria
+menos legível.</simpara>
+<simpara>Lembre-se de escolher o valor inicial do seu acumulador com atenção. Se você quiser
+usar o <literal>reduce</literal> para encontrar a multiplicação de uma série de números, você teria
+que começar com 1 ao invés de 0, se não, estaríamos multiplicando os números por zero!</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">;; valor inicial errado
+(reduce * 0 [3 4 5])
+;; =&gt; 0
+
+;; valor inicial correto
+(reduce * 1 [3 4 5])
+;; =&gt; 60</programlisting>
+</section>
+<section xml:id="sequências-for">
+<title><literal>sequências for</literal></title>
+<simpara>Em <emphasis>Clojure</emphasis>, o <literal>for</literal> não é usado para iteração, mas para gerar uma sequência, uma
+operação também conhecida como "sequence comprehension". Em esta seção, você vai aprender
+como ela funciona e como usá-la para construir sequências declarativas.</simpara>
+<simpara><literal>for</literal> recebe um vetor de vínculos e uma expressão e gera uma sequência com o resultado
+de evaluar cada expressão. Vamos ver um exemplo:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(for [x [1 2 3]]
+  [x (* x x)])
+;; =&gt; ([1 1] [2 4] [3 9])</programlisting>
+<simpara>Nesse exemplo, <literal>x</literal> seria vinculado a cada item do vetor <literal>[1 2 3]</literal> por vez,
+e retornaria uma nova sequência onde cada item é um vetor de dois itens com o item
+original e o quadrado dele.</simpara>
+<simpara><literal>for</literal> suporta vários vínculos, o que vai fazer a coleção ser iterada em uma maneira
+aninhada, muito parecido quando colocamos <literal>for</literal> dentro de <literal>for</literal> em uma linguagem imperativa.
+O vínculo mais interno itera "mais rápido".</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(for [x [1 2 3]
+      y [4 5]]
+  [x y])
+
+;; =&gt; ([1 4] [1 5] [2 4] [2 5] [3 4] [3 5])</programlisting>
+<simpara>Podemos também colocar depois dos vínculos, três modificadores: <literal>:let</literal> para
+criar vínculos locais, <literal>:while</literal> para parar a geração da sequência, e `:when`para
+filtrar valores.</simpara>
+<simpara>Aqui está um exemplo de vínculos locais utilizando o modificador <literal>:let</literal>, note
+que os vínculos definitos estarão disponíveis na expressão:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(for [x [1 2 3]
+      y [4 5]
+      :let [z (+ x y)]]
+  z)
+;; =&gt; (5 6 6 7 7 8)</programlisting>
+<simpara>Podemos utilizar o modificador <literal>:while</literal> para expressar a condição que uma vez que deixar
+de ser verdade, vamos parar a geraçào da sequência. Aqui está um exemplo:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(for [x [1 2 3]
+      y [4 5]
+      :while (= y 4)]
+  [x y])
+
+;; =&gt; ([1 4] [2 4] [3 4])</programlisting>
+<simpara>Para fitrar os valores gerados, podemos usar o modificador <literal>:when</literal> como no exemplo
+a seguir:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(for [x [1 2 3]
+      y [4 5]
+      :when (= (+ x y) 6)]
+  [x y])
+
+;; =&gt; ([1 5] [2 4])</programlisting>
+<simpara>Podemos combinar os modificados acima para expressar geração de sequências mais complexas
+ou expressar a intenção do nosso <literal>for</literal> loop de maneira mais clara:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(for [x [1 2 3]
+      y [4 5]
+      :let [z (+ x y)]
+      :when (= z 6)]
+  [x y])
+
+;; =&gt; ([1 5] [2 4])</programlisting>
+<simpara>Quando listamos os usos mais comuns do <literal>for</literal> loop em linguagens imperativas,
+nós mencionamos que algumas vezes queremos rodar alguma rotina pra
+cada valor na sequência, sem nos importarmos com o resultado. Normalmente,
+fazemos isso para realizar algum efeito (<emphasis>side-effect</emphasis>) com os valores da sequência.</simpara>
+<simpara><emphasis>Clojure</emphasis> provê o construtor <literal>doseq</literal>, que é análogo ao <literal>for</literal>, mas executa a expressão,
+descarta o resultado, e retorna <literal>nil</literal>. Como o <literal>for</literal>, ele aceita os mesmos modificadores
+<literal>:let</literal>, <literal>:when</literal> e <literal>:while</literal>.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(doseq [x [1 2 3]
+        y [4 5]
+       :let [z (+ x y)]]
+  (println x "+" y "=" z))
+
+;; 1 + 4 = 5
+;; 1 + 5 = 6
+;; 2 + 4 = 6
+;; 2 + 5 = 7
+;; 3 + 4 = 7
+;; 3 + 5 = 8
+;; =&gt; nil</programlisting>
+<simpara>Se você quer simplesmente iterar e aplicar alguma rotina com efeito (<emphasis>side-effect</emphasis>) como
+<literal>println</literal> para cada item na coleção, você usar a função especializada <literal>run!</literal> que internamente
+usa uma "redução" mais rápida.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(run! println [1 2 3])
+;; 1
+;; 2
+;; 3
+;; =&gt; nil</programlisting>
+<simpara>Essa função explicitamente retorna <literal>nil</literal>.</simpara>
+</section>
+</section>
+</section>
+<section xml:id="tipos-de-coleções">
+<title>Tipos de coleções</title>
+<section xml:id="imutáveis-e-persistentes">
+<title>Imutáveis e persistentes</title>
+<simpara>Como mencionamos antes, as coleções no <emphasis>Clojure</emphasis> são persistentes e imutáveis, mas
+nós não explicamos o que isso significa.</simpara>
+<simpara>Uma estrutura de dado imutável, como o nome sugere, são estrutura de dados que não
+podem ser mudadas. Alterações in-loco não são permitidas em estruturas imutáveis.</simpara>
+<simpara>Vamos ilustrar isso com um exemplo: adicionando valores a um vetor usando <literal>conj</literal>(conjoin).</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(let [xs [1 2 3]
+      ys (conj xs 4)]
+  (println "xs:" xs)
+  (println "ys:" ys))
+
+;; xs: [1 2 3]
+;; ys: [1 2 3 4]
+;; =&gt; nil</programlisting>
+<simpara>Como você pode ver, nós derivamos uma versão do vetor <literal>xs</literal> ao adicionar um elmento
+a ele, e obtemos um novo vetor <literal>ys</literal> com esse elemento adicionado. Entretanto,
+o vetor <literal>xs</literal> se mantém inalterado, porque ele é imutável.</simpara>
+<simpara>Uma estrutura persistente é uma estrutura de dados que retorna uma nova versão
+dela mesmo enquanto a transforma, deixando o original não modificado. <emphasis>Clojure</emphasis>
+faz isso ser eficiente em termos de memória e tempo usando uma técnica de implementação
+chamada <emphasis>structural sharing</emphasis> (compartilhamento de estrutura), onde a maioria dos dados
+são compartilhados entre as duas versões e não duplicada e as transformações
+copiam o mínimo possível de dados.</simpara>
+<simpara>Se você quer saber mais como esse compartilhamento funciona, continue lendo. Se não
+está interessado em saber mais dos detalhes, sinta-se livre para pular para <link linkend="the-sequence-abstraction">próxima seção</link>.</simpara>
+<simpara>Para ilustrar melhor esse <emphasis>structural sharing</emphasis> nas estruturas do <emphasis>Clojure</emphasis>, vamos
+comparar se algumas partes da velha e nova versão da estrutura de dados são
+na verdade o mesmo objeto usando a função <literal>identical?</literal>. Nós vamos usar uma lista
+para isso:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(let [xs (list 1 2 3)
+      ys (cons 0 xs)]
+  (println "xs:" xs)
+  (println "ys:" ys)
+  (println "(rest ys):" (rest ys))
+  (identical? xs (rest ys)))
+
+;; xs: (1 2 3)
+;; ys: (0 1 2 3)
+;; (rest ys): (1 2 3)
+;; =&gt; true</programlisting>
+<simpara>Como você pode ver no exemplo, nós usamos <literal>cons</literal> (construct0 para prefixar um valor
+a lista <literal>xs</literal> e obtemos uma nova lista <literal>ys</literal> com o elemento adicionado. O resto de <literal>ys</literal>
+obtidos usando a função <literal>rest</literal>, é o mesmo objeto em memória que a lista <literal>xs</literal>, e então
+<literal>xs</literal> e <literal>ys</literal> compartilham a mesma estrutura.</simpara>
+</section>
+<section xml:id="the-sequence-abstraction">
+<title>A Abstração de Sequências</title>
+<simpara>Uma das abstrações centrais do <emphasis>Clojure</emphasis> é a <emphasis>sequence</emphasis> que pode ser pensando como
+uma lista e pode ser derivada de qualquer tipo de coleção. É uma coleção persistente
+e imutável como todos os tipos de coleção, e muitas funções centrais do <emphasis>Clojure</emphasis>
+retornam sequências.</simpara>
+<simpara>Os tipos que podem ser usados para gerar uma sequência são chamados de  "seqables";
+nos podemos chamar <literal>seq</literal> com eles como argumento e obter uma sequência de volta.
+Sequências suportam duas operações básicas: <literal>first</literal> e <literal>rest</literal>. Ambas chamam <literal>seq</literal>
+no argumento fornecidos a eles:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(first [1 2 3])
+;; =&gt; 1
+
+(rest [1 2 3])
+;; =&gt; (2 3)</programlisting>
+<simpara>Chamando <literal>seq</literal> em um <emphasis>seqable</emphasis>, podemos obter resultados diferentes se o <emphasis>seqable</emphasis> está
+vazio ou não. Ele irá retornar <literal>nil</literal> quando a coleção está vazia ou se não, uma sequence:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(seq [])
+;; =&gt; nil
+
+(seq [1 2 3])
+;; =&gt; (1 2 3)</programlisting>
+<simpara><literal>next</literal> é similar a operação <literal>rest</literal>, exceto que ela retorna <literal>nil</literal> quando chamada
+com uma sequência com um ou zero elementos. note que, quando chamamos <literal>rest</literal> com
+uma sequência vazia, ela retornará um valor "logicamente true"(<literal>()</literal>), enquanto <literal>next</literal>
+irá retornar um valor "logicalmente false" (<literal>nil</literal>).
+(<link linkend="truthiness-section">revise a seção sobre "O que é verdade em Clojure" caso tenha alguma dúvida sobre isso</link>).</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(rest [])
+;; =&gt; ()
+
+(next [])
+;; =&gt; nil
+
+(rest [1 2 3])
+;; =&gt; (2 3)
+
+(next [1 2 3])
+;; =&gt; (2 3)</programlisting>
+<section xml:id="nil-punning">
+<title>nil-punning</title>
+<simpara>Como <literal>seq</literal> retorna <literal>nil</literal> quando a coleção está valia, e <literal>nil</literal> é considerado um valor
+"logicalmente false", você pode checar se uma coleção está vazia usando a função <literal>seq</literal>.
+O termo técnico para isso é nil-punning.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn print-coll
+  [coll]
+  (when (seq coll)
+    (println "Saw " (first coll))
+    (recur (rest coll))))
+
+(print-coll [1 2 3])
+;; Vi 1
+;; Vi 2
+;; Vi 3
+;; =&gt; nil
+
+(print-coll #{1 2 3})
+;; Vi 1
+;; Vi 3
+;; Vi 2
+;; =&gt; nil</programlisting>
+<simpara>Apesar de <literal>nil</literal> não ser  nem um <emphasis>seqable</emphasis> nem uma sequência, ele é suportado por todas
+as funções que vimos até agora:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(seq nil)
+;; =&gt; nil
+
+(first nil)
+;; =&gt; nil
+
+(rest nil)
+;; =&gt; ()</programlisting>
+</section>
+<section xml:id="funções-que-trabalham-com-sequências">
+<title>Funções que trabalham com sequências</title>
+<simpara>As funções centrais do <emphasis>Clojure</emphasis> para transformar coleções criam sequências a partir
+dos seus argumentos e são implementadas em termos das operações genéricas que aprendemos
+na seção precedente. Isso faz com que elas sejam super genéricas porque podemos usar
+em qualquer tipo de dado que seja um <emphasis>seqable</emphasis>. vamos ver como <literal>map</literal> funciona nos diversos
+tipos de coleções:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(map inc [1 2 3])
+;; =&gt; (2 3 4)
+
+(map inc #{1 2 3})
+;; =&gt; (2 4 3)
+
+(map count {:a 41 :b 40})
+;; =&gt; (2 2)
+
+(map inc '(1 2 3))
+;; =&gt; (2 3 4)</programlisting>
+<note>
+<simpara>Quando usamos <literal>map</literal> em uma coleção do tipo map, sua função de mapeamento irá receber como
+argumento um vetor com dois items, contendo chave e valor contidos no mapa.
+O exemplo abaixo usa <link linkend="destructuring-section">destructuring</link> para acessar a chave e o valor de maneira mais simples.</simpara>
+</note>
+<programlisting language="clojure" linenumbering="unnumbered">(map (fn [[key value]] (* value value))
+     {:ten 10 :seven 7 :four 4})
+;; =&gt; (100 49 16)</programlisting>
+<simpara>Obviamente a mesma operação pode ser feita de forma mais idiomática obtendo somente uma
+<emphasis>seq</emphasis> dos valores do mapa:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(map (fn [value] (* value value))
+     (vals {:ten 10 :seven 7 :four 4}))
+;; =&gt; (100 49 16)</programlisting>
+<simpara>Como você pode notar, funções que operam em sequências são seguras para serem
+usadas com coleções vazias ou até mesmo <literal>nil</literal> já que elas não precisam fazer nada
+a não ser retornar um sequência vazia quando encontram tais valores.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(map inc [])
+;; =&gt; ()
+
+(map inc #{})
+;; =&gt; ()
+
+(map inc nil)
+;; =&gt; ()</programlisting>
+<simpara>Nós já vimos alguns exemplos com as funções como <literal>map</literal>, <literal>filter</literal>, e <literal>reduce</literal>, mas
+<emphasis>Clojure</emphasis> fornece uma variedade de funções genéricas que operam em sequências no
+seu <emphasis>core namespace</emphasis>. Note qua muitas das operações que aprendemos até agora
+funcionam com <emphasis>seqables</emphasis> e são extensíveis a tipos definidos pelo usuário.</simpara>
+<simpara>Podemos verificar se um valor é uma coleção através da função predicado
+<literal>coll?</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(coll? nil)
+;; =&gt; false
+
+(coll? [1 2 3])
+;; =&gt; true
+
+(coll? {:language "ClojureScript" :file-extension "cljs"})
+;; =&gt; true
+
+(coll? "ClojureScript")
+;; =&gt; false</programlisting>
+<simpara>Existem funções predicados similares para checarem se um valor é uma sequência (<literal>seq?</literal>) ou
+um <emphasis>seqable</emphasis> (<literal>seqable?</literal>):</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(seq? nil)
+;; =&gt; false
+(seqable? nil)
+;; =&gt; false
+
+(seq? [])
+;; =&gt; false
+(seqable? [])
+;; =&gt; true
+
+(seq? #{1 2 3})
+;; =&gt; false
+(seqable? #{1 2 3})
+;; =&gt; true
+
+(seq? "ClojureScript")
+;; =&gt; false
+(seqable? "ClojureScript")
+;; =&gt; false
+
+(seq? '(1 2 3))
+;; =&gt; true
+(seqable? '(1 2 3))
+;; =&gt; true</programlisting>
+<simpara>Para coleções que podem ser contadas em tempo constante, podemos utilizar a
+função <literal>count</literal>. Essa operação inclusive funciona com strings, apesar de elas não serem
+uma coleção, sequência, ou seqable.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(count nil)
+;; =&gt; 0
+
+(count [1 2 3])
+;; =&gt; 3
+
+(count {:language "ClojureScript" :file-extension "cljs"})
+;; =&gt; 2
+
+(count "ClojureScript")
+;; =&gt; 13</programlisting>
+<simpara>Nós também podemos obterm uma variante vazia de uma certa coleção através da
+função <literal>empty</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(empty nil)
+;; =&gt; nil
+
+(empty [1 2 3])
+;; =&gt; []
+
+(empty #{1 2 3})
+;; =&gt; #{}</programlisting>
+<simpara>A função predicado <literal>empty?</literal> retorna <literal>true</literal> se uma certa coleção está vazia:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(empty? nil)
+;; =&gt; true
+
+(empty? [])
+;; =&gt; true
+
+(empty? #{1 2 3})
+;; =&gt; false</programlisting>
+<simpara>A função <literal>conj</literal>(conjoin) adiciona um elemento a um coleção e pode adicionar ela
+em diferentes "lugares" dependendo do tipo da coleção. O elemento é adicionado
+onde é mais performático, mas note que nem toda coleção possui uma ordem definida.</simpara>
+<simpara>Podemos passar muitos elementos quanto quisermos para <literal>conj</literal>; vamos ver alguns exemplos:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(conj nil 42)
+;; =&gt; (42)
+
+(conj [1 2] 3)
+;; =&gt; [1 2 3]
+
+(conj [1 2] 3 4 5)
+;; =&gt; [1 2 3 4 5]
+
+(conj '(1 2) 0)
+;; =&gt; (0 1 2)
+
+(conj #{1 2 3} 4)
+;; =&gt; #{1 3 2 4}
+
+(conj {:language "ClojureScript"} [:file-extension "cljs"])
+;; =&gt; {:language "ClojureScript", :file-extension "cljs"}</programlisting>
+</section>
+<section xml:id="lazinesspreguiça">
+<title>Laziness/Preguiça</title>
+<simpara>Maioria das funções que retornam sequência no <emphasis>Clojure</emphasis> retornam uma sequência "preguiçosa"
+ao invés de calcular todos os elementos da nova sequênica. Sequências <emphasis>Lazy</emphasis> geram seu
+conteúdo a medida que são solicitadas a fazê-lo, normalmente quando estamos iterando sob
+elas. Laziness/Preguiça garante que não estamos fazendo mais trabalho do que precisamos e nos dá
+a possibilidade de tratar sequências potencialmente infinitas como sequências comuns.</simpara>
+<simpara>Considere a função <literal>rage</literal>, que gera uma sequência de inteiros:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(range 5)
+;; =&gt; (0 1 2 3 4)
+(range 1 10)
+;; =&gt; (1 2 3 4 5 6 7 8 9)
+(range 10 100 15)
+;; (10 25 40 55 70 85)</programlisting>
+<simpara>Se você dizer apenas <literal>(range)</literal>, você irá obter uma sequência de todos os inteiros.
+Não tente isso dentro de uma REPL, pois ela tentará evaluar a expressão e todos os
+elementos da sequência.</simpara>
+<simpara>Aqui está um exemplo controlado. Supondo que você esteja escrevendo um programa
+gráfico e queira desenhar o gráfico da equação <emphasis>y</emphasis>= 2 <emphasis>x</emphasis> <superscript>2</superscript> + 5, e queira somente
+aqueles valores de <literal>x</literal> para quais <literal>y</literal> é menor que 100. Você pode geral todos os números
+entre 0 e 100, que certamente serão suficientes, e então usar <literal>take-while</literal> com a condição <literal>y &#8656; 100</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(take-while (fn [x] (&lt; (+ (* 2 x x) 5) 100))
+            (range 0 100))
+;; =&gt; (0 1 2 3 4 5 6)</programlisting>
+</section>
+</section>
+<section xml:id="entendendo-coleções-a-fundo">
+<title>Entendendo Coleções a fundo</title>
+<simpara>Agora que conhecemos a abstração de serquências de Clojure e algum das funções
+para manipulá-las, é hora de conhecermos alguns tipos de coleções concretas
+e as operações que elas suportam.</simpara>
+<section xml:id="listas-2">
+<title>Listas</title>
+<simpara>Em <emphasis>Clojure</emphasis>, listas são uma estrutura de dados usada principalmente par agrupar
+símbolos juntos para criar programas. Diferente de outras Lisps, muitas construções
+sintáticas do <emphasis>Clojure</emphasis> usam estruturas sintáticas diferentes da lista (como vetores e mapas).
+Isso torna o código menos uniforme, porém aumenta a facilidade de leitura.</simpara>
+<simpara>Você pode pensar nas listas do <emphasis>Clojure</emphasis> como listas ligadas (mas não duplamente), onde
+cada nó contém um valor e um ponteiro para o resto da lista. Isso faz com que seja
+natural (e rápido) adicionar items ao começo da lista, já que adicionar ao fim iria
+criar a necessidade de percorrer toda a lista. Essa adição é feita utilizando
+a função <literal>cons</literal>.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(cons 0 (cons 1 (cons 2 ())))
+;; =&gt; (0 1 2)</programlisting>
+<simpara>Nós usamos a sintaxe literal <literal>()</literal> para representar uma lista vazia. Já que ela não
+contém nenhum símbolo, não é tratada como uma chamada de função. porém, quando usando
+a sintaxe literal de listas que contenham elementos, precisamos prefixá-la com aspa
+<literal>'</literal> para previnir que <emphasis>Clojure</emphasis> evalue ela como uma chamada de função:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(cons 0 '(1 2))
+;; =&gt; (0 1 2)</programlisting>
+<simpara>Como adicionar ao começo (ou cabeça, ou head) leva tempo constante para ser
+feito, a função <literal>conj</literal> operando em listas adiciona items ao começo.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(conj '(1 2) 0)
+;; =&gt; (0 1 2)</programlisting>
+<simpara>Listas e outras estruturas de dados do <emphasis>Clojure</emphasis> podem ser usadas como pilhas
+usando as funções <literal>peek</literal>, <literal>pop</literal> e <literal>conj</literal>. Note que o topo da pilha será o lugar
+onde <literal>conj</literal> vai adicionar elementos, fazendo <literal>conj</literal> equivalente a função <literal>push</literal>
+de uma pilha. No caso de listas, <literal>conj</literal> adiciona elementos no começo da lista,
+e <literal>peek</literal> retorna o primeiro elemento da lista, e <literal>pop</literal> retorna a lista com todos
+os elementos exceto o primeiro.</simpara>
+<simpara>Note que as duas operações que retornam a pilha (<literal>conj</literal> e <literal>pop</literal>) não mudam o tipo da
+coleção usada pela pilha.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def list-stack '(0 1 2))
+
+(peek list-stack)
+;; =&gt; 0
+
+(pop list-stack)
+;; =&gt; (1 2)
+
+(type (pop list-stack))
+;; =&gt; cljs.core/List
+
+(conj list-stack -1)
+;; =&gt; (-1 0 1 2)
+
+(type (conj list-stack -1))
+;; =&gt; cljs.core/List</programlisting>
+<simpara>Uma coisa que listas não particularmente goas é acesso arbitrário de elementos através
+de um index. Como elas são armazenadas como listas ligadas em memória, para acesso arbitrário
+a um certo index, é necessário percorrer a lista em ordem para obter o elemento desejado, ou
+lançar uma exceção de index não presente na lista, caso o index maior que a quantidade
+de elementos na lista. Outras coleções que não possuem index também sofrem
+dessa limitação como <emphasis>lazy sequences</emphasis> .</simpara>
+</section>
+<section xml:id="vetores-2">
+<title>Vetores</title>
+<simpara>Vetores são uma das estruturas de dados mais comum em <emphasis>Clojure</emphasis>. Elas são usadas como
+estrutura sintática em vários lugares em que Lisps mais tradicionais utilizam lista, como
+por exemplo em declaração de argumentos de funções e em blocos de vínculos <literal>let</literal>.</simpara>
+<simpara>Vetores em <emphasis>Clojure</emphasis> são delimitados por cochetes <literal>[]</literal> como sintaxe literal. Eles
+também podem ser criados com a função <literal>vector</literal> ou a partir de outra coleção
+utilizando a função <literal>vec</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(vector? [0 1 2])
+;; =&gt; true
+
+(vector 0 1 2)
+;; =&gt; [0 1 2]
+
+(vec '(0 1 2))
+;; =&gt; [0 1 2]</programlisting>
+<simpara>Vetores são, como listas, coleções ordenadas de valores heterogêneos. Diferente de listas,
+vetores crescem naturalmente a partir do fim deles (ou cauda), então a função <literal>conj</literal>
+adiciona itens ao final do vetor. Adições ao fim do vetor são feitas em tempo constante:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(conj [0 1] 2)
+;; =&gt; [0 1 2]</programlisting>
+<simpara>Outra coisa que diferencia listas de vetores é que vetores são coleções indexadas
+e suportam acesso eficiente a items através de índices e atualizações nào destrutivas.
+Nós usamos a função <literal>nth</literal> para obter valores de um certo index:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(nth [0 1 2] 0)
+;; =&gt; 0
+
+(nth [0 1 2] 2)
+;; =&gt; 2</programlisting>
+<simpara>Como vetores associam chaves sequênciais númericas (indexes) aos valroes, podemos
+tratar eles como uma estrutura associativa. <emphasis>Clojure</emphasis> provê a função <literal>assoc</literal>
+que dado uma estrutura de dados associativa, um conjunto de pares de chave e valores
+retorna uma nova estrutura de dados com as chaves fornecidas modificadas. O index
+começa em 0 referindo-se ao primeiro elemento do vetor.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(assoc ["cero" "uno" "two"] 2 "dos")
+;; =&gt; ["cero" "uno" "dos"]</programlisting>
+<simpara>Note que podemos somente associar uma chave que já está no vetor ou é a última
+posição do vetor (fazendo ele crescer):</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(assoc ["cero" "uno" "dos"] 3 "tres")
+;; =&gt; ["cero" "uno" "dos" "tres"]
+
+(assoc ["cero" "uno" "dos"] 4 "cuatro")
+;; Error: Index 4 out of bounds [0,3]</programlisting>
+<simpara>Algo supreendente é que estruturas de dados associativas podem ser usadas
+como funções. Elas sào funções das suas chaves para os valores associado a elas.
+No caso dos vetores, se uma certa chave não está presente uma exceção é
+lançada:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(["cero" "uno" "dos"] 0)
+;; =&gt; "cero"
+
+(["cero" "uno" "dos"] 2)
+;; =&gt; "dos"
+
+(["cero" "uno" "dos"] 3)
+;; Error: Not item 3 in vector of length 3</programlisting>
+<simpara>Como listas, vetores podem também ser usadas como pilhas com as funções <literal>peek</literal>, <literal>pop</literal>
+e <literal>conj</literal>. É importante notar que vetores crescem na direção contrária das listas:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def vector-stack [0 1 2])
+
+(peek vector-stack)
+;; =&gt; 2
+
+(pop vector-stack)
+;; =&gt; [0 1]
+
+(type (pop vector-stack))
+;; =&gt; cljs.core/PersistentVector
+
+(conj vector-stack 3)
+;; =&gt; [0 1 2 3]
+
+(type (conj vector-stack 3))
+;; =&gt; cljs.core/PersistentVector</programlisting>
+<simpara>As funções <literal>map</literal> e <literal>filter</literal> são operações que retornam uma <emphasis>lazy sequence</emphasis>, mas é comum
+precisarmos de sequências onde todos os valores já foram computados. Por isso,
+existem as funções <literal>mapv</literal> e <literal>filterv</literal> que funcionam igual <literal>map</literal> e <literal>filter</literal> porém
+retornam vetores. Elas tem a vantagem de serem mais rápidas do que construir um vetor
+a partir de uma <emphasis>lazy sequence</emphasis> e fazendo a intenção do código mais explícita:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(map inc [0 1 2])
+;; =&gt; (1 2 3)
+
+(type (map inc [0 1 2]))
+;; =&gt; cljs.core/LazySeq
+
+(mapv inc [0 1 2])
+;; =&gt; [1 2 3]
+
+(type (mapv inc [0 1 2]))
+;; =&gt; cljs.core/PersistentVector</programlisting>
+</section>
+<section xml:id="mapas">
+<title>Mapas</title>
+<simpara>Mapas são onipresente em <emphasis>Clojure</emphasis>. Como vetores, eles também são usados
+como parte da sintaxe da linguagem, principalmente para adição de <link linkend="metadata-section">metadadaos</link>
+a uma var. Qualquer estrutura de dados em <emphasis>Clojure</emphasis> pode ser usada como
+uma chave em um mapa, apesar de ser comum usarmos <emphasis>keywords</emphasis> pois elas
+também podem ser chamadas como funções.</simpara>
+<simpara>Mapas em <emphasis>Clojure</emphasis> são escritos literalmente como pares chave-valor envoltos
+por chaves <literal>{}</literal>. Alternativamente, eles também pode ser criados usando a
+função <literal>hash-map</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(map? {:name "Cirilla"})
+;; =&gt; true
+
+(hash-map :name "Cirilla")
+;; =&gt; {:name "Cirilla"}
+
+(hash-map :name "Cirilla" :surname "Fiona")
+;; =&gt; {:name "Cirilla" :surname "Fiona"}</programlisting>
+<simpara>Como mapas não possuem uma ordem específica, a função <literal>conj</literal> apenas adiciona um
+ou mais pares de chave-valor ao mapa. <literal>conj</literal> para mapas espera um ou mais sequência
+de pares chave-valor como seus últimos argumentos:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def ciri {:name "Cirilla"})
+
+(conj ciri [:surname "Fiona"])
+;; =&gt; {:name "Cirilla", :surname "Fiona"}
+
+(conj ciri [:surname "Fiona"] [:occupation "Wizard"])
+;; =&gt; {:name "Cirilla", :surname "Fiona", :occupation "Wizard"}</programlisting>
+<simpara>No exemplo anterior, por causalidade, a ordem foi preservada, mas para muitas chaves,
+você verá que a ordem não é preservada.</simpara>
+<simpara>Mapas associam chaves a valores e são portanto uma estrutura de dados associativa.
+Eles suportam a adição de novas associaçòes usando a função <literal>assoc</literal> e, diferente de vetores,
+a remoção usando <literal>dissoc</literal>. <literal>assoc</literal> também pode atualizar valores de uma chave existente.
+Vamos ver como essas funções funcionam:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(assoc {:name "Cirilla"} :surname "Fiona")
+;; =&gt; {:name "Cirilla", :surname "Fiona"}
+(assoc {:name "Cirilla"} :name "Alfonso")
+;; =&gt; {:name "Alfonso"}
+(dissoc {:name "Cirilla"} :name)
+;; =&gt; {}</programlisting>
+<simpara>Mapas também são funções das suas chaves, retornando os valores relacionados com
+a chave passada como argumentol. Diferente de vetores, eles retornam <literal>nil</literal> caso a
+chave não esteja presente no mapa:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">({:name "Cirilla"} :name)
+;; =&gt; "Cirilla"
+
+({:name "Cirilla"} :surname)
+;; =&gt; nil</programlisting>
+<simpara><emphasis>Clojure</emphasis> também fornece hash maps ordenados que se comportam como sua versão não ordenada
+mas preservam a ordem quando iteramos sob seus elementos. Podemos criar um mapa ordenado
+com um ordenamento padrão usando a função <literal>sorted-map</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def sm (sorted-map :c 2 :b 1 :a 0))
+;; =&gt; {:a 0, :b 1, :c 2}
+
+(keys sm)
+;; =&gt; (:a :b :c)</programlisting>
+<simpara>Se precisarmos de um ordenamento diferente, podemos prover uma função comparadora
+a função <literal>sorted-map-by</literal>, vamos ver um exemplo em que invertemos a ordem retornada
+pela função <literal>compare</literal>. Uma função comparadora recebe dois items para comparar
+e retorna -1 (se o primeiro item é menor que o segundo), 0 (se eles são iguais) e
+1 (se o primeiro item é maior que o segundo).</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn reverse-compare [a b] (compare b a))
+
+(def sm (sorted-map-by reverse-compare :a 0 :b 1 :c 2))
+;; =&gt; {:c 2, :b 1, :a 0}
+
+(keys sm)
+;; =&gt; (:c :b :a)</programlisting>
+</section>
+<section xml:id="conjuntos-ou-sets">
+<title>Conjuntos (ou Sets)</title>
+<simpara>Sets em <emphasis>Clojure</emphasis> também possuem uma sintaxe literal que é <literal>#{}</literal> e também podem
+ser criados utilizando a função <literal>set</literal>. Eles são coleções não ordenadas de valores sem
+duplicações.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(set? #{\a \e \i \o \u})
+;; =&gt; true
+
+(set [1 1 2 3])
+;; =&gt; #{1 2 3}</programlisting>
+<simpara>A sintaxe literal não permite duplicações. Se você escrever um set literal com duplicações
+um erro será lançado:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">#{1 1 2 3}
+;; clojure.lang.ExceptionInfo: Duplicate key: 1</programlisting>
+<simpara>Existem várias operações que podem ser realizadas com sets, porem elas estão
+localizadas no <emphasis>namespace</emphasis> <literal>clojure.set</literal> e portanto precisam ser importadas. Você vai
+aprender <link linkend="namespace-section">os detalhes sobre namespaces</link> mais tarde, por hora, você só
+precisa saber que estamos carregando um <emphasis>namespace</emphasis> chamado <literal>clojure.set</literal> e vinculá-lo
+ao símbolo <literal>s</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(require '[clojure.set :as s])
+
+(def danish-vowels #{\a \e \i \o \u \æ \ø \å})
+;; =&gt; #{"a" "e" "å" "æ" "i" "o" "u" "ø"}
+
+(def spanish-vowels #{\a \e \i \o \u})
+;; =&gt; #{"a" "e" "i" "o" "u"}
+
+(s/difference danish-vowels spanish-vowels)
+;; =&gt; #{"å" "æ" "ø"}
+
+(s/union danish-vowels spanish-vowels)
+;; =&gt; #{"a" "e" "å" "æ" "i" "o" "u" "ø"}
+
+(s/intersection danish-vowels spanish-vowels)
+;; =&gt; #{"a" "e" "i" "o" "u"}</programlisting>
+<simpara>Uma propriedade interessante dos sets é que eles podem ser aninhados. Linguagens
+que possuem sets mutáveis podem acabar contendo valores duplicados, mas isso não
+pode acontecer no <emphasis>Clojure</emphasis>. Todas as estruturas de dado do <emphasis>Clojure</emphasis> podém ser aninhadas
+de forma arbitrária devido a imutabilidade.</simpara>
+<simpara>Sets também suportam a operação genérica <literal>conj</literal> como todas as outras coleções suportam.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def spanish-vowels #{\a \e \i \o \u})
+;; =&gt; #{"a" "e" "i" "o" "u"}
+
+(def danish-vowels (conj spanish-vowels \æ \ø \å))
+;; =&gt; #{"a" "e" "i" "o" "u" "æ" "ø" "å"}
+
+(conj #{1 2 3} 1)
+;; =&gt; #{1 3 2}</programlisting>
+<simpara>Sets funcionam como uma estrutura associativa que associam os valores que ele contém a eles
+mesmos. E como qualquer valore exceto <literal>nil</literal> e <literal>false</literal> são "logicamente verdade" em
+<emphasis>Clojure</emphasis>, podemos usar os sets como funções predicados:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def vowels #{\a \e \i \o \u})
+;; =&gt; #{"a" "e" "i" "o" "u"}
+
+(get vowels \b)
+;; =&gt; nil
+
+(contains? vowels \b)
+;; =&gt; false
+
+(vowels \a)
+;; =&gt; "a"
+
+(vowels \z)
+;; =&gt; nil
+
+(filter vowels "Hound dog")
+;; =&gt; ("o" "u" "o")</programlisting>
+<simpara>Sets também possuem uma variante ordenada como mapas que é criada
+utilizando as funções <literal>sorted-set</literal> e <literal>sorted-set-by</literal> que são análogas as funções
+<literal>sorted-map</literal> e <literal>sorted-map-by</literal>.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def unordered-set #{[0] [1] [2]})
+;; =&gt; #{[0] [2] [1]}
+
+(seq unordered-set)
+;; =&gt; ([0] [2] [1])
+
+(def ordered-set (sorted-set [0] [1] [2]))
+;; =&gt;# {[0] [1] [2]}
+
+(seq ordered-set)
+;; =&gt; ([0] [1] [2])</programlisting>
+</section>
+<section xml:id="filas">
+<title>Filas</title>
+<simpara><emphasis>Clojure</emphasis> também provê uma fila persistente e imutável. Filas não são usadas tanto
+quanto outros tipos de coleções. Elas podem ser criadas utilizando a sintaxe literal
+<literal>#queue []</literal>, mas não existe uma função para criá-las.
+ClojureScript also provides a persistent and immutable queue. Queues are not used as
+pervasively as other collection types.  They can be created by simply getting the empty
+queue: <literal>(clojure.lang.PersistentQueue/EMPTY)</literal>. Porém não existe nenhuma função
+construtora para criá-las.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def pq (conj (clojure.lang.PersistentQueue/EMPTY) 1 2 3))
+;; =&gt; #object[clojure.lang.PersistentQueue 0x28cb9120 "clojure.lang.PersistentQueue@7861"]</programlisting>
+<simpara>Usar <literal>conj</literal> para adiconar valores a files, os adiciona ao fim dela:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def pq (conj (clojure.lang.PersistentQueue/EMPTY) 1 2 3))
+;; =&gt; #object[clojure.lang.PersistentQueue 0x28cb9120 "clojure.lang.PersistentQueue@7861"]
+
+(last (conj pq 4 5))
+;; =&gt; 5</programlisting>
+<simpara>Infelizmente, as filas não são impressas de forma muito legível na Repl.
+É importante lembrar que as operações que usamos para pilha funcionam de maneira
+diferente para filas. <literal>pop</literal> retira valores do começo da fila, e <literal>conj</literal> coloca valores
+no fim da fila.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def pq (conj (clojure.lang.PersistentQueue/EMPTY) 1 2 3))
+;; =&gt; #object[clojure.lang.PersistentQueue 0x28cb9120 "clojure.lang.PersistentQueue@7861"]
+
+(peek pq)
+;; =&gt; 1
+
+(println (mapv identity (pop pq)))
+;; =&gt; [2 3]
+
+(println (mapv identity (conj pq 4)))
+;; =&gt; [1 2 3 4]</programlisting>
+<simpara>Filas não são usadas com muita frequência como lista ou vetores, mas é bom saber
+que elas estão disponíveis em <emphasis>Clojure</emphasis>, e podem eventualmente serem úteis.</simpara>
+</section>
+</section>
+</section>
+<section xml:id="destructuring-section">
+<title>Desestruturando (<emphasis>Destructuring</emphasis>)</title>
+<simpara><emphasis>Destructuring,</emphasis> como o nome sugere, é um modo de quebrar uma estrutura de dados
+como coleções e focar em partes individuais dela. <emphasis>Clojure</emphasis> oferece uma
+sintaxe concisa para desestruturar seja sequência indexadas ou estruturas
+associativas que pode ser usada onde criamos vínculos entre símbolos e valores.</simpara>
+<simpara>Vamos ver um exemplo de <emphasis>destructuring</emphasis> que é útil pare entendermos o parágrafo
+anterior. Imagine que você tem uma sequência e esteja interessado somente
+no primeiro e terceiro item. Você pode obter uma referência a eles usando
+a função <literal>nth</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(let [v [0 1 2]
+      fst (nth v 0)
+      thrd (nth v 2)]
+  [thrd fst])
+;; =&gt; [2 0]</programlisting>
+<simpara>Porém, o código anterior é um pouco verboso. <emphasis>Destructuring</emphasis> pode nos ajudar a
+extrair valores de uma sequência indexada de maneira mais sucinta se usarmos
+um vetor no lado esquerdo do vínculo:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(let [[fst _ thrd] [0 1 2]]
+  [thrd fst])
+;; =&gt; [2 0]</programlisting>
+<simpara>No exemplo acima, <literal>[fst _ thrd]</literal> é uma expressão de <emphasis>destructuring</emphasis>. Ela é representada
+como um vetor e é usada para vincular valores indexados aos símbolos <literal>fst</literal> e <literal>thrd</literal>,
+correspondendo aos valores com index <literal>0</literal> e <literal>2</literal> respectivamente. O símbolo <literal>_</literal> é utilizado
+como um placeholder para valores que não estamos interessados, nesse caso <literal>1</literal>.</simpara>
+<simpara>Note que <emphasis>destructuring</emphasis> não está limitado aos vínculos criados dentro de um <literal>let</literal>;
+ele funciona em qualquer lugar que criámos um vínculo entre valores e símbolos como
+nas formas especiais <literal>for</literal> e <literal>doseq</literal> ou em argumentos de funções. Podemos escrever uma
+função que receba um pair e troque as posiçòes desse par de maneira muito sucinta
+utilizando a sintaxe do <emphasis>destructuring</emphasis> como argumento da função:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn swap-pair [[fst snd]]
+  [snd fst])
+
+(swap-pair [1 2])
+;; =&gt; [2 1]
+
+(swap-pair '(3 4))
+;; =&gt; [4 3]</programlisting>
+<simpara><emphasis>Destructuring</emphasis> posicional com vetores é bastante útil para tirarmos valores indexados
+de uma sequência, mas algumas vezes não queremos descartar o resto dos elementos
+na sequência. Similar com ao <literal>&amp;</literal> usado em funções de aridade variável, o <literal>&amp;</literal> pode ser usado
+dentro do <emphasis>destructuring</emphasis> de um vetor para agrupar o resto dos elementos de uma sequência:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(let [[fst snd &amp; more] (range 10)]
+  {:first fst
+   :snd snd
+   :rest more})
+;; =&gt; {:first 0, :snd 1, :rest (2 3 4 5 6 7 8 9)}</programlisting>
+<simpara>Note que o valor na posição <literal>0</literal> foi vinculado a <literal>fst</literal>, o valor na posição <literal>1</literal>
+foi vinculado a <literal>snd</literal>, e a sequência de elementos a partir da posição <literal>2</literal> foi vinculada
+ao símbolo <literal>more</literal>.</simpara>
+<simpara>Nós podemos ainda estar interessados na estrutura de dados como um todo, mesmo
+quando estamos fazendo um <emphasis>destructuring</emphasis>. Podemos manter a referência a estrutura
+usando a <emphasis>keyword</emphasis> <literal>:as</literal>. Se usada dentro de um <emphasis>destructuring</emphasis>, a estrutura de dados
+original fica vinculada ao símbolo que segue a <emphasis>keyword</emphasis> <literal>:as</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(let [[fst snd &amp; more :as original] (range 10)]
+  {:first fst
+   :snd snd
+   :rest more
+   :original original})
+;; =&gt; {:first 0, :snd 1, :rest (2 3 4 5 6 7 8 9), :original (0 1 2 3 4 5 6 7 8 9)}</programlisting>
+<simpara>Não só podemos usar <emphasis>destructuring</emphasis> com sequências, mas estruturas associativas ainda
+podem ser desestruturadas. Nesse caso, o <emphasis>destructuring</emphasis> é representado utilizando
+um map ao invés de um vetor. Nesse mapa, as chaves são símbolos que queremos vincular aos valores
+e os valores são as chaves que queremos usar para obter os valores dentro da estrutura
+associativa que queremos desestruturar. Vamos ver um exemplo:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(let [{language :language} {:language "ClojureScript"}]
+  language)
+;; =&gt; "ClojureScript"</programlisting>
+<simpara>No exemplo acima, estamos extraindo o valor associado com a chave <literal>:language</literal> e
+vinculando ele com o símbolo <literal>language</literal>. Quando procuramos o map por uma chave que não
+está presente, o símbolo é vinculado a <literal>nil</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(let [{name :name} {:language "ClojureScript"}]
+  name)
+;; =&gt; nil</programlisting>
+<simpara><emphasis>Destructuring</emphasis> associative permite o fornecimento de valores <emphasis>default</emphasis> caso a chave não
+esteja presente no mapa. Um mapa seguido da chave <literal>:or</literal> é usada para valores
+<emphasis>default</emphasis> como o exemplo seguinte mostra:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(let [{name :name :or {name "Anonymous"}} {:language "ClojureScript"}]
+  name)
+;; =&gt; "Anonymous"
+
+(let [{name :name :or {name "Anonymous"}} {:name "Cirilla"}]
+  name)
+;; =&gt; "Cirilla"</programlisting>
+<simpara><emphasis>Destructuing</emphasis> associativo também suporta vincular a estrutura de dados original a um
+símbolo colocado depois da keyword <literal>:as</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(let [{name :name :as person} {:name "Cirilla" :age 49}]
+  [name person])
+;; =&gt; ["Cirilla" {:name "Cirilla" :age 49}]</programlisting>
+<simpara><emphasis>Keyword</emphasis> não são as únicas coisas que podem ser chaves em uma estrutura associative.
+Números, strings, símbolos e muitas outras estruturas de dados podem ser usadas como
+chave, então também podemos usá-las no <emphasis>destruturing</emphasis>. Mas note que para símbolos, precisamos
+prefixá-los com aspa <literal>'</literal> para evitar que sejam evaluados.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(let [{one 1} {0 "zero" 1 "one"}]
+  one)
+;; =&gt; "one"
+
+(let [{name "name"} {"name" "Cirilla"}]
+  name)
+;; =&gt; "Cirilla"
+
+(let [{lang 'language} {'language "ClojureScript"}]
+  lang)
+;; =&gt; "ClojureScript"</programlisting>
+<simpara>Como normalmente os valores correspondente as chaves são usualmente vinculado
+a símbolos com o mesmo nome (Ex: <literal>:language</literal> e <literal>language</literal>) e chaves normalmente
+são keywords, strings ou símbolos, <emphasis>Clojure</emphasis> oferece uma sintaxe mais simples
+para esses casos.</simpara>
+<simpara>Vamos ver alguns exemplos desses casos, começando pelas <emphasis>keywords</emphasis> usando <literal>:keys</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(let [{:keys [name surname]} {:name "Cirilla" :surname "Fiona"}]
+  [name surname])
+;; =&gt; ["Cirilla" "Fiona"]</programlisting>
+<simpara>Como você pode ver, utilizamos a <emphasis>keyword</emphasis> <literal>:keys</literal> e associamos ela a um vetor de símbolos,
+os valores correspondentes as versões chaves do símbolo são vinculado a eles. A expressão
+<literal>{:keys [name surname]}</literal> é equivalente a  <literal>{name :name surname :surname}</literal>, porém mais
+sucinta.</simpara>
+<simpara>A versão string e simbólica dessa sintaxe funciona exatamente igual, só que nesses casos
+usamos <literal>:strs</literal> e <literal>:syms</literal> respectivamente:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(let [{:strs [name surname]} {"name" "Cirilla" "surname" "Fiona"}]
+  [name surname])
+;; =&gt; ["Cirilla" "Fiona"]
+
+(let [{:syms [name surname]} {'name "Cirilla" 'surname "Fiona"}]
+  [name surname])
+;; =&gt; ["Cirilla" "Fiona"]</programlisting>
+<simpara>Uma propriedade interessante do <emphasis>destruturing</emphasis> é que podemos ter um dentro do outro de maneira
+arbitrária, o que torna o código para acesso de estruturas aninhadas muito fácil de compreender,
+uma vez que ele faz mímica da estrutura da coleção:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(let [{[fst snd] :languages} {:languages ["ClojureScript" "Clojure"]}]
+  [snd fst])
+;; =&gt; ["Clojure" "ClojureScript"]</programlisting>
+</section>
+<section xml:id="threading-macros-ou-ordenando-chamadas-consecutivas-de-funções">
+<title><emphasis>Threading Macros</emphasis> (ou ordenando chamadas consecutivas de funções)</title>
+<simpara><emphasis>Threading macros</emphasis>, também conhecido como funções flecha, permite que escrevamos código
+mais fácil de ler quando possuímos várias chamadas de funções aninhadas.</simpara>
+<simpara>Imagine que você tenha <literal>(f (g (h x)))</literal> onde a função <literal>f</literal> recebe como seu primeiro argumento
+o resultado da chamada da função <literal>g</literal> repetida e assim por diante. Com a <emphasis>threading macro</emphasis>
+mais básica <literal>&#8594;</literal> podemos converter essa expressào em <literal>(-&gt; x (h) (g) (f))</literal> que é muito
+mais fácil de ler.</simpara>
+<simpara>O resulta é uma sintaxe mais simples, porque a função flecha é definida como macro
+e não impacta na performance do código. A forma <literal>(-&gt; x (h) (g) (f))</literal> é convertida
+automaticamente para <literal>(f (g (h x)))</literal> durante a compilação</simpara>
+<simpara>Observe que os parenteses em <literal>h</literal>, <literal>g</literal> e <literal>f</literal> são opcionais e podem ser omitidos:
+<literal>(f (g (h x)))</literal> é o mesmo que <literal>(-&gt; x h g f)</literal>.</simpara>
+<section xml:id="thread-first-macro">
+<title><emphasis>Thread-first macro</emphasis> (<literal>-&gt;</literal>)</title>
+<simpara>Isso é chamado de <emphasis>thread first</emphasis>, ou thread primeiro, poque o primeiro argumento das diferentes
+funções é o resultado da expressão anterior.</simpara>
+<simpara>Usando um exemplo mais concreto, assim é como seria o código sem utilizarmos
+<emphasis>threading macro</emphasis>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def book {:name "Lady of the Lake"
+           :readers 0})
+
+(update (assoc book :age 1999) :readers inc)
+;; =&gt; {:name "Lady of the lake" :age 1999 :readers 1}</programlisting>
+<simpara>Podemos reescrevê-lo com a _threading macro <literal>-&gt;</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(-&gt; book
+    (assoc :age 1999)
+    (update :readers inc))
+;; =&gt; {:name "Lady of the lake" :age 1999 :readers 1}</programlisting>
+<simpara>Esse <emphasis>threading macro</emphasis> é especialmente útil para transformarmos estrutura de dados, porque
+em <emphasis>Clojure</emphasis>, funções que transforma estruturas de dados recebem como primeiro argumento
+a estrutura de dados.</simpara>
+</section>
+<section xml:id="thread-last-macro-ou-thread-por-último">
+<title>Thread-last macro, ou thread por último (<literal>-&gt;&gt;</literal>)</title>
+<simpara>A principal diferença entre <emphasis>thread-last</emphasis> e <emphasis>thread-first</emphasis> é que ao invés do retorno
+ser utilizado como primeiro argumento das funções, ele é utilizado como último.</simpara>
+<simpara>Vejamos um exemplo:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def numbers [1 2 3 4 5 6 7 8 9 0])
+
+(take 2 (filter odd? (map inc numbers)))
+;; =&gt; (3 5)</programlisting>
+<simpara>O mesmo código reescrito com <literal>-&gt;&gt;</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(-&gt;&gt; numbers
+     (map inc)
+     (filter odd?)
+     (take 2))
+;; =&gt; (3 5)</programlisting>
+<simpara>Esse thread macro é especialmente útil para transformarmos sequências ou coleções com
+<literal>map</literal> , <literal>filter</literal>, <literal>reduce</literal> e outras funções, pois no <emphasis>Clojure</emphasis> essas funções recebem como
+último argumento a sequência.</simpara>
+</section>
+<section xml:id="thread-as-macro-ou-thread-como-as">
+<title>Thread-as macro ou thread-como (<literal>as-&gt;</literal>)</title>
+<simpara>Finalmente, tem os casos que nem  <literal>-&gt;</literal> nem <literal>-&gt;&gt;</literal> são aplicáveis. Nesses casos,
+tudo que você precisa utilizar é <literal>as-&gt;</literal>, a alternativa mais flexível, que permite
+aplicar o retorno em qualquer posição da chamada de função, e não somente a primeira
+ou a última.</simpara>
+<simpara>Essa forma espera dois argumentos fixos e um número arbitrário de expressões.
+Assim como <literal>-&gt;</literal>, o primeiro argumento é o valor a ser utilizado nas formas seguintes.
+O segundo arbumento é um símbolo ao qual esse valor estará vinculado. Em cada forma subsequente,
+podemos utilizar esse símbolo para nos referirmos ao valor retornado na forma anterior.</simpara>
+<simpara>Vejamos um exemplo:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(as-&gt; numbers $
+  (map inc $)
+  (filter odd? $)
+  (first $)
+  (hash-map :result $ :id 1))
+;; =&gt; {:result 3 :id 1}</programlisting>
+</section>
+<section xml:id="thread-some-macros-ou-thread-se-algo-some-and-some">
+<title>Thread-some macros ou thread se algo (<literal>some-&gt;</literal> and <literal>some-&gt;&gt;</literal>)</title>
+<simpara>Duas outras <emphasis>threading macros</emphasis> mais especializadas que o <emphasis>Clojure</emphasis> possui são as <emphasis>thread-some</emphasis>.
+Elas funcionam de forma semelhante a <literal>-&gt;</literal> e <literal>-&gt;&gt;</literal> exceto que elas encerram a execução
+das formas uma vez que alguma expressão retorne <literal>nil</literal>.</simpara>
+<simpara>Vejamos um exemplo:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(some-&gt; (rand-nth [1 nil])
+        (inc))
+;; =&gt; 2
+
+(some-&gt; (rand-nth [1 nil])
+        (inc))
+;; =&gt; nil</programlisting>
+<simpara>Esse é um modo fácil de evitar uma null pointer exception.</simpara>
+</section>
+<section xml:id="thread-cond-macros-ou-thread-se-cond-and-cond">
+<title>Thread-cond macros ou thread se (<literal>cond-&gt;</literal> and <literal>cond-&gt;&gt;</literal>)</title>
+<simpara>As macros <literal>cond-&gt;</literal> and <literal>cond-&gt;&gt;</literal> são análogas a <literal>-&gt;</literal>  e <literal>-&gt;&gt;</literal> e oferecem
+a abilidade de pularmos alguns itens na pipeline. Vejamos um exemplo:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn describe-number
+  [n]
+  (cond-&gt; []
+    (odd? n) (conj "odd")
+    (even? n) (conj "even")
+    (zero? n) (conj "zero")
+    (pos? n) (conj "positive")))
+
+(describe-number 3)
+;; =&gt; ["odd" "positive"]
+
+(describe-number 4)
+;; =&gt; ["even" "positive"]</programlisting>
+<simpara>A expressão seguinte é executada somente quando a condição é "logicamente true".</simpara>
+</section>
+<section xml:id="leituras-adicionais-em-inglês">
+<title>Leituras adicionais (em inglês)</title>
+<itemizedlist>
+<listitem>
+<simpara><link xl:href="http://www.spacjer.com/blog/2015/11/09/lesser-known-clojure-variants-of-threading-macro/">http://www.spacjer.com/blog/2015/11/09/lesser-known-clojure-variants-of-threading-macro/</link></simpara>
+</listitem>
+<listitem>
+<simpara><link xl:href="http://clojure.org/guides/threading_macros">http://clojure.org/guides/threading_macros</link></simpara>
+</listitem>
+</itemizedlist>
+</section>
+</section>
+<section xml:id="namespace-section">
+<title>Namespaces</title>
+<section xml:id="definindo-um-namespace">
+<title>Definindo um <emphasis>namespace</emphasis></title>
+<simpara>Um <emphasis>namespace</emphasis> é um peça fundamental de modularizar o código. <emphasis>Namespaces</emphasis> são
+análagos aos pacotes em Java ou módulos em Ruby ou Python e podem ser definidos
+com a macro <literal>ns</literal>. Se você já deu uma olhada algum código em <emphasis>Clojure</emphasis>, você terá
+notado que alguns arquivoc começam com:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(ns myapp.core
+  "Alguma string de documentação.")
+
+(def x "hello")</programlisting>
+<simpara><emphasis>Namespaces</emphasis> são dinâmicos, significando que você pode criá-los a qualquer momento.
+Entretanto a convenção é possuir um <emphasis>namespace</emphasis> por arquivo. Naturalmente,
+a definição de um <emphasis>namespace</emphasis> está usualmente no começo de um arquivo, seguida
+de um docstring opcional.</simpara>
+<simpara>Antes, explicamos vars e símbolos. Cada var que definimos será associada com
+um namespace. Se você não define um <emphasis>namespace</emphasis>, então o default, "user" será usado:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def x "hello")
+;; =&gt; #'user/x</programlisting>
+</section>
+<section xml:id="carregando-outros-namespaces">
+<title>Carregando outros <emphasis>namespaces</emphasis></title>
+<simpara>Definir um <emphasis>namespace</emphasis> e  variáveis dentro dele, mas não é muito útil se não podemos
+utilizar símbolos de outros namespaces. Para isso, a macro <literal>ns</literal> oferece um jeito
+simpels de carregar outros <emphasis>namespaces</emphasis>:</simpara>
+<simpara>Observe o exemplo seguinte:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(ns myapp.main
+  (:require myapp.core
+            clojure.string))
+
+(clojure.string/upper-case myapp.core/x)
+;; =&gt; "HELLO"</programlisting>
+<simpara>Como você pode observar, estamos usando nomes qualificados (<emphasis>namespace</emphasis> + nome da var)
+para acessar vars e funções de um outros <emphasis>namespaces</emphasis>.</simpara>
+<simpara>Isso permite acessarmos outros <emphasis>namespaces</emphasis>, mas também é repetitivo e extremamente
+verbose. E será bem mais verbose se o nome do namespace for muito grande. Para resolver isso
+podemos utilizar a diretiva <literal>:as</literal> para criar um "apelido" (<emphasis>alias</emphasis>) para o <emphasis>namespace</emphasis>.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(ns myapp.main
+  (:require [myapp.core :as core]
+            [clojure.string :as str]))
+
+(str/upper-case core/x)
+;; =&gt; "HELLO"</programlisting>
+<simpara>Adicionalmente, <emphasis>Clojure</emphasis> oferece um jeito simples de se refer a uma var ou função
+de um <emphasis>namespace</emphasis> usando a diretiva <literal>:refer</literal>, seguido pela sequência de símbolos
+que vão referir-se as vars daquele <emphasis>namespace</emphasis>. Efetivamente, é como se essas
+vars e funções fizessem parte do seu <emphasis>namespace</emphasis>, e não precisamos qualificá-las.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(ns myapp.main
+  (:require [clojure.string :refer [upper-case]]))
+(upper-case x)
+;; =&gt; "HELLO"</programlisting>
+<simpara>E finalmente, é importante saber que tudo localizado no <emphasis>namespace</emphasis> <literal>clojure.core</literal>
+é automaticamente carregado e não deveria ser feito o <literal>require</literal> de forma explícita.
+Algumas vezes, você pode querer definir vars com nomes que conflituam com aqueles
+definidos no <emphasis>namespace</emphasis> <literal>clojure.core</literal>. Para fazer isso, a macro <literal>ns</literal> oferece outra
+diretiva que permite excluir alguns símbolos específicos e prevenir que eles sejam
+carregados.</simpara>
+<simpara>Vejamos um exemplo:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(ns myapp.main
+  (:refer-clojure :exclude [min]))
+
+(defn min
+  [x y]
+  (if (&gt; x y)
+    y
+    x))</programlisting>
+<simpara>A macro <literal>ns</literal> tem outras diretivas para carregar classes da linguagem hospeira , Java,
+com <literal>:import</literal>, mas isso é explicado em outra seção.</simpara>
+</section>
+<section xml:id="namespaces-e-nome-de-arquivos">
+<title><emphasis>Namespaces</emphasis> e nome de arquivos</title>
+<simpara>Quando você possui um <emphasis>namespace</emphasis> como <literal>myapp.core</literal>, o código deve estar em
+um arquivo chamado <literal>core.clj</literal> dentro do diretório <literal>myapp</literal>. Entào, no exemplo precedente
+com os <emphasis>namespaces</emphasis> <literal>myapp.core</literal> e <literal>myapp.main</literal> seriam encontrados em um projeto
+com uma estrutura de arquivos assim:</simpara>
+<screen>myapp
+└── src
+    └── myapp
+        ├── core.cljs
+        └── main.cljs</screen>
+</section>
+</section>
+<section xml:id="abstrações-e-polimorfismos">
+<title>Abstrações e Polimorfismos</title>
+<simpara>Tenho certeza que em mais de uma vez você se encontrou em uma situação somo essa:
+você definiu uma ótima abstração (utilizando interfaces ou algo similar) para sua
+"lógica de negócio", e você precisa lidar com outro módulo sob o qual você não tem
+nenhum controle, e você provavelmente estava pensando em criar adapters, proxies, e
+outras abordagens que implicam em um grande volume de complexidade adicional.</simpara>
+<simpara>Algumas linguagens dinâmicas permitem "mokey-patching": linguagems onde as classes
+são abertas e qualquer método pode ser definido e redefinido a qualquer momento.
+Também sabemos que essa é uma má prática.</simpara>
+<simpara>Nós nào podemos confiar em uma linguagem que permite que você sobreescreva métodos
+que você está usando quando importarmos uma biblioteca de um terceiro. Não podemos
+esperar um comportamento consistente quando isso acontece.</simpara>
+<simpara>Esses sintomas são comumente chamados de "problema de expressão"
+veja <link xl:href="http://en.wikipedia.org/wiki/Expression_problem">http://en.wikipedia.org/wiki/Expression_problem</link> para mais detalhes.</simpara>
+<section xml:id="protocolos">
+<title>Protocolos</title>
+<simpara>O mecanismo em <emphasis>Clojure</emphasis> para definir "interfaces" é chamado protocolo (<emphasis>protocol</emphasis>).
+Um protocolo consiste de um nome e um conjunto de assinaturas de funções.
+Todas as funções tem ao menos um argumento correspondendo ao <literal>this</literal> em Javascript
+ou <literal>self</literal> em Python.</simpara>
+<simpara>Protocolos provém um polimorfismo baseado em tipos, e eles escolhem qual função
+executar baseado no tipo do primeiro argumento.</simpara>
+<simpara>Um protocolo parece o seguinte:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(ns myapp.testproto)
+
+(defprotocol IProtocolName
+  "A docstring describing the protocol."
+  (sample-method [this] "A doc string associated with this function."))</programlisting>
+<note>
+<simpara>o prefixo "I" é comumente usado para criar uma separação entre protocolos
+e tipos. Na comunidade <emphasis>Clojure</emphasis>, existe opiniões muitas diferentes sobre como
+o prefixo "I" deveria ser usado. Na nossa opinião, é uma solução aceitável para
+evitar conflito de nomes e possíveis confusões. Porém, nào utilizar esse prefixo
+não é considerado uma prática ruim.</simpara>
+</note>
+<simpara>Da perspectiva do usuário, funções de um protocolo são simpels funções definidas no
+<emphasis>namespace</emphasis> onde o protocolo foi definido. Isso permite uma abordagem fácil e simples
+para evitar conflitos entre diferentes protocolos implementados para o mesmo tipo que
+contém nomes de funções iguais.</simpara>
+<simpara>Aqui está um exemplo. Vamos criar um protocolo chamado <literal>IInvertible</literal> para os dados
+que podem ser "invertidos". Ele irá conter um único método chamado <literal>invert</literal>.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defprotocol IInvertible
+  "Esse protocolo é para tipos de dados que são 'invertíveis'"
+  (invert [this] "Invert the given item."))</programlisting>
+<section xml:id="extendendo-tipos-já-existentes">
+<title>Extendendo tipos já existentes</title>
+<simpara>Uma dos pontos positivos de protocolos é a habilidade de extender tipos existentes
+e talvez tipos providos por bibliotecas de terceiros. Essa operação pode ser feito
+de jeitos diferentes.</simpara>
+<simpara>A maioria das vezes você irá usar as macros <emphasis role="strong">extend-protocol</emphasis> ou <emphasis role="strong">extend-type</emphasis>. A sintaxe
+do <literal>extend-type</literal> é assim:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type TypeA
+  ProtocolA
+  (function-from-protocol-a [this]
+    ;; implementação aqui
+    )
+
+  ProtocolB
+  (function-from-protocol-b-1 [this parameter1]
+    ;; implementação aqui
+    )
+  (function-from-protocol-b-2 [this parameter1 parameter2]
+    ;; implementação aqui
+    ))</programlisting>
+<simpara>Como você pode observar, que com <emphasis role="strong">extend-type</emphasis> você pode extender um só tipo com
+diferentes protocolos em uma única expressão.</simpara>
+<simpara>Vamos brincar com o nosso protocolo <literal>IInvertible</literal> definido anteriormente:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-type String
+  IInvertible
+  (invert [this] (apply str (reverse this))))
+
+(extend-type clojure.lang.PersistentList
+  IInvertible
+  (invert [this] (reverse this)))
+
+(extend-type clojure.lang.PersistentVector
+  IInvertible
+  (invert [this] (into [] (reverse this))))</programlisting>
+<simpara>Agora, é hora de testarmos a implementação do nosso protocolo:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(invert "abc")
+;; =&gt; "cba"
+
+(invert 0)
+;; =&gt; 0
+
+(invert '(1 2 3))
+;; =&gt; (3 2 1)
+
+(invert [1 2 3])
+;; =&gt; [3 2 1]</programlisting>
+<simpara>Em comparação, <emphasis role="strong">extend-protocol</emphasis> faz o inverso; dado um protocolo, ele adiciona
+uma implementação para vários tipos. A sintaxe é assim:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-protocol ProtocolA
+  TypeA
+  (function-from-protocol-a [this]
+    ;; implementação aqui
+    )
+
+  TypeB
+  (function-from-protocol-a [this]
+    ;; implementação aqui
+    ))</programlisting>
+<simpara>Então, o exemplo anterior poderia ser escrito também dessa maneira:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(extend-protocol IInvertible
+  String
+  (invert [this] (apply str (reverse this)))
+
+  clojure.lang.PersistentList
+  (invert [this] (reverse this))
+
+  clojure.lang.PersistentVector
+  (invert [this] (into [] (reverse this))))</programlisting>
+</section>
+<section xml:id="introspeção-usando-protocolos">
+<title>Introspeção usando Protocolos</title>
+<simpara><emphasis>Clojure</emphasis> vem com algumas funções úteis que permitem verificar se algo implementa
+um protocolo usando a função <literal>satisfies?</literal>. O propósito dessa função é determinar
+em runtime se algum objeto satisfaz um protocolo.</simpara>
+<simpara>Se definirmos um protocolo Baz e um record Foo que implementa esse protocolo,
+podemos verificar isso com a função <literal>satisfies?</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defprotocol Baz
+             (bar [this]))
+
+(defrecord Foo [some-name]
+           Baz
+           (bar [this] (str "Hello, " some-name)))
+
+
+(satisfies? Baz (-&gt;Foo "Alguém"))
+;; =&gt; true</programlisting>
+</section>
+</section>
+<section xml:id="multimethods">
+<title>Multimethods</title>
+<simpara>Protocolos resolvem um problema muito comum de polimorfismo: despachar uma função
+por tipo. Mas em algumas circunstâncias, essa abordagem pode ser limitante.
+E são nesses casos que usamos <emphasis>multimethods</emphasis></simpara>
+<simpara>Esses <emphasis>multimethods</emphasis> não estão limitados apenas por tipos; ao invés, eles oferecem
+a possibilidade de chamar funções de acordo com tipos de múltiplos argumentos
+ou por valor. Eles também permitem criarmos hierarquias. Além disso, como protocolos,
+<emphasis>multimethods</emphasis> são um sistema aberto de extensão que pode ser usado por outras
+bibliotecas.</simpara>
+<simpara>As funções básicas dos <emphasis>multimethods</emphasis> são <literal>defmulti</literal> e <literal>defmethod</literal>. O <literal>defmulti</literal> é
+utilizado para criar uma função <emphasis>dispatch</emphasis> inicial.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defmulti say-hello
+  "Uma função polimórfica que retorna uma mensagem de
+  olá dependendo da chave :locale, sendo o padrão `:en`"
+  (fn [param] (:locale param))
+  :default :en)</programlisting>
+<simpara>A função anônima definida dentro do <literal>defmulti</literal> é chamada de função <emphasis>dispatch</emphasis>. Ela
+é chamada toda vez que a função <literal>say-hello</literal> é chamada e deveria retornar algum tipo
+de valor que será usado para selecionar a implementação correta. No nosso exemplo,
+ela retorna o conteúdo da chave <literal>:locale</literal> do primeiro argumento.</simpara>
+<simpara>E finalmente, devemos adicionar algumas implementações. Isso é feito através do
+<literal>defmethod</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defmethod say-hello :en
+  [person]
+  (str "Hello " (:name person "Anonymous")))
+
+(defmethod say-hello :es
+  [person]
+  (str "Hola " (:name person "Anónimo")))</programlisting>
+<simpara>Então, se executamos essa função com um mapa contendo a chave <literal>:local</literal> e opcionalmente
+a chave <literal>:name</literal>, o <emphasis>multimethod</emphasis> vai primeiro chamar a função <literal>dispatch</literal> para determinar
+o valor de <literal>dispatch</literal>, e então irá procurar pela implementação daquele valor.
+Se uma implementação é encontrada, a respectiva função será executada. Se não, o <literal>dispatch</literal>
+vai procurar pela implementação padrão (se houver) e executará ela.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(say-hello {:locale :es})
+;; =&gt; "Hola Anónimo"
+
+(say-hello {:locale :en :name "Ciri"})
+;; =&gt; "Hello Ciri"
+
+(say-hello {:locale :fr})
+;; =&gt; "Hello Anonymous"</programlisting>
+<simpara>Se uma implementação padrão não for especificada, uma exceção será gerada,
+notificando que o valor não possui uma implementação para aquele <literal>multimethod</literal>.</simpara>
+</section>
+<section xml:id="hierarquias">
+<title>Hierarquias</title>
+<simpara>Hierarquias são o modo que o <emphasis>Clojure</emphasis> fornece para construir relações que seu domínio
+possa precisar. Hierarquias são definidas em termos de relaçãoes entre objetos
+nomeados como símbolos, <emphasis>keywords</emphasis> ou tipos.</simpara>
+<simpara>Hierarquias podem ser definidas globalmente ou localmente, de acordo com suas
+necessidades. Você pode extender uma hierarquia em qualquer <emphasis>namespace</emphasis>, não apenas
+onde ela é definida.</simpara>
+<simpara>O <emphasis>namespace</emphasis> global é mais limitado, por boas razões. <emphasis>Keywords</emphasis> e símbolos que não são
+qualificados com um <emphasis>namespace</emphasis> não podem ser usados em uma hierarquia global.
+Esse comportamento previne situações onde duas ou mais bibliotecas tentam utilizar
+o mesmo símbolo com semânticas diferentes.</simpara>
+<section xml:id="definindo-uma-hierarquia">
+<title>Definindo uma hierarquia</title>
+<simpara>Uma relação dentro de uma hierarquia deveria ser definida usando a função
+<literal>derive</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(derive ::circle ::shape)
+(derive ::box ::shape)</programlisting>
+<simpara>Nos apenas definimos um conjunto de relações entre <emphasis>keywords</emphasis> qualificadas. Nesse
+caso, o <literal>::circle</literal> é filho de <literal>::shape</literal> e <literal>::box</literal> também é filho de <literal>::shape</literal>.</simpara>
+<tip>
+<simpara>A sintaxe <literal>::circle</literal> é um "apelido" para <literal>:current.ns/circle</literal>. Então,
+se você estiver executando isso na REPL, <literal>::circle</literal>  será transformado em <literal>user/circle</literal>.</simpara>
+</tip>
+</section>
+<section xml:id="hierarquias-e-introspecção">
+<title>Hierarquias e introspecção</title>
+<simpara><emphasis>Clojure</emphasis> vem com uma série de funções que permite verificar relações relacionadas
+a hierarquias em runtime. Essas funções são: <literal>isa?</literal>, <literal>ancestors</literal> e <literal>descendants</literal>.</simpara>
+<simpara>Vejamos um exemplo de como podemos usá-las com a hierarquia definida no exemplo
+anterior:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(ancestors ::box)
+;; =&gt; #{:cljs.user/shape}
+
+(descendants ::shape)
+;; =&gt; #{:cljs.user/circle :cljs.user/box}
+
+(isa? ::box ::shape)
+;; =&gt; true
+
+(isa? ::rect ::shape)
+;; =&gt; false</programlisting>
+</section>
+<section xml:id="hierarquias-definidas-localmente">
+<title>Hierarquias definidas localmente</title>
+<simpara>Como mencionamos anteriormente, em <emphasis>Clojure</emphasis> voc6e pode definir uma
+hierarquia local. Isso pode ser feito com a função <literal>make-hierarchy</literal>. Aqui está
+o exemplo anterior com uma hierarquia local.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def h (-&gt; (make-hierarchy)
+           (derive :box :shape)
+           (derive :circle :shape)))</programlisting>
+<simpara>Agora podemos fazer a mesma instrospecção com a hierarquia local:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(isa? h :box :shape)
+;; =&gt; true
+
+(isa? :box :shape)
+;; =&gt; false</programlisting>
+<simpara>Como você pode observar, em uma hierarquia local podemos usar <emphasis>keywords</emphasis> sem <emphasis>namespaces</emphasis>,
+e se executamos <literal>isa?</literal> sem passar uma hierarquia local, false é retornado, como esperado.</simpara>
+</section>
+<section xml:id="hierarquias-em-multimethods">
+<title>Hierarquias em <emphasis>multimethods</emphasis></title>
+<simpara>Uma das grandes vantagens de hierarquias é que elas funcionam junto com <emphasis>multimethods</emphasis>.
+Isso é porque os <emphasis>multimethods</emphasis> utilizam <emphasis>by default</emphasis> a função <literal>isa?</literal> como último passo
+do <emphasis>dispatch</emphasis>.</simpara>
+<simpara>Vejamos um exemplo para compreendermos isso. Primeiro vamos definir um <emphasis>multimethod</emphasis>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defmulti stringify-shape
+  "A function that prints a human readable representation
+  of a shape keyword."
+  identity
+  :hierarchy #'h)</programlisting>
+<simpara>Com o parâmetro nomeado <literal>:hierarchy</literal>, nos indicamos ao <emphasis>multimethod</emphasis> que queremos
+usar essa hierarquia; se não for especificado, a hierarquia global será usada.</simpara>
+<simpara>Em seguida, definimos a implementação de nosso <emphasis>mulitmethod</emphasis>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defmethod stringify-shape :box
+  [_]
+  "A box shape")
+
+(defmethod stringify-shape :shape
+  [_]
+  "A generic shape")
+
+(defmethod stringify-shape :default
+  [_]
+  "Unexpected object")</programlisting>
+<simpara>Agora, vejamos o que acontece se executarmos essa função com <literal>:box</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(stringify-shape :box)
+;; =&gt; "A box shape"</programlisting>
+<simpara>Tudo funciona como esperado; o <emphasis>multimethod</emphasis> executa uma <emphasis>matching</emphasis> direto na implementação
+do parâmetro dado. Em seguida, vejamos o que acontece se executarmos a mesma
+função com o parâmetro <literal>:circle</literal>  que não possui uma implementação  "direta":</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(stringify-shape :circle)
+;; =&gt; "A generic shape"</programlisting>
+<simpara>O <literal>multimethod</literal> automaticamente resolve qual implementação usar, utilizando a hierarquia
+fornecidade. Como <literal>:circle</literal> é um descendente de <literal>:shape</literal>, a implementação do <emphasis>multimethod</emphasis>
+para <literal>:shape</literal> é executada.</simpara>
+<simpara>Finalmente, se você fornecer uma <emphasis>keyword</emphasis> que não faz parte da hierarquia, você
+obtém a implementação default:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(stringify-shape :triangle)
+;; =&gt; "Unexpected object"</programlisting>
+</section>
+</section>
+</section>
+<section xml:id="tipos-de-dados">
+<title>Tipos de dados</title>
+<simpara>Até agora, nós usamos mapas, <literal>sets</literal>, listas e vetores para representar nossos dados.
+E na maioria dos casos, essa é um abordagem muito boa. Mas algumas vezes precisamos
+definir nossos próprios tipos, e nesse livro vamos chamá-los de <emphasis>data types</emphasis>.</simpara>
+<simpara>Um <emphasis>data type</emphasis> fornece o seguinte:</simpara>
+<itemizedlist>
+<listitem>
+<simpara>Um tipo único fornecido pelo host, seja nomeado ou anônimo.</simpara>
+</listitem>
+<listitem>
+<simpara>A habilidade de implementar protocolos.</simpara>
+</listitem>
+<listitem>
+<simpara>Estrutura explicitamente declarada utilizando campos e <emphasis>closures</emphasis>.</simpara>
+</listitem>
+<listitem>
+<simpara>Comportamento similar a mapas (via <emphasis>records</emphasis>, que veremos em seguida)</simpara>
+</listitem>
+</itemizedlist>
+<section xml:id="deftype">
+<title>Deftype</title>
+<simpara>A opção mais baixo nível para criar seus próprios tipos em <emphasis>Clojure</emphasis> é a macro
+<literal>deftype</literal>. Como demonstração, vamos definir um tipo chamado <literal>User</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(deftype User [firstname lastname])</programlisting>
+<simpara>Uma vez que o tipo foi definido, podemos criar uma instância do nosso <literal>User</literal>. No
+exemplo a seguir, o <literal>.</literal> depois do <literal>User</literal> indica que estamos chamando um construtor.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def person (User. "Triss" "Merigold"))</programlisting>
+<simpara>Os campos do <literal>User</literal> podem ser acessados usando a notação prefixada com <literal>.</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(.-firstname person)
+;; =&gt; "Triss"</programlisting>
+<simpara>Tipos definidos com <literal>deftype</literal> (e <literal>defrecord</literal>, que veremos depois0 criam uma
+classe na linguagem host associada com o <emphasis>namespace</emphasis> atual. Por conveniência,
+<emphasis>Clojure</emphasis> também define uma função construtora chamada <literal>&#8594;User</literal> que pode ser importada
+utilizando a diretiva <literal>:require</literal>.</simpara>
+<simpara>Nós, pessoalmente, não gostamos desse tipo de função, e prefirimos definir nossos
+próprios construtores com nomes mais idiomáticos.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn make-user
+  [firstname lastname]
+  (User. firstname lastname))</programlisting>
+<simpara>Usamos essa função no nosso código ao invés de <literal>&#8594;User</literal>.</simpara>
+</section>
+<section xml:id="defrecord">
+<title>Defrecord</title>
+<simpara>Um <emphasis>record</emphasis> é uma abstração um pouco mais alto nível para definirmos tipos
+em <emphasis>Clojure</emphasis> e deveria ser favorecido em relação a <literal>deftype</literal>.</simpara>
+<simpara>Como sabemos, <emphasis>Clojure</emphasis> tende a usar tipos de dados como <literal>map</literal>, mas na maioria dos
+casos precisamos tipos vinculados a um nome para representar entidades
+na nossa aplicação. Para isso usamos os <emphasis>records</emphasis>:</simpara>
+<simpara>Um <emphasis>record</emphasis> é um tipo de dado que implementa a interface do mapa e portanto pode ser
+utilizado como qualquer outro mapa. E como <emphasis>records</emphasis> são tipos, eles suportam
+polimorfismo baseado em tipos através de protocolos.</simpara>
+<simpara>Em resumo: com <emphasis>records</emphasis> temos o melhor dos dois mundos, mapas que podem participar
+em diferentes abstrações.</simpara>
+<simpara>Vamos começar definindo o tipo <literal>User</literal> mas utilizando <emphasis>records</emphasis>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defrecord User [firstname lastname])</programlisting>
+<simpara>Parece muito com a sintaxe de <literal>deftype</literal>, e na verdade, <literal>defrecord</literal> utililiza o <literal>deftype</literal>
+por baixo dos panos como um função de baixo nível para definir tipos.</simpara>
+<simpara>Agora, perceba a diferença para acessar campos:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def person (User. "Yennefer" "of Vengerberg"))
+
+(:firstname person)
+;; =&gt; "Yennefer"
+
+(get person :firstname)
+;; =&gt; "Yennefer"</programlisting>
+<simpara>Como mencionamos, <emphasis>records</emphasis> são mapas e agem como tais:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(map? person)
+;; =&gt; true</programlisting>
+<simpara>E como mapas, eles suportam campos extras que não definimos inicialmente:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def person2 (assoc person :age 92))
+
+(:age person2)
+;; =&gt; 92</programlisting>
+<simpara>Como podemos ver, a função <literal>assoc</literal> funciona como esperado e retorna uma instância do
+mesmo tipo, porém com um novo par chave-valor. Porém tome cuidado com o <literal>dissoc</literal>!
+Seu comportamento com <literal>records</literal> é um pouco diferente do que com mapas; ele vai retornar
+um novo <emphasis>record</emphasis> se o campo desassociado for opcional, se não ele vai retornar um
+mapa normal.</simpara>
+<simpara>Outra diferença com mapas é que os <emphasis>records</emphasis> não agem como funções:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def plain-person {:firstname "Yennefer", :lastname "of Vengerberg"})
+
+(plain-person :firstname)
+;; =&gt; "Yennefer"
+
+(person :firstname)
+;; =&gt; class user.User cannot be cast to class clojure.lang.IFn</programlisting>
+<simpara>Por conveniência, a macro <literal>defrecord</literal>, como <literal>deftype</literal>, expõe uma função <literal>&#8594;User</literal>,
+assim como uma função construtora adicional <literal>map&#8594;User</literal>. Mas mantemos nossa
+opinião de criar nossos próprios construtores ao invés de usar os outros.
+Mas como eles existem, vamos dar uma olhada em como usá-los:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def cirilla (-&gt;User "Cirilla" "Fiona"))
+(def yen (map-&gt;User {:firstname "Yennefer"
+                     :lastname "of Vengerberg"}))</programlisting>
+</section>
+<section xml:id="implementando-protocols">
+<title>Implementando <emphasis>protocols</emphasis></title>
+<simpara>Tanto <literal>deftype</literal> quanto <literal>defrecord</literal> permitem a implementação de protocolos "inline"
+como fizemos com <emphasis>extend-type</emphasis> e <emphasis>extend-protocol</emphasis>. Vamos definir um protocolo
+como exemplo</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defprotocol IUser
+  "A common abstraction for working with user types."
+  (full-name [_] "Get the full name of the user."))</programlisting>
+<simpara>Agora, podemos definir um tipo que implementando nossa abstração <literal>IUser</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defrecord User [firstname lastname]
+  IUser
+  (full-name [_]
+    (str firstname " " lastname)))
+
+;; Create an instance.
+(def user (User. "Yennefer" "of Vengerberg"))
+
+(full-name user)
+;; =&gt; "Yennefer of Vengerberg"</programlisting>
+</section>
+<section xml:id="reify-materializar">
+<title>Reify (Materializar)</title>
+<simpara>A macro <literal>reify</literal> é um construtor ad-hoc que podemos usar para criar objectos que implementam
+uma interface sem definir um tipo. Porém, com <literal>reify</literal> não possuímos campos acessíveis
+como em <literal>deftype</literal> e <literal>defrecord</literal>.</simpara>
+<simpara>No exemplo abaixo, podemos criar um objeto que implementa a abstração <literal>IUser</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(defn user
+  [firstname lastname]
+  (reify
+    IUser
+    (full-name [_]
+      (str firstname " " lastname))))
+
+(def yen (user "Yennefer" "of Vengerberg"))
+(full-name yen)
+;; =&gt; "Yennefer of Vengerberg"</programlisting>
+</section>
+</section>
+<section xml:id="interoperabilidade-com-a-linguagem-hospedeira">
+<title>Interoperabilidade com a linguagem hospedeira</title>
+<simpara><emphasis>Clojure</emphasis> foi feita para ser uma linguagem "convidada". Isso significa que o seu design
+foi pensando para trabalhar bem em cima do eco-sistema já existente da JVM.</simpara>
+<section xml:id="os-tipos">
+<title>Os tipos</title>
+<simpara><emphasis>Clojure</emphasis> tira vantagens do tipos fornecidos pela plataforma. Essa é uma lista (provavelmente incompleta)
+de tipos que o <emphasis>Clojure</emphasis> utiliza do java.
+<emphasis>ClojureScript</emphasis>, unlike what you might expect, tries to take advantage of every type
+that the platform provides. This is a (perhaps incomplete) list of things that
+<emphasis>ClojureScript</emphasis> inherits and reuses from the underlying platform:</simpara>
+<itemizedlist>
+<listitem>
+<simpara>Strings em <emphasis>Clojure</emphasis> são <emphasis role="strong">Strings</emphasis> do Java.</simpara>
+</listitem>
+<listitem>
+<simpara><emphasis>Clojure</emphasis> utiliza os tipos numéricos primitivos do Java além de <literal>BigInteger</literal> e <literal>BigDecimal</literal>.</simpara>
+</listitem>
+<listitem>
+<simpara><emphasis>Clojure</emphasis> <literal>nil</literal> tem o mesmo valor que o <literal>null</literal>  em Java..</simpara>
+</listitem>
+<listitem>
+<simpara>As expressões regulares em <emphasis>Clojure</emphasis> são instâncias da class <literal>java.util.regex.Pattern</literal>.</simpara>
+</listitem>
+<listitem>
+<simpara><emphasis>Clojure</emphasis> não é interpretada, é sempre compilada para Java Bytecode.</simpara>
+</listitem>
+<listitem>
+<simpara><emphasis>Clojure</emphasis> permite chamada das APIs da plataforma usando a mesma semântica já existente.</simpara>
+</listitem>
+</itemizedlist>
+<simpara>Em cima disso, <emphasis>Clojure</emphasis> constroí suas próprias abstrações e tipos que não existem
+na plataforma, como Vectors, Maps, Sets, e outros que foram explicados nas seções
+anteriores.</simpara>
+</section>
+<section xml:id="interagindo-com-tipos-da-plataforma">
+<title>Interagindo com tipos da plataforma</title>
+<simpara><emphasis>Clojure</emphasis> vem com um conjunto de formas especiais que nos permite interagir
+com tipos da plataformas como por exemplo chamar métodos de objetos, criar novas
+instâncias, e acessar propriedades de objetos.</simpara>
+<section xml:id="acesso-a-plataforma">
+<title>Acesso a plataforma</title>
+<simpara><emphasis>Clojure</emphasis> já possui vários símbolos importados do Java que podem ser usados, como
+por exemplo <literal>Integer</literal>, <literal>Long</literal>, <literal>String</literal>, etc:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(Integer. 23)
+;; =&gt; 23
+(Integer/parseInt "23")
+;; =&gt; 23</programlisting>
+</section>
+<section xml:id="criando-novas-instâncias">
+<title>Criando novas instâncias</title>
+<simpara><emphasis>Clojure</emphasis> fornece dois modos de criar uma nova instância de uma classe Java:</simpara>
+<simpara>Usando a forma special <literal>new</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(import 'java.io.File)
+(new File "some_file.txt")</programlisting>
+<simpara>Usando a forma especial <literal>.</literal>:
+Using the <literal>.</literal> special form</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(import 'java.io.File)
+(File. "some_file.txt")</programlisting>
+<simpara>A última opção é o modo recomendado de criar instâncias. Não sabemos de nenhuma diferença
+real entre as duas formas, porém na comunidade <emphasis>Clojure</emphasis>, a última é mais utilizada.</simpara>
+</section>
+<section xml:id="chamando-métodos-dos-objetos">
+<title>Chamando métodos dos objetos</title>
+<simpara>Para chamar métodos de algum objeto, ao invés de fazermos como fazemos
+em Java, como <literal>obj.method()</literal>,  o método vem primeiro prefixado com <literal>.</literal> e o objeto
+como o primeiro argumento, seguido pelos argumentos do método.
+To invoke methods of some object instance, as opposed to how it is done in
+JavaScript (e.g., <literal>obj.method()</literal>, the method name comes first like any other
+standard function in Lisp languages but with a little variation: the function name
+starts with special form <literal>.</literal>.</simpara>
+<simpara>Let&#8217;s see how we can call the <literal>.test()</literal> method of a regexp instance:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def java-map (java.util.HashMap.))
+(.put java-map "a 1)</programlisting>
+</section>
+<section xml:id="acessar-e-modificar-propriedades-de-um-objeto">
+<title>Acessar e modificar propriedades de um objeto</title>
+<simpara>Acesso a uma propriedade de um objeto é muito similar a chamar um método. A unica diferença
+é que ao invés de ser prefixado com <literal>.</literal> prefixamos o nome da propriedade com <literal>.-</literal>.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def point (java.awt.Point. 1 2))
+(.-y point)
+;; =&gt; 2</programlisting>
+<simpara>Para modificar uma propriedade utilizamos a forma especial <literal>set!</literal> passando
+um um lista que realiza acesso a propriedade e o novo valor:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def point (java.awt.Point. 1 2))
+(set! (.-y point) 3)
+;; =&gt; 3
+
+(.-y point)
+;; =&gt; 3</programlisting>
+</section>
+<section xml:id="arrays">
+<title>Arrays</title>
+<simpara>Algumas funções do Java aceitam somente arrays. Para isso <emphasis>Clojure</emphasis> fornece
+algumas funções que permitem que criarmos arrays do Java a partir de coleções
+do <emphasis>Clojure</emphasis>.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def path ["username" "dev" "clojure"])
+(java.nio.file.Paths/get "/Users" path)
+;; =&gt; class clojure.lang.PersistentVector cannot be cast to class [Ljava.lang.String;
+
+(java.nio.file.Paths/get "/Users" (into-array ["username" "dev" "clojure"]))
+;; #object[sun.nio.fs.UnixPath 0x1f193686 "/Users/username/dev/clojure"]</programlisting>
+<simpara>Em <emphasis>Clojure</emphasis>, arrays também funcionam bem com a abstração de sequências, então podemos
+usar funções como:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(count (into-array ["username" "dev" "clojure"]))
+;; =&gt; 10</programlisting>
+</section>
+</section>
+</section>
+<section xml:id="gerenciamento-de-estado">
+<title>Gerenciamento de estado</title>
+<simpara>Nós aprendemos que uma das ideias fundamentais do <emphasis>Clojure</emphasis> é a imutabilidade. Tanto
+valores escalres quanto coleções são imutáveis em <emphasis>Clojure</emphasis>.</simpara>
+<simpara>Imutabilidade possui muitas propriedades interessantes, mas algumas vezes precisamos
+modelar valores que mudam ao longo do tempo. Como podemos fazer isso se não podemos
+mutar as estruturas de dado?</simpara>
+<section xml:id="vars-2">
+<title>Vars</title>
+<simpara><emphasis>Vars</emphasis> podem ser redefinidas como desejarmos dentro de um <emphasis>namespace</emphasis>,  mas não existe
+jeito de saber <emphasis role="strong">quando</emphasis> elas mudam. A inabilidade de redefinir <emphasis>vars</emphasis> de outros <emphasis>namespaces</emphasis>
+é um pouco limitante; além disso, se estamos modificando estado, provavelmente estamos
+interessados em saber quando isso ocorre.</simpara>
+</section>
+<section xml:id="atoms">
+<title>Atoms</title>
+<simpara><emphasis>Clojure</emphasis> nos da o tipo <literal>Atom</literal>, que é um objeto contendo um valor que pode ser alterado
+quando quisermos. Além de alterar seu valor, eles também suportam serem observados
+através de funções <emphasis>watcher</emphasis>(observadores) que podem ser vinculados e desvinculados do átomo
+e validações para garantir que o valor associado é sempre válido.</simpara>
+<simpara>Se queremos modelar uma identidade correspondende a um pessoa chamada Ciri, podemos
+colocar uma estrutura imutável dentro de um átomo. Note que podemos obter o valor
+do átomo com a função <literal>deref</literal> ou usando a forma especial mais curta <literal>@</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def ciri (atom {:name "Cirilla" :lastname "Fiona" :age 20}))
+;; #&lt;Atom: {:name "Cirilla", :lastname "Fiona", :age 20}&gt;
+
+(deref ciri)
+;; {:name "Cirilla", :lastname "Fiona", :age 20}
+
+@ciri
+;; {:name "Cirilla", :lastname "Fiona", :age 20}</programlisting>
+<simpara>Podemos utilizar a função <literal>swap!</literal> para alterar seu valor com uma função, como na função update.
+Como o aniversário da Ciri é hoje, vamos incrementar sua idade:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(swap! ciri update :age inc)
+;; {:name "Cirilla", :lastname "Fiona", :age 21}
+
+@ciri
+;; {:name "Cirilla", :lastname "Fiona", :age 21}</programlisting>
+<simpara>A função <literal>reset!</literal> substitui o valor presenter no átomo por um novo:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(reset! ciri {:name "Cirilla", :lastname "Fiona", :age 22})
+;; {:name "Cirilla", :lastname "Fiona", :age 22}
+
+@ciri
+;; {:name "Cirilla", :lastname "Fiona", :age 22}</programlisting>
+<section xml:id="observabilidade">
+<title>Observabilidade</title>
+<simpara>Nós podemos adicionar e remover funções <emphasis>watchers</emphasis>(observadoras) de átomos. Quando
+um átomo é alterado através de <literal>swap!</literal> ou <literal>reset!</literal>, todos os <emphasis>watchers</emphasis> de um átomo são
+chamados. <emphasis>Watchers</emphasis> podem ser adicionados através da função <literal>add-watch</literal>. Note que cada
+<emphasis>watcher</emphasis> tem uma chave associada com ele (<literal>:logger</literal> por exemplo) que usada para remover
+o <emphasis>watch</emphasis> do átomo.</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def a (atom))
+
+(add-watch a :logger (fn [key the-atom old-value new-value]
+                       (println "Key:" key "Old:" old-value "New:" new-value)))
+
+(reset! a 42)
+;; Key: :logger Old: nil New: 42
+;; =&gt; 42
+
+(swap! a inc)
+;; Key: :logger Old: 42 New: 43
+;; =&gt; 43
+
+(remove-watch a :logger)</programlisting>
+</section>
+</section>
+<section xml:id="volatiles">
+<title>Volatiles</title>
+<simpara>Volatiles, como átomos, são objetos que possuem um valor que pode ser alterado. Contudo,
+eles não provem a possibilidade de validação observação que átomos possuem.
+Isso faz com que eles sejam mais performáticos e mais adequados para serem
+usados dentro de funções que não precisam de observação ou validação.</simpara>
+<simpara>API deles é muito parecida com a dos átomos. Eles podem ser <emphasis>dereferenced</emphasis> para obtermos
+o valor deles e suportam mudanças através de <literal>vswap!</literal> e <literal>vreset!</literal>:</simpara>
+<programlisting language="clojure" linenumbering="unnumbered">(def ciri (volatile! {:name "Cirilla" :lastname "Fiona" :age 20}))
+;; #&lt;Volatile: {:name "Cirilla", :lastname "Fiona", :age 20}&gt;
+
+(volatile? ciri)
+;; =&gt; true
+
+(deref ciri)
+;; {:name "Cirilla", :lastname "Fiona", :age 20}
+
+(vswap! ciri update :age inc)
+;; {:name "Cirilla", :lastname "Fiona", :age 21}
+
+(vreset! ciri {:name "Cirilla", :lastname "Fiona", :age 22})
+;; {:name "Cirilla", :lastname "Fiona", :age 22}</programlisting>
+<simpara>Note que outra diferença com átomos é o construtor que é <literal>volatile!</literal>.</simpara>
+</section>
+</section>
+</chapter>
+<chapter xml:id="agradecimentos">
+<title>Agradecimentos</title>
+<simpara>Agradecimentos especiais aos autores originais do livro que fizeram o grande trabalho de escrevê-lo
+e disponibilizá-lo sob um licensa que permita sua tradução e adaptação.</simpara>
+<simpara>Special thanks to:</simpara>
+<itemizedlist>
+<listitem>
+<simpara>Andrey Antukh <link xl:href="mailto:niwi@niwi.nz">niwi@niwi.nz</link></simpara>
+</listitem>
+<listitem>
+<simpara>Alejandro Gómez <link xl:href="mailto:alejandro@dialelo.com">alejandro@dialelo.com</link></simpara>
+</listitem>
+</itemizedlist>
+<simpara>Who wrote the original book and to all others involved in the elaboration of that book.
+- Andrey Antukh <link xl:href="mailto:niwi@niwi.nz">niwi@niwi.nz</link>
+- Alejandro Gómez <link xl:href="mailto:alejandro@dialelo.com">alejandro@dialelo.com</link></simpara>
+</chapter>
+<chapter xml:id="recursos-adicionais">
+<title>Recursos adicionais</title>
+<simpara>Aqui está uma lista de mais recursos sobre <emphasis>Clojure</emphasis>.
+A medida que acharmos ou produzirmos mais conteúdo em português, iremos adicionar
+aqui.</simpara>
+<itemizedlist>
+<listitem>
+<simpara><link xl:href="https://clojure.org/api/cheatsheet/">Clojure Cheatsheet</link>: uma referência em inglês da linguagem <emphasis>Clojure</emphasis>.</simpara>
+</listitem>
+<listitem>
+<simpara><link xl:href="https://clojuredocs.org/">Clojure Community-docs </link>: documentação sobre a linguagem produzida pela comunidade.</simpara>
+</listitem>
+</itemizedlist>
+</chapter>
+</book>
