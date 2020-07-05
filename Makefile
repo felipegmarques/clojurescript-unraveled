@@ -36,8 +36,8 @@ mobi: epub
 	ebook-convert dist/_clojurescript-unraveled.epub dist/clojurescript-unraveled.mobi --output-profile=kindle --chapter="/" --no-chapters-in-toc --cover=cover/cover.png --mobi-ignore-margins --margin-left=2 --margin-right=2
 
 github: html
-	ghp-import -m "Generate book" -b gh-pages dist/
-	git push origin gh-pages
+	ghp-import -m "Generate book" -b clojure dist/
+	git push origin clojure
 
 clean:
 	rm -r dist/
